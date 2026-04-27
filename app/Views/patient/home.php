@@ -82,9 +82,9 @@
                     </div>
                 </div><!-- Upcoming Appointment -->
                 <div class="px-6 md:px-12 lg:px-16 xl:px-20 2xl:px-32 mt-8">
-                    <div class="flex items-center justify-between mb-4 md:mb-6 max-w-7xl mx-auto">
-                        <h3 class="font-bold text-gray-800 text-lg md:text-2xl lg:text-3xl md:ml-100">Jadwal Mendatang</h3><button
-                            class="text-sm md:text-lg lg:text-xl text-blue-600 font-medium">Lihat Semua</button>
+                    <div class="flex items-center justify-between mb-4 md:mb-6 max-w-1xl mx-auto">
+                        <h3 class="font-bold text-gray-800 text-lg md:text-2xl lg:text-3xl flex items-center justify-between">Jadwal Mendatang</h3>
+                        <button class="text-sm md:text-lg lg:text-xl text-blue-600 font-medium">Lihat Semua</button>
                     </div>
                     <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl md:rounded-3xl p-5 md:p-8 lg:p-10 card-hover">
                         <div class="flex items-start justify-between mb-4 md:mb-6">
@@ -116,11 +116,11 @@
                     </div>
                 </div><!-- Health Tips -->
                 <div class="px-6 md:px-12 lg:px-16 xl:px-20 2xl:px-32 mt-8">
-                    <div class="flex items-center justify-between mb-4 md:mb-6 max-w-7xl mx-auto">
-                        <h3 class="font-bold text-gray-800 text-lg md:text-2xl lg:text-3xl ml-5 md:ml-6">Tips Kesehatan</h3><button
+                    <div class="flex items-center justify-between mb-4 md:mb-6 max-w-1xl mx-auto">
+                        <h3 class="font-bold text-gray-800 text-lg md:text-2xl lg:text-3xl flex items-center justify-between">Tips Kesehatan</h3><button
                             class="text-sm md:text-lg lg:text-xl text-blue-600 font-medium">Lihat Semua</button>
                     </div>
-                    <div class="flex space-x-4 overflow-x-auto pb-2 -mx-6 px-6 scrollbar-hide md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 md:gap-6 md:space-x-0 md:overflow-visible md:mx-0 md:px-0">
+                    <div class="flex space-x-4 overflow-x-auto pb-10 -mx-6 px-6 scrollbar-hide md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 md:gap-6 md:space-x-0 md:overflow-visible md:mx-0 md:px-0">
                         <div class="flex-shrink-0 w-64 md:w-full bg-white rounded-2xl md:rounded-3xl shadow-sm overflow-hidden card-hover">
                             <div
                                 class="h-32 md:h-48 lg:h-56 bg-gradient-to-br from-teal-400 to-teal-500 flex items-center justify-center">
@@ -143,15 +143,17 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                         d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                                 </svg>
-                            </div>
-                            <div class="p-4 md:p-6 lg:p-8">
-                                <h4 class="font-semibold text-gray-800 mb-1 text-base md:text-xl lg:text-2xl">Vitamin D Penting</h4>
-                                <p class="text-sm md:text-lg lg:text-xl text-gray-500">Manfaat sinar matahari pagi</p>
+                                </div>
+                                <div class="p-4 md:p-6 lg:p-8">
+                                    <h4 class="font-semibold text-gray-800 mb-1 text-base md:text-xl lg:text-2xl">Vitamin D Penting</h4>
+                                    <p class="text-sm md:text-lg lg:text-xl text-gray-500">Manfaat sinar matahari pagi</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 </div>
+
 <?= $this->include('components/bottom_nav') ?>
 <?= $this->endSection() ?>
