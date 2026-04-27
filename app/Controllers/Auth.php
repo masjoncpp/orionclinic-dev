@@ -30,7 +30,7 @@ class Auth extends BaseController
         }
 
         // Simpan notifikasi sukses di session agar muncul saat dialihkan
-        return redirect()->to('/')->with('success', 'Pendaftaran berhasil. Silakan coba masuk dengan akun baru Anda!');
+        return redirect()->to('auth/login')->with('success', 'Pendaftaran berhasil. Silakan coba masuk dengan akun baru Anda!');
     }
 
     public function processLogin()
@@ -58,12 +58,12 @@ class Auth extends BaseController
             return redirect()->to('/patient');
         }
 
-        return redirect()->to('/')->with('error', 'Email atau kata sandi yang Anda masukkan salah.');
+        return redirect()->to('auth/login')->with('error', 'Email atau kata sandi yang Anda masukkan salah.');
     }
 
     public function logout()
     {
         session()->destroy();
-        return redirect()->to('/')->with('success', 'Anda telah berhasil keluar.');
+        return redirect()->to('auth/login')->with('success', 'Anda telah berhasil keluar.');
     }
 }
