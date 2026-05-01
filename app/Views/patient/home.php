@@ -157,6 +157,8 @@
 <?= $this->include('components/bottom_nav') ?>
 <?= $this->endSection() ?>
 
+<div></div>
+
 <?php
 $a;
 $b;
