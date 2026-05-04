@@ -135,15 +135,13 @@ if (window.elementSdk) {
     });
 }
 
-// Prevent form submissions
+// Highlight active nav item based on current URL
 $(document).ready(function() {
-    $('#login-form').on('submit', (e) => {
-        e.preventDefault();
-        showScreen('home-screen');
-    });
-
-    $('#register-form').on('submit', (e) => {
-        e.preventDefault();
-        showScreen('home-screen');
+    var path = window.location.pathname;
+    $('.nav-item').each(function() {
+        var onclick = $(this).attr('onclick') || '';
+        if (onclick && onclick.includes(path)) {
+            $(this).addClass('active text-blue-600').removeClass('text-gray-400');
+        }
     });
 });

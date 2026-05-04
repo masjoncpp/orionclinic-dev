@@ -4,6 +4,17 @@ use App\Models\UserModel;
 
 class Auth extends BaseController
 {
+    public function login()
+    {
+        if (session()->get('isLoggedIn')) {
+            $role = session()->get('role');
+            return ($role === 'doctor')
+                ? redirect()->to('/doctor')
+                : redirect()->to('/patient');
+        }
+        return view('auth/login', ['hide_sidebar' => true, 'title' => 'Masuk - Orion Clinic']);
+    }
+
     public function register()
     {
         return view('auth/register', ['hide_sidebar' => true, 'title' => 'Daftar Akun - Orion Clinic']);

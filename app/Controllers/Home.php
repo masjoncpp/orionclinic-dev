@@ -2,8 +2,8 @@
 
 class Home extends BaseController
 {
-    public function index(): string
+    public function index()
     {
-        return view('patient/home', ['hide_sidebar' => true, 'title' => 'Home - Orion Clinic']);
+        return redirect()->to('/patient');
     }
 }

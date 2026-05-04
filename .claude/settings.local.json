@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php spark *)",
+      "Read(//usr/bin/**)",
+      "Read(//usr/**)"
+    ]
+  }
+}
