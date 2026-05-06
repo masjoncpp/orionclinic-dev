@@ -4,6 +4,11 @@ class Home extends BaseController
 {
     public function index()
     {
-        return redirect()->to('/patient');
+        $session = session();
+        if ($session->has('user_id')) {
+            $role = $session->get('role');
+            return redirect()->to($role === 'doctor' ? '/doctor' : '/patient');
+        }
+        return view('landing');
     }
 }
