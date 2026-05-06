@@ -36,37 +36,32 @@ class Auth extends BaseController
             return view('auth/register', [
                 'hide_sidebar' => true,
                 'title'        => 'Daftar Akun - Orion Clinic',
-                'validation'   => $model->errors()
+                'validation'   => $model->errors(),
             ]);
         }
 
-        // Simpan notifikasi sukses di session agar muncul saat dialihkan
         return redirect()->to('auth/login')->with('success', 'Pendaftaran berhasil. Silakan coba masuk dengan akun baru Anda!');
     }
 
     public function processLogin()
     {
-        $model = new UserModel();
-        $email = $this->request->getPost('email');
+        $model    = new UserModel();
+        $email    = $this->request->getPost('email');
         $password = $this->request->getPost('password');
-
-        $user = $model->where('email', $email)->first();
+        $user     = $model->where('email', $email)->first();
 
         if ($user && password_verify($password, $user['password'])) {
-            $sessionData = [
+            session()->set([
                 'user_id'    => $user['id'],
                 'name'       => $user['name'],
                 'email'      => $user['email'],
                 'phone'      => $user['phone'],
                 'role'       => $user['role'],
                 'isLoggedIn' => true,
-            ];
-            session()->set($sessionData);
-            
-            if ($user['role'] == 'doctor') {
-                return redirect()->to('/doctor');
-            }
-            return redirect()->to('/patient');
+            ]);
+            return $user['role'] === 'doctor'
+                ? redirect()->to('/doctor')
+                : redirect()->to('/patient');
         }
 
         return redirect()->to('auth/login')->with('error', 'Email atau kata sandi yang Anda masukkan salah.');

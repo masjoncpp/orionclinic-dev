@@ -1,4 +1,3 @@
-<!-- Mobile Bottom Navigation -->
 <div id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-100 px-1 pt-2 pb-3 flex justify-around items-center md:hidden z-50">
     <?php if(isset($role) && $role == 'doctor'): ?>
 

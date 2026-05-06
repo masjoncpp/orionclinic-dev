@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('style.css') ?>">
 </head>
-<body class="h-full bg-gray-50">
+<body class="h-full bg-blue-50">
     <div id="app" class="h-full w-full flex overflow-hidden">
         <?php if(!isset($hide_sidebar)): ?>
             <?= $this->include('components/sidebar') ?>
