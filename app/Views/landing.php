@@ -30,12 +30,32 @@
             box-shadow: 0 20px 40px -8px rgba(37,99,235,0.15);
         }
         .sidebar-link {
-            transition: all 0.2s ease;
+            position: relative;
+            transition: color 0.2s ease;
         }
-        .sidebar-link:hover {
-            background: #eff6ff;
+        .sidebar-link::after {
+            content: "";
+            position: absolute;
+            left: 1rem;
+            right: 1rem;
+            bottom: 0.35rem;
+            height: 2px;
+            background: #2563eb;
+            border-radius: 2px;
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.25s ease;
+        }
+        .sidebar-link:hover,
+        .sidebar-link.active {
             color: #2563eb;
-            transform: translateX(4px);
+        }
+        .sidebar-link:hover::after,
+        .sidebar-link.active::after {
+            transform: scaleX(1);
+        }
+        .sidebar-link:active {
+            transform: scale(0.97);
         }
         .hero-float {
             animation: heroFloat 4s ease-in-out infinite;
@@ -68,20 +88,23 @@
         }
         html { scroll-behavior: smooth; }
 
-        /* Mobile nav toggle */
-        #mobile-menu { transition: transform 0.3s ease, opacity 0.3s ease; }
-        #mobile-menu.hidden { transform: translateX(-100%); opacity: 0; pointer-events: none; }
-        #mobile-menu.open { transform: translateX(0); opacity: 1; pointer-events: all; }
+        /* Mobile nav toggle (slide dari kanan, selaras dgn tombol hamburger) */
+        #mobile-menu .mobile-panel { transition: transform 0.3s ease; }
+        #mobile-menu.hidden .mobile-panel { transform: translateX(100%); }
+        #mobile-menu.open .mobile-panel { transform: translateX(0); }
+        #mobile-menu { transition: opacity 0.3s ease; }
+        #mobile-menu.hidden { opacity: 0; pointer-events: none; }
+        #mobile-menu.open { opacity: 1; pointer-events: all; }
     </style>
 </head>
 <body class="h-full bg-gray-50 overflow-x-hidden">
 
-<div class="flex h-full">
+<div class="h-full">
 
     <?= view('components/landing_sidebar') ?>
 
     <!-- ===== MAIN CONTENT ===== -->
-    <main class="flex-1 md:ml-72 overflow-y-auto">
+    <main class="w-full pt-16 md:pt-20 overflow-y-auto">
 
         <!-- ============ HERO SECTION ============ -->
         <section id="hero" class="gradient-hero min-h-screen flex items-center px-6 md:px-12 pt-16 md:pt-0 pb-12">
@@ -257,53 +280,10 @@
                         <div class="relative">
                             <div class="absolute -top-4 -left-4 w-24 h-24 bg-blue-100 rounded-full opacity-60"></div>
                             <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-teal-100 rounded-full opacity-50"></div>
-                            <div class="relative bg-gradient-to-br from-blue-50 to-teal-50 rounded-3xl p-8 shadow-lg">
-                                <svg viewBox="0 0 380 300" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
-                                    <!-- Hospital building -->
-                                    <rect x="80" y="80" width="220" height="180" rx="8" fill="#dbeafe"/>
-                                    <rect x="80" y="80" width="220" height="180" rx="8" stroke="#93c5fd" stroke-width="2"/>
-
-                                    <!-- Roof -->
-                                    <polygon points="190,30 310,80 70,80" fill="#2563eb" opacity="0.8"/>
-                                    <polygon points="190,30 310,80 70,80" fill="none" stroke="#1d4ed8" stroke-width="2"/>
-
-                                    <!-- Cross sign -->
-                                    <rect x="175" y="40" width="30" height="10" rx="5" fill="white"/>
-                                    <rect x="182" y="33" width="16" height="24" rx="5" fill="none"/>
-                                    <rect x="178" y="37" width="24" height="10" rx="4" fill="white"/>
-                                    <rect x="183" y="32" width="14" height="20" rx="4" fill="white"/>
-
-                                    <!-- Windows -->
-                                    <rect x="105" y="105" width="40" height="40" rx="6" fill="white" stroke="#bfdbfe" stroke-width="1.5"/>
-                                    <rect x="170" y="105" width="40" height="40" rx="6" fill="white" stroke="#bfdbfe" stroke-width="1.5"/>
-                                    <rect x="235" y="105" width="40" height="40" rx="6" fill="white" stroke="#bfdbfe" stroke-width="1.5"/>
-                                    <rect x="105" y="165" width="40" height="40" rx="6" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
-                                    <rect x="235" y="165" width="40" height="40" rx="6" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
-
-                                    <!-- Window details -->
-                                    <line x1="125" y1="105" x2="125" y2="145" stroke="#93c5fd" stroke-width="1"/>
-                                    <line x1="105" y1="125" x2="145" y2="125" stroke="#93c5fd" stroke-width="1"/>
-                                    <line x1="190" y1="105" x2="190" y2="145" stroke="#93c5fd" stroke-width="1"/>
-                                    <line x1="170" y1="125" x2="210" y2="125" stroke="#93c5fd" stroke-width="1"/>
-                                    <line x1="255" y1="105" x2="255" y2="145" stroke="#93c5fd" stroke-width="1"/>
-                                    <line x1="235" y1="125" x2="275" y2="125" stroke="#93c5fd" stroke-width="1"/>
-
-                                    <!-- Door -->
-                                    <rect x="165" y="195" width="50" height="65" rx="25" fill="white" stroke="#93c5fd" stroke-width="2"/>
-                                    <circle cx="208" cy="228" r="3" fill="#60a5fa"/>
-
-                                    <!-- Ground -->
-                                    <rect x="30" y="255" width="320" height="12" rx="6" fill="#bfdbfe"/>
-
-                                    <!-- Trees -->
-                                    <rect x="45" y="220" width="8" height="35" rx="4" fill="#86efac"/>
-                                    <ellipse cx="49" cy="210" rx="20" ry="22" fill="#4ade80"/>
-                                    <rect x="320" y="215" width="8" height="40" rx="4" fill="#86efac"/>
-                                    <ellipse cx="324" cy="203" rx="22" ry="24" fill="#4ade80"/>
-
-                                    <!-- Orion Clinic text on building -->
-                                    <text x="190" y="75" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="Plus Jakarta Sans">ORION CLINIC</text>
-                                </svg>
+                            <div class="relative bg-gradient-to-br from-blue-50 to-teal-50 rounded-3xl p-12 shadow-lg flex items-center justify-center">
+                                <img src="<?= base_url('assets/img/logoorion.png') ?>"
+                                     alt="Orion Clinic"
+                                     class="w-full max-w-sm object-contain drop-shadow-xl hero-float">
                             </div>
                         </div>
                     </div>
