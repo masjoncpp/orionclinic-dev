@@ -3,10 +3,10 @@
 
 <!-- ===== DESKTOP TOP NAVBAR ===== -->
 <header class="hidden md:block fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
-    <div class="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-7 h-16 flex items-center justify-between">
 
         <!-- Nav Links -->
-        <nav class="flex items-center gap-1">
+        <nav class="flex items-center gap-2">
             <a href="#hero"       class="sidebar-link px-4 py-2 text-gray-600 font-medium text-sm">Beranda</a>
             <a href="#tentang"    class="sidebar-link px-4 py-2 text-gray-600 font-medium text-sm">Tentang Kami</a>
             <a href="#layanan"    class="sidebar-link px-4 py-2 text-gray-600 font-medium text-sm">Layanan</a>

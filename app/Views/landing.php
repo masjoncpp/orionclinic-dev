@@ -99,12 +99,12 @@
 </head>
 <body class="h-full bg-gray-50 overflow-x-hidden">
 
-<div class="h-full">
+<div class="h-full flex flex-col">
 
     <?= view('components/landing_sidebar') ?>
 
     <!-- ===== MAIN CONTENT ===== -->
-    <main class="w-full pt-16 md:pt-20 overflow-y-auto">
+    <main class="flex-grow">
 
         <!-- ============ HERO SECTION ============ -->
         <section id="hero" class="gradient-hero min-h-screen flex items-center px-6 md:px-12 pt-16 md:pt-0 pb-12">
