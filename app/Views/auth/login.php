@@ -1,6 +1,6 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
-<div id="login-screen" class="flex flex-col h-full bg-white md:absolute md:inset-0 md:z-50 md:flex-row">
+<div id="login-screen" class="flex flex-col h-full bg-white md:inset-0 md:z-50 md:flex-row">
             <!-- Desktop Banner -->
             <div class="hidden md:flex md:w-1/2 bg-gradient-to-br from-blue-600 to-blue-800 items-center justify-center p-12 text-white text-center relative overflow-">
                 <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
