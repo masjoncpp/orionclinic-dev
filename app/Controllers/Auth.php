@@ -1,4 +1,6 @@
-<?php namespace App\Controllers;
+<?php
+
+namespace App\Controllers;
 
 use App\Models\UserModel;
 
@@ -17,6 +19,14 @@ class Auth extends BaseController
 
     public function register()
     {
+        if (session()->get('isLoggedIn')) {
+            $role = session()->get('role');
+
+            return $role === 'doctor'
+                ? redirect()->to('/doctor')
+                : redirect()->to('/patient');
+        }
+
         return view('auth/register', ['hide_sidebar' => true, 'title' => 'Daftar Akun - Orion Clinic']);
     }
 
@@ -51,6 +61,8 @@ class Auth extends BaseController
         $user     = $model->where('email', $email)->first();
 
         if ($user && password_verify($password, $user['password'])) {
+            session()->regenerate();
+
             session()->set([
                 'user_id'    => $user['id'],
                 'name'       => $user['name'],
@@ -70,6 +82,9 @@ class Auth extends BaseController
     public function logout()
     {
         session()->destroy();
+
+        session()->regenerateToken();
+
         return redirect()->to('auth/login')->with('success', 'Anda telah berhasil keluar.');
     }
 }

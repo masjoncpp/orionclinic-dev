@@ -14,16 +14,20 @@ $routes->get('logout', 'Auth::logout');
 $routes->get('register', 'Auth::register');
 $routes->post('register', 'Auth::processRegister');
 
-$routes->get('patient', 'Patient::index');
-$routes->get('patient/consultation', 'Patient::consultation');
-$routes->get('patient/prescription', 'Patient::prescription');
-$routes->get('patient/history', 'Patient::history');
-$routes->get('patient/profile', 'Patient::profile');
-$routes->get('patient/chat', 'Patient::chat');
-$routes->get('patient/wellness', 'Patient::wellness');
+$routes->group('patient', ['filter' => ['auth', 'role:patient']], static function ($routes) {
+    $routes->get('/', 'Patient::index');
+    $routes->get('consultation', 'Patient::consultation');
+    $routes->get('prescription', 'Patient::prescription');
+    $routes->get('history', 'Patient::history');
+    $routes->get('profile', 'Patient::profile');
+    $routes->get('chat', 'Patient::chat');
+    $routes->get('wellness', 'Patient::wellness');
+});
 
-$routes->get('doctor', 'Doctor::index');
-$routes->get('doctor/consultation', 'Doctor::consultation');
-$routes->get('doctor/patients', 'Doctor::patients');
-$routes->get('doctor/profile', 'Doctor::profile');
-$routes->get('doctor/chat', 'Doctor::chat');
+$routes->group('doctor', ['filter' => ['auth', 'role:doctor']], static function ($routes) {
+    $routes->get('/', 'Doctor::index');
+    $routes->get('consultation', 'Doctor::consultation');
+    $routes->get('patients', 'Doctor::patients');
+    $routes->get('profile', 'Doctor::profile');
+    $routes->get('chat', 'Doctor::chat');
+});

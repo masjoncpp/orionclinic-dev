@@ -1,15 +1,18 @@
-<?php namespace App\Filters;
+<?php
 
+namespace App\Filters;
+
+use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use CodeIgniter\Filters\FilterInterface;
 
 class AuthFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
         if (! session()->get('isLoggedIn')) {
-            return redirect()->to('/')->with('error', 'Silakan masuk (Login) terlebih dahulu untuk mengakses fitur layanan klinik.');
+            return redirect()->to('/auth/login')
+                ->with('error', 'Silakan masuk terlebih dahulu untuk mengakses fitur layanan klinik.');
         }
     }
 
