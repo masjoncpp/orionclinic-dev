@@ -1,0 +1,164 @@
+@startuml
+!define table(x) class x << (T,#FFAAAA) >>
+!define primary_key(x) <u>x</u>
+!define foreign_key(x) <i>x</i>
+
+hide methods
+hide stereotypes
+
+skinparam class {
+    BackgroundColor White
+    ArrowColor #2688d4
+    BorderColor #2688d4
+}
+
+table(users) {
+  primary_key(id) : INT
+  --
+  name : VARCHAR
+  email : VARCHAR
+  password : VARCHAR
+  role : VARCHAR
+  phone : VARCHAR
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+table(patients) {
+  primary_key(id) : INT
+  --
+  foreign_key(user_id) : INT
+  date_of_birth : DATE
+  gender : ENUM
+  address : TEXT
+  allergies : TEXT
+  pre_existing_conditions : TEXT
+  emergency_contact : VARCHAR
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+table(doctors) {
+  primary_key(id) : INT
+  --
+  foreign_key(user_id) : INT
+  specialization : VARCHAR
+  experience_years : INT
+  str_number : VARCHAR
+  sip_number : VARCHAR
+  consultation_fee : DECIMAL
+  is_verified : BOOLEAN
+  status : ENUM
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+table(appointments) {
+  primary_key(id) : INT
+  --
+  foreign_key(patient_id) : INT
+  foreign_key(doctor_id) : INT
+  appointment_date : DATE
+  time_slot : TIME
+  reason : TEXT
+  queue_number : INT
+  status : ENUM
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+table(consultations) {
+  primary_key(id) : INT
+  --
+  foreign_key(appointment_id) : INT
+  doctor_notes : TEXT
+  diagnosis : TEXT
+  status : ENUM
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+table(messages) {
+  primary_key(id) : INT
+  --
+  foreign_key(consultation_id) : INT
+  foreign_key(sender_id) : INT
+  message : TEXT
+  attachment_path : VARCHAR
+  is_read : BOOLEAN
+  created_at : DATETIME
+}
+
+table(prescriptions) {
+  primary_key(id) : INT
+  --
+  foreign_key(consultation_id) : INT
+  status : ENUM
+  notes : TEXT
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+table(prescription_items) {
+  primary_key(id) : INT
+  --
+  foreign_key(prescription_id) : INT
+  medicine_name : VARCHAR
+  dosage : VARCHAR
+  frequency : VARCHAR
+  duration : VARCHAR
+  quantity : INT
+}
+
+table(medical_records) {
+  primary_key(id) : INT
+  --
+  foreign_key(patient_id) : INT
+  foreign_key(consultation_id) : INT
+  blood_pressure : VARCHAR
+  weight : DECIMAL
+  height : DECIMAL
+  summary : TEXT
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+table(payments) {
+  primary_key(id) : INT
+  --
+  foreign_key(appointment_id) : INT
+  amount : DECIMAL
+  payment_method : VARCHAR
+  status : ENUM
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+table(notifications) {
+  primary_key(id) : INT
+  --
+  foreign_key(user_id) : INT
+  title : VARCHAR
+  message : TEXT
+  is_read : BOOLEAN
+  created_at : DATETIME
+}
+
+' Relasi One-to-One
+users "1" -- "1" patients
+users "1" -- "1" doctors
+appointments "1" -- "1" consultations
+appointments "1" -- "1" payments
+consultations "1" -- "1" prescriptions
+
+' Relasi One-to-Many
+patients "1" -- "many" appointments
+doctors "1" -- "many" appointments
+consultations "1" -- "many" messages
+users "1" -- "many" messages : "sender_id"
+prescriptions "1" -- "many" prescription_items
+patients "1" -- "many" medical_records
+consultations "1" -- "0..1" medical_records : "opsional"
+users "1" -- "many" notifications
+
+@enduml
