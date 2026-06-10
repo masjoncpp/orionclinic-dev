@@ -9,8 +9,11 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 
 $routes->get('auth/login', 'Auth::login');
+$routes->post('auth/login', 'Auth::processLogin');
 $routes->post('processLogin', 'Auth::processLogin');
 $routes->get('logout', 'Auth::logout');
+$routes->get('auth/register', 'Auth::register');
+$routes->post('auth/register', 'Auth::processRegister');
 $routes->get('register', 'Auth::register');
 $routes->post('register', 'Auth::processRegister');
 

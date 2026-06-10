@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use Throwable;
 
 class Auth extends BaseController
 {
@@ -35,30 +36,57 @@ class Auth extends BaseController
         $model = new UserModel();
 
         $data = [
-            'name'     => $this->request->getPost('name'),
-            'email'    => $this->request->getPost('email'),
-            'phone'    => $this->request->getPost('phone'),
-            'password' => $this->request->getPost('password'),
+            'name'     => trim((string) $this->request->getPost('name')),
+            'email'    => trim((string) $this->request->getPost('email')),
+            'phone'    => trim((string) $this->request->getPost('phone')),
+            'password' => (string) $this->request->getPost('password'),
             'role'     => 'patient',
         ];
 
-        if (!$model->save($data)) {
-            return view('auth/register', [
-                'hide_sidebar' => true,
-                'title'        => 'Daftar Akun - Orion Clinic',
-                'validation'   => $model->errors(),
+        try {
+            $saved = $model->save($data);
+        } catch (Throwable $exception) {
+            log_message('error', 'Register failed because the user store is unavailable: {message}', [
+                'message' => $exception->getMessage(),
             ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Pendaftaran belum dapat diproses karena koneksi database belum tersedia.');
         }
 
-        return redirect()->to('auth/login')->with('success', 'Pendaftaran berhasil. Silakan coba masuk dengan akun baru Anda!');
+        if (! $saved) {
+            return redirect()->back()
+                ->withInput()
+                ->with('errors', $model->errors());
+        }
+
+        return redirect()->to('/auth/login')->with('success', 'Pendaftaran Akun berhasil. Silahkan masuk dengan akun baru Anda!');
     }
 
     public function processLogin()
     {
-        $model    = new UserModel();
-        $email    = $this->request->getPost('email');
-        $password = $this->request->getPost('password');
-        $user     = $model->where('email', $email)->first();
+        $email    = trim((string) $this->request->getPost('email'));
+        $password = (string) $this->request->getPost('password');
+
+        if ($email === '' || $password === '') {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Email dan kata sandi wajib diisi.');
+        }
+
+        $model = new UserModel();
+        try {
+            $user = $model->where('email', $email)->first();
+        } catch (Throwable $exception) {
+            log_message('error', 'Login failed because the user store is unavailable: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Login belum dapat diproses karena koneksi database belum tersedia.');
+        }
 
         if ($user && password_verify($password, $user['password'])) {
             session()->regenerate();
@@ -71,12 +99,15 @@ class Auth extends BaseController
                 'role'       => $user['role'],
                 'isLoggedIn' => true,
             ]);
+
             return $user['role'] === 'doctor'
                 ? redirect()->to('/doctor')
                 : redirect()->to('/patient');
         }
 
-        return redirect()->to('auth/login')->with('error', 'Email atau kata sandi yang Anda masukkan salah.');
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Email atau kata sandi yang Anda masukkan salah!');
     }
 
     public function logout()
@@ -85,6 +116,6 @@ class Auth extends BaseController
 
         session()->regenerateToken();
 
-        return redirect()->to('auth/login')->with('success', 'Anda telah berhasil keluar.');
+        return redirect()->to('/auth/login')->with('success', 'Anda berhasil logout!');
     }
 }

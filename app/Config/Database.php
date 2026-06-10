@@ -194,11 +194,62 @@ class Database extends Config
     {
         parent::__construct();
 
+        $this->applyLocalSqliteFallback();
+
         // Ensure that we always set the database group to 'tests' if
         // we are currently running an automated test suite, so that
         // we don't overwrite live data on accident.
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }
+    }
+
+    private function applyLocalSqliteFallback(): void
+    {
+        if (ENVIRONMENT === 'testing') {
+            return;
+        }
+
+        $hasConfiguredDefault = $this->default['database'] !== ''
+            || $this->default['username'] !== ''
+            || $this->default['password'] !== '';
+
+        if ($hasConfiguredDefault) {
+            return;
+        }
+
+        $sqlitePath = WRITEPATH . 'database.db';
+
+        if (! is_file($sqlitePath)) {
+            return;
+        }
+
+        $this->default = [
+            'DSN'         => '',
+            'hostname'    => '',
+            'username'    => '',
+            'password'    => '',
+            'database'    => $sqlitePath,
+            'DBDriver'    => 'SQLite3',
+            'DBPrefix'    => '',
+            'pConnect'    => false,
+            'DBDebug'     => true,
+            'charset'     => 'utf8',
+            'DBCollat'    => '',
+            'swapPre'     => '',
+            'encrypt'     => false,
+            'compress'    => false,
+            'strictOn'    => false,
+            'failover'    => [],
+            'port'        => 3306,
+            'foreignKeys' => true,
+            'busyTimeout' => 1000,
+            'synchronous' => null,
+            'dateFormat'  => [
+                'date'     => 'Y-m-d',
+                'datetime' => 'Y-m-d H:i:s',
+                'time'     => 'H:i:s',
+            ],
+        ];
     }
 }

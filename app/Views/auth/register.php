@@ -11,7 +11,7 @@
                     <p class="text-xl text-blue-100/90 leading-relaxed">Bergabunglah dengan ribuan<br>pengguna lainnya.</p>
                 </div>
             </div>
-            <div class="flex-1 overflow-auto px-6 pt-8 pb-6"><button onclick="window.location.href='<?= base_url() ?>'"
+            <div class="flex-1 overflow-auto px-6 pt-8 pb-6"><button type="button" onclick="window.location.href='<?= site_url('auth/login') ?>'"
                     class="mb-6 p-2 -ml-2 rounded-full hover:bg-gray-100 transition-all">
                     <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -20,10 +20,16 @@
                     <h1 class="text-2xl font-bold text-gray-800">Buat Akun Baru</h1>
                     <p class="text-gray-500 text-sm mt-1">Daftar untuk mulai menggunakan Orion Clinic</p>
                 </div>
-                <form action="<?= base_url('register') ?>" method="post" class="space-y-4">
-                    <?php if (isset($validation)): ?>
+                <form action="<?= site_url('auth/register') ?>" method="post" class="space-y-4">
+                    <?php if (session()->getFlashdata('error')): ?>
                         <div class="bg-red-50 text-red-600 p-4 rounded-xl mb-4 text-sm">
-                            <?= implode('<br>', $validation) ?>
+                            <?= session()->getFlashdata('error') ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php $errors = session('errors'); ?>
+                    <?php if (! empty($errors)): ?>
+                        <div class="bg-red-50 text-red-600 p-4 rounded-xl mb-4 text-sm">
+                            <?= implode('<br>', $errors) ?>
                         </div>
                     <?php endif; ?>
                     <?= csrf_field() ?>
@@ -34,7 +40,7 @@
                                 fill="none" stroke="currentColor" viewbox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg><input type="text" id="fullname-input" name="name" required placeholder="Nama lengkap Anda"
+                            </svg><input type="text" id="fullname-input" name="name" value="<?= old('name') ?>" required placeholder="Nama lengkap Anda"
                                 class="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl text-gray-800 bg-gray-50 focus:bg-white transition-all">
                         </div>
                     </div>
@@ -44,7 +50,7 @@
                                 fill="none" stroke="currentColor" viewbox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                            </svg><input type="email" id="reg-email-input" name="email" required placeholder="nama@email.com"
+                            </svg><input type="email" id="reg-email-input" name="email" value="<?= old('email') ?>" required placeholder="nama@email.com"
                                 class="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl text-gray-800 bg-gray-50 focus:bg-white transition-all">
                         </div>
                     </div>
@@ -55,7 +61,7 @@
                                 fill="none" stroke="currentColor" viewbox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                            </svg><input type="tel" id="phone-input" name="phone" placeholder="08xxxxxxxxxx"
+                            </svg><input type="tel" id="phone-input" name="phone" value="<?= old('phone') ?>" required placeholder="08xxxxxxxxxx"
                                 class="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl text-gray-800 bg-gray-50 focus:bg-white transition-all">
                         </div>
                     </div>
@@ -70,7 +76,7 @@
                                 class="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl text-gray-800 bg-gray-50 focus:bg-white transition-all">
                         </div>
                     </div>
-                    <div class="flex items-start pt-2"><input type="checkbox" id="terms-checkbox"
+                    <div class="flex items-start pt-2"><input type="checkbox" id="terms-checkbox" required
                             class="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"> <label
                             for="terms-checkbox" class="ml-3 text-sm text-gray-600"> Saya menyetujui <span
                                 class="text-blue-600 font-medium">Syarat &amp; Ketentuan</span> serta <span
@@ -80,7 +86,7 @@
                         Sekarang </button>
                 </form>
                 <p class="text-center mt-6 text-gray-600">Sudah punya akun? <button type="button"
-                        onclick="window.location.href='<?= base_url() ?>'"
+                        onclick="window.location.href='<?= site_url('auth/login') ?>'"
                         class="text-blue-600 font-semibold hover:text-blue-700">Masuk</button></p>
             </div>
         </div>
