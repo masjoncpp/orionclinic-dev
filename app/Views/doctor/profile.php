@@ -45,6 +45,19 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- Logout Button -->
+                    <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+                        <button onclick="window.location.href='<?= base_url('logout') ?>'"
+                            class="w-full flex items-center p-4 hover:bg-red-50 transition-all">
+                            <div class="w-9 h-9 bg-red-50 rounded-xl flex items-center justify-center mr-3 flex-shrink-0">
+                                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                </svg>
+                            </div>
+                            <span class="flex-1 text-left font-semibold text-red-500 text-sm">Keluar dari Akun</span>
+                        </button>
+                    </div>
                 </div>
             </div>
             
