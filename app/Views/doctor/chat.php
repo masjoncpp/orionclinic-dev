@@ -9,11 +9,11 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
-                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                         <img src="<?= base_url('assets/profile.png') ?>"  alt="Patient" class="w-10 h-10 rounded-full object-cover">
+                    <div class="w-10 h-10 <?= $appointment['gender'] == 'female' ? 'bg-pink-100 text-pink-600' : 'bg-blue-100 text-blue-600' ?> rounded-full flex items-center justify-center mr-3 font-bold">
+                         <?= substr($appointment['patient_name'], 0, 1) ?>
                     </div>
                     <div>
-                        <h4 class="font-semibold text-gray-800 text-sm">Budi Santoso</h4>
+                        <h4 class="font-semibold text-gray-800 text-sm"><?= esc($appointment['patient_name']) ?></h4>
                         <div class="flex items-center">
                             <span class="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
                             <span class="text-xs text-green-600">Online</span>
@@ -21,30 +21,41 @@
                     </div>
                 </div>
                 <div class="flex space-x-2">
-                    <button class="p-2 bg-blue-50 rounded-full hover:bg-blue-100 transition-all text-blue-600 font-semibold text-xs px-4">Resep Obat</button>
+                    <button class="p-2 bg-blue-50 rounded-full hover:bg-blue-100 transition-all text-blue-600 font-semibold text-xs px-4">Buat Resep</button>
                 </div>
             </div>
             
             <!-- Chat Messages -->
             <div class="flex-1 overflow-auto p-4 space-y-4 pb-20">
-                <div class="flex justify-start">
-                    <div class="bg-white rounded-2xl rounded-tl-none p-4 max-w-[80%] shadow-sm">
-                        <p class="text-gray-800 text-sm">Selamat siang Dok. Saya mengalami demam dan sakit kepala sejak kemarin.</p>
-                        <span class="text-xs text-gray-400 mt-2 block">14:02</span>
-                    </div>
+                <div class="flex justify-center">
+                    <span class="text-xs text-gray-400 bg-white px-4 py-1.5 rounded-full shadow-sm border border-gray-100">Konsultasi dimulai • <?= date('d M Y, H:i', strtotime($appointment['appointment_date'] . ' ' . $appointment['time_slot'])) ?></span>
                 </div>
-                <div class="flex justify-end">
-                    <div class="bg-blue-600 rounded-2xl rounded-tr-none p-4 max-w-[80%]">
-                        <p class="text-white text-sm">Baik, bisa ceritakan lebih detail? Berapa suhu tubuh Anda dan apakah ada gejala lain seperti batuk atau pilek?</p>
-                        <span class="text-xs text-blue-200 mt-2 block">14:03</span>
+
+                <?php if (empty($messages)): ?>
+                    <div class="text-center py-10">
+                        <p class="text-xs text-gray-400">Belum ada pesan dari pasien.</p>
                     </div>
-                </div>
-                <div class="flex justify-start">
-                    <div class="bg-white rounded-2xl rounded-tl-none p-4 max-w-[80%] shadow-sm">
-                        <p class="text-gray-800 text-sm">Suhu 38.5°C Dok. Ada sedikit pilek tapi tidak batuk.</p>
-                        <span class="text-xs text-gray-400 mt-2 block">14:05</span>
-                    </div>
-                </div>
+                <?php else: ?>
+                    <?php foreach ($messages as $msg): ?>
+                        <?php if ($msg['sender_id'] == session()->get('user_id')): ?>
+                            <!-- Doctor message (Current User) -->
+                            <div class="flex justify-end">
+                                <div class="bg-blue-600 rounded-2xl rounded-tr-none p-4 max-w-[80%] shadow-sm">
+                                    <p class="text-white text-sm"><?= esc($msg['message']) ?></p>
+                                    <span class="text-xs text-blue-200 mt-2 block"><?= date('H:i', strtotime($msg['created_at'])) ?></span>
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <!-- Patient message -->
+                            <div class="flex justify-start">
+                                <div class="bg-white rounded-2xl rounded-tl-none p-4 max-w-[80%] shadow-sm border border-gray-100">
+                                    <p class="text-gray-800 text-sm"><?= esc($msg['message']) ?></p>
+                                    <span class="text-xs text-gray-400 mt-2 block"><?= date('H:i', strtotime($msg['created_at'])) ?></span>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
             
             <!-- Chat Input -->

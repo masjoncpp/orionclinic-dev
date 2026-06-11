@@ -18,26 +18,34 @@
                     </div>
                 </div>
                 <div class="px-6 py-6 space-y-4">
-                     <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between card-hover">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4 text-blue-600 font-bold">BS</div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">Budi Santoso</h4>
-                                <p class="text-sm text-gray-500 mt-1">Laki-laki, 34 Tahun</p>
-                                <p class="text-xs text-blue-500 mt-1 font-medium cursor-pointer hover:underline">Lihat Riwayat Medis</p>
-                            </div>
+                    <?php if (empty($patients)): ?>
+                        <div class="bg-white rounded-2xl p-8 text-center border border-dashed border-gray-300">
+                            <p class="text-gray-400">Belum ada data pasien.</p>
                         </div>
-                    </div>
-                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between card-hover">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mr-4 text-pink-600 font-bold">AS</div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">Ani Susanti</h4>
-                                <p class="text-sm text-gray-500 mt-1">Perempuan, 28 Tahun</p>
-                                <p class="text-xs text-blue-500 mt-1 font-medium cursor-pointer hover:underline">Lihat Riwayat Medis</p>
+                    <?php else: ?>
+                        <?php foreach ($patients as $p): ?>
+                            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between card-hover">
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 <?= $p['gender'] == 'female' ? 'bg-pink-100 text-pink-600' : 'bg-blue-100 text-blue-600' ?> rounded-full flex items-center justify-center mr-4 font-bold">
+                                        <?php 
+                                            $pName = $p['name'] ?? 'Patient';
+                                            $pInitials = substr($pName, 0, 1);
+                                            $pLastSpace = strrpos($pName, ' ');
+                                            if ($pLastSpace !== false) {
+                                                $pInitials .= substr($pName, $pLastSpace + 1, 1);
+                                            }
+                                            echo esc(strtoupper($pInitials));
+                                        ?>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800"><?= esc($p['name']) ?></h4>
+                                        <p class="text-sm text-gray-500 mt-1"><?= $p['gender'] == 'female' ? 'Perempuan' : 'Laki-laki' ?>, <?= $p['date_of_birth'] ? date_diff(date_create($p['date_of_birth']), date_create('today'))->y : '?' ?> Tahun</p>
+                                        <p class="text-xs text-blue-500 mt-1 font-medium cursor-pointer hover:underline">Lihat Riwayat Medis</p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </div>
             

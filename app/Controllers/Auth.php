@@ -61,6 +61,14 @@ class Auth extends BaseController
                 ->with('errors', $model->errors());
         }
 
+        // Create Patient Profile
+        $userId = $model->getInsertID();
+        $patientModel = new \App\Models\PatientModel();
+        $patientModel->save([
+            'user_id' => $userId,
+            'gender'  => 'male', // default
+        ]);
+
         return redirect()->to('/auth/login')->with('success', 'Pendaftaran Akun berhasil. Silahkan masuk dengan akun baru Anda!');
     }
 

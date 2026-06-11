@@ -30,66 +30,35 @@
             <div class="relative">
                 <div class="absolute left-5 top-0 bottom-0 w-0.5 bg-gray-200"></div>
 
-                <!-- Item 1 -->
-                <div class="relative pl-12 pb-6">
-                    <div class="absolute left-3.5 w-4 h-4 bg-blue-600 rounded-full border-2 border-white shadow-md"></div>
-                    <div class="bg-white rounded-2xl p-4 shadow-sm card-hover cursor-pointer">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">Konsultasi</span>
-                            <span class="text-xs text-gray-400">15 Jan 2025</span>
-                        </div>
-                        <h4 class="font-bold text-gray-800 text-sm">Dr. Sarah Wijaya</h4>
-                        <p class="text-xs text-gray-500 mt-1">Demam & Sakit Kepala</p>
-                        <p class="text-xs text-gray-400 mt-1">Diagnosis: Common Cold</p>
-                        <button class="mt-3 text-xs text-blue-600 font-semibold hover:text-blue-700">Lihat Detail →</button>
+                <?php if (empty($history)): ?>
+                    <div class="bg-white rounded-2xl p-10 text-center border border-dashed border-gray-300 ml-12">
+                        <p class="text-gray-400">Belum ada riwayat kesehatan.</p>
                     </div>
-                </div>
-
-                <!-- Item 2 -->
-                <div class="relative pl-12 pb-6">
-                    <div class="absolute left-3.5 w-4 h-4 bg-teal-600 rounded-full border-2 border-white shadow-md"></div>
-                    <div class="bg-white rounded-2xl p-4 shadow-sm card-hover cursor-pointer">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-teal-600 bg-teal-50 px-2.5 py-1 rounded-full">Resep Obat</span>
-                            <span class="text-xs text-gray-400">15 Jan 2025</span>
+                <?php else: ?>
+                    <?php foreach ($history as $h): ?>
+                        <!-- History Item -->
+                        <div class="relative pl-12 pb-6">
+                            <?php 
+                                $colorClass = 'bg-blue-600';
+                                if ($h['status'] == 'cancelled') $colorClass = 'bg-red-600';
+                                if ($h['status'] == 'completed') $colorClass = 'bg-green-600';
+                            ?>
+                            <div class="absolute left-3.5 w-4 h-4 <?= $colorClass ?> rounded-full border-2 border-white shadow-md"></div>
+                            <div class="bg-white rounded-2xl p-4 shadow-sm card-hover cursor-pointer">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-bold <?= str_replace('bg-', 'text-', $colorClass) ?> <?= str_replace('bg-', 'bg-', $colorClass) ?>/10 px-2.5 py-1 rounded-full capitalize"><?= $h['status'] ?></span>
+                                    <span class="text-xs text-gray-400"><?= date('d M Y', strtotime($h['appointment_date'])) ?></span>
+                                </div>
+                                <h4 class="font-bold text-gray-800 text-sm"><?= esc($h['doctor_name']) ?></h4>
+                                <p class="text-xs text-gray-500 mt-1"><?= esc($h['reason']) ?></p>
+                                <?php if ($h['diagnosis']): ?>
+                                    <p class="text-xs text-gray-400 mt-1">Diagnosis: <?= esc($h['diagnosis']) ?></p>
+                                <?php endif; ?>
+                                <button class="mt-3 text-xs text-blue-600 font-semibold hover:text-blue-700">Lihat Detail →</button>
+                            </div>
                         </div>
-                        <h4 class="font-bold text-gray-800 text-sm">2 Jenis Obat</h4>
-                        <p class="text-xs text-gray-500 mt-1">Paracetamol, Vitamin C</p>
-                        <div class="flex items-center justify-between mt-2">
-                            <p class="text-xs text-gray-400">Status: Selesai</p>
-                            <span class="text-xs text-green-600 font-semibold bg-green-50 px-2 py-0.5 rounded-full">Selesai</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Item 3 -->
-                <div class="relative pl-12 pb-6">
-                    <div class="absolute left-3.5 w-4 h-4 bg-purple-600 rounded-full border-2 border-white shadow-md"></div>
-                    <div class="bg-white rounded-2xl p-4 shadow-sm card-hover cursor-pointer">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full">Konsultasi</span>
-                            <span class="text-xs text-gray-400">10 Jan 2025</span>
-                        </div>
-                        <h4 class="font-bold text-gray-800 text-sm">Dr. Andi Pratama, Sp.A</h4>
-                        <p class="text-xs text-gray-500 mt-1">Konsultasi Tumbuh Kembang Anak</p>
-                        <p class="text-xs text-gray-400 mt-1">Pasien: Anisa Santoso</p>
-                        <button class="mt-3 text-xs text-blue-600 font-semibold hover:text-blue-700">Lihat Detail →</button>
-                    </div>
-                </div>
-
-                <!-- Item 4 -->
-                <div class="relative pl-12">
-                    <div class="absolute left-3.5 w-4 h-4 bg-green-600 rounded-full border-2 border-white shadow-md"></div>
-                    <div class="bg-white rounded-2xl p-4 shadow-sm card-hover cursor-pointer">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">Medical Check Up</span>
-                            <span class="text-xs text-gray-400">5 Jan 2025</span>
-                        </div>
-                        <h4 class="font-bold text-gray-800 text-sm">Check Up Tahunan</h4>
-                        <p class="text-xs text-gray-500 mt-1">Hasil: Normal</p>
-                        <button class="mt-3 text-xs text-blue-600 font-semibold hover:text-blue-700">Lihat Hasil Lengkap →</button>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
             </div>
         </div>

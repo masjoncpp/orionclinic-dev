@@ -7,11 +7,19 @@
                     <div class="flex items-center justify-between mb-6">
                         <div class="flex items-center">
                             <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-3 border-2 border-white/20 text-white font-bold text-xl">
-                                DW
+                                <?php 
+                                    $name = session()->get('name') ?? 'Doctor';
+                                    $initials = substr($name, 0, 1);
+                                    $lastSpace = strrpos($name, ' ');
+                                    if ($lastSpace !== false) {
+                                        $initials .= substr($name, $lastSpace + 1, 1);
+                                    }
+                                    echo esc(strtoupper($initials));
+                                ?>
                             </div>
                             <div>
                                 <p class="text-white/80 text-sm">Selamat Bertugas 👋</p>
-                                <h2 class="text-white font-bold text-lg">Dr. Sarah Wijaya</h2>
+                                <h2 class="text-white font-bold text-lg"><?= session()->get('name') ?></h2>
                             </div>
                         </div>
                         <button class="relative p-2 bg-white/10 rounded-full hover:bg-white/20 transition-all">
@@ -33,7 +41,7 @@
                                 </div>
                                 <span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full font-semibold">Hari Ini</span>
                             </div>
-                            <p class="text-2xl font-bold text-gray-800">12</p>
+                            <p class="text-2xl font-bold text-gray-800"><?= $stats['total_today'] ?></p>
                             <p class="text-sm text-gray-500 font-medium">Total Pasien</p>
                         </div>
                         <div class="bg-white rounded-2xl p-4 shadow-lg card-hover border-b-4 border-yellow-500">
@@ -42,7 +50,7 @@
                                     <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 </div>
                             </div>
-                            <p class="text-2xl font-bold text-gray-800">3</p>
+                            <p class="text-2xl font-bold text-gray-800"><?= $stats['waiting'] ?></p>
                             <p class="text-sm text-gray-500 font-medium">Menunggu</p>
                         </div>
                          <div class="bg-white rounded-2xl p-4 shadow-lg card-hover border-b-4 border-green-500">
@@ -51,7 +59,7 @@
                                     <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 </div>
                             </div>
-                            <p class="text-2xl font-bold text-gray-800">9</p>
+                            <p class="text-2xl font-bold text-gray-800"><?= $stats['completed'] ?></p>
                             <p class="text-sm text-gray-500 font-medium">Selesai</p>
                         </div>
                         <div class="bg-white rounded-2xl p-4 shadow-lg card-hover border-b-4 border-purple-500">
@@ -60,8 +68,8 @@
                                     <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 </div>
                             </div>
-                            <p class="text-2xl font-bold text-gray-800">Rp 1.5M</p>
-                            <p class="text-sm text-gray-500 font-medium">Pendapatan</p>
+                            <p class="text-2xl font-bold text-gray-800">Rp <?= number_format($doctor['consultation_fee'] * $stats['completed'] / 1000, 1) ?>K</p>
+                            <p class="text-sm text-gray-500 font-medium">Pendapatan Est.</p>
                         </div>
                     </div>
                 </div>
@@ -73,36 +81,29 @@
                         <button onclick="window.location.href='<?= base_url('doctor/consultation') ?>'" class="text-sm text-blue-600 font-medium hover:underline">Lihat Semua</button>
                     </div>
                     <div class="space-y-4">
-                        <!-- Patient 1 (Waiting) -->
-                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between card-hover">
-                            <div class="flex items-center">
-                                <img src="<?= base_url('assets/profile.png') ?>"  alt="Patient" class="w-12 h-12 rounded-full mr-4 object-cover border border-gray-200">
-                                <div class="flex-1">
-                                    <h4 class="font-semibold text-gray-800">Budi Santoso</h4>
-                                    <p class="text-xs text-gray-500 mt-1">Keluhan: Demam, Sakit Kepala</p>
+                        <?php if (empty($upcoming)): ?>
+                            <div class="bg-white rounded-2xl p-8 text-center border border-dashed border-gray-300">
+                                <p class="text-gray-400">Tidak ada jadwal konsultasi hari ini.</p>
+                            </div>
+                        <?php else: ?>
+                            <?php foreach ($upcoming as $apt): ?>
+                                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between card-hover">
+                                    <div class="flex items-center">
+                                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4 text-blue-600 font-bold">
+                                            <?= substr($apt['patient_name'], 0, 1) ?>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-semibold text-gray-800"><?= esc($apt['patient_name']) ?></h4>
+                                            <p class="text-xs text-gray-500 mt-1">Keluhan: <?= esc($apt['reason']) ?></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col items-end">
+                                        <span class="bg-yellow-100 text-yellow-700 text-xs px-3 py-1 rounded-full font-medium mb-2"><?= date('H:i', strtotime($apt['time_slot'])) ?> WIB</span>
+                                        <button onclick="window.location.href='<?= base_url('doctor/chat?id=' . $apt['id']) ?>'" class="bg-blue-600 text-white text-sm px-4 py-1.5 rounded-lg font-medium hover:bg-blue-700 transition">Mulai</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="flex flex-col items-end">
-                                <span class="bg-yellow-100 text-yellow-700 text-xs px-3 py-1 rounded-full font-medium mb-2">14:00 WIB</span>
-                                <button onclick="window.location.href='<?= base_url('doctor/chat') ?>'" class="bg-blue-600 text-white text-sm px-4 py-1.5 rounded-lg font-medium hover:bg-blue-700 transition">Mulai</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Patient 2 -->
-                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between card-hover">
-                            <div class="flex items-center">
-                                <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center mr-4 text-gray-600 font-bold">
-                                    AS
-                                </div>
-                                <div class="flex-1">
-                                    <h4 class="font-semibold text-gray-800">Ani Susanti</h4>
-                                    <p class="text-xs text-gray-500 mt-1">Keluhan: Konsultasi Rutin</p>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-end">
-                                <span class="bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full font-medium mb-2">14:30 WIB</span>
-                            </div>
-                        </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

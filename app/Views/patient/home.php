@@ -94,31 +94,43 @@
             <div class="mb-6">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="font-bold text-gray-800 text-base md:text-lg">Jadwal Mendatang</h3>
-                    <button class="text-sm text-blue-600 font-semibold hover:text-blue-700">Lihat Semua</button>
+                    <button onclick="window.location.href='<?= base_url('patient/history') ?>'" class="text-sm text-blue-600 font-semibold hover:text-blue-700">Lihat Semua</button>
                 </div>
-                <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-5 md:p-6 card-hover">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
-                                <svg class="w-7 h-7 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <div class="flex items-center mb-0.5">
-                                    <span class="w-2 h-2 bg-green-400 rounded-full mr-2 status-online"></span>
-                                    <span class="text-xs text-green-300 font-medium">Online</span>
-                                </div>
-                                <h4 class="text-white font-bold text-sm md:text-base">Dr. Sarah Wijaya</h4>
-                                <p class="text-white/60 text-xs">Dokter Umum • Hari ini, 14:00 WIB</p>
-                            </div>
-                        </div>
-                        <button onclick="window.location.href='<?= base_url('patient/chat') ?>'"
-                            class="bg-white text-blue-600 px-4 py-2 rounded-xl font-bold text-sm hover:bg-blue-50 transition-all flex-shrink-0">
-                            Mulai Chat
-                        </button>
+                
+                <?php if (empty($upcoming)): ?>
+                    <div class="bg-white rounded-2xl p-6 text-center border border-dashed border-gray-200">
+                        <p class="text-gray-400 text-sm">Belum ada jadwal konsultasi mendatang.</p>
+                        <button onclick="window.location.href='<?= base_url('patient/consultation') ?>'" class="mt-2 text-blue-600 font-bold text-sm">Cari Dokter</button>
                     </div>
-                </div>
+                <?php else: ?>
+                    <div class="space-y-3">
+                        <?php foreach ($upcoming as $apt): ?>
+                            <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-5 md:p-6 card-hover shadow-lg shadow-blue-900/10">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div class="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                                            <svg class="w-7 h-7 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center mb-0.5">
+                                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2 status-online"></span>
+                                                <span class="text-xs text-green-300 font-medium">Online</span>
+                                            </div>
+                                            <h4 class="text-white font-bold text-sm md:text-base"><?= esc($apt['doctor_name']) ?></h4>
+                                            <p class="text-white/60 text-xs"><?= esc($apt['specialization']) ?> • <?= date('d M, H:i', strtotime($apt['appointment_date'] . ' ' . $apt['time_slot'])) ?> WIB</p>
+                                        </div>
+                                    </div>
+                                    <button onclick="window.location.href='<?= base_url('patient/chat?id=' . $apt['id']) ?>'"
+                                        class="bg-white text-blue-600 px-4 py-2 rounded-xl font-bold text-sm hover:bg-blue-50 transition-all flex-shrink-0 shadow-sm">
+                                        Mulai Chat
+                                    </button>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <!-- Desktop: two-column layout for bottom sections -->
