@@ -67,7 +67,38 @@ class Patient extends BaseController
         ]); 
     }
 
-    public function prescription() { return view('patient/prescription', ['title' => 'Resep Obat - Orion Clinic']); }
+    public function prescription()
+    {
+        $userId = session()->get('user_id');
+        $patientModel = new \App\Models\PatientModel();
+        $patient = $patientModel->where('user_id', $userId)->first();
+        
+        $prescriptions = [];
+        if ($patient) {
+            $prescriptionModel = new \App\Models\PrescriptionModel();
+            $prescriptions = $prescriptionModel
+                ->select('prescriptions.*, users.name as doctor_name, consultations.diagnosis')
+                ->join('consultations', 'consultations.id = prescriptions.consultation_id')
+                ->join('appointments', 'appointments.id = consultations.appointment_id')
+                ->join('doctors', 'doctors.id = appointments.doctor_id')
+                ->join('users', 'users.id = doctors.user_id')
+                ->where('appointments.patient_id', $patient['id'])
+                ->orderBy('prescriptions.created_at', 'DESC')
+                ->findAll();
+
+            // Fetch items for each prescription
+            $itemModel = new \App\Models\PrescriptionItemModel();
+            foreach ($prescriptions as &$p) {
+                $p['items'] = $itemModel->where('prescription_id', $p['id'])->findAll();
+                $p['total_cost'] = 0; // In real app, you might have medicine prices
+            }
+        }
+
+        return view('patient/prescription', [
+            'title'         => 'Resep Obat - Orion Clinic',
+            'prescriptions' => $prescriptions
+        ]);
+    }
     public function history()
     {
         $userId = session()->get('user_id');

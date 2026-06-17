@@ -17,6 +17,11 @@ $routes->post('auth/register', 'Auth::processRegister');
 $routes->get('register', 'Auth::register');
 $routes->post('register', 'Auth::processRegister');
 
+$routes->group('chat', ['filter' => 'auth'], static function ($routes) {
+    $routes->post('send', 'Chat::send');
+    $routes->get('updates', 'Chat::get_updates');
+});
+
 $routes->group('patient', ['filter' => ['auth', 'role:patient']], static function ($routes) {
     $routes->get('/', 'Patient::index');
     $routes->get('consultation', 'Patient::consultation');

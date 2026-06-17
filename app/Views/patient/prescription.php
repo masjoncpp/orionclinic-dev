@@ -15,97 +15,66 @@
             <h1 class="text-base font-bold text-gray-800">Resep & Obat</h1>
         </div>
 
-        <!-- Tabs -->
-        <div class="bg-white px-5 border-b border-gray-100">
-            <div class="flex space-x-6">
-                <button class="py-3 text-sm font-bold text-blue-600 border-b-2 border-blue-600">Resep Aktif</button>
-                <button class="py-3 text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors">Riwayat</button>
-            </div>
-        </div>
-
         <div class="p-5 max-w-2xl mx-auto">
 
-            <!-- Prescription Card -->
-            <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-4">
-
-                <!-- Card Header -->
-                <div class="p-4 border-b border-gray-50">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">Aktif</span>
-                        <span class="text-xs text-gray-400">15 Jan 2025</span>
-                    </div>
-                    <h4 class="font-bold text-gray-800 text-sm">Resep dari Dr. Sarah Wijaya</h4>
-                    <p class="text-xs text-gray-500 mt-0.5">Konsultasi: Demam & Sakit Kepala</p>
-                </div>
-
-                <!-- Medicine List -->
-                <div class="divide-y divide-gray-50">
-                    <div class="p-4 flex items-center">
-                        <div class="w-11 h-11 bg-teal-100 rounded-xl flex items-center justify-center mr-3 flex-shrink-0">
-                            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <h5 class="font-semibold text-gray-800 text-sm">Paracetamol 500mg</h5>
-                            <p class="text-xs text-gray-400">3x1 setelah makan</p>
-                        </div>
-                        <span class="text-sm font-bold text-gray-700">10 tablet</span>
-                    </div>
-
-                    <div class="p-4 flex items-center">
-                        <div class="w-11 h-11 bg-orange-100 rounded-xl flex items-center justify-center mr-3 flex-shrink-0">
-                            <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <h5 class="font-semibold text-gray-800 text-sm">Vitamin C 500mg</h5>
-                            <p class="text-xs text-gray-400">1x1 setelah makan</p>
-                        </div>
-                        <span class="text-sm font-bold text-gray-700">10 tablet</span>
-                    </div>
-
-                    <div class="p-4 flex items-center">
-                        <div class="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mr-3 flex-shrink-0">
-                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <h5 class="font-semibold text-gray-800 text-sm">Amoxicillin 250mg</h5>
-                            <p class="text-xs text-gray-400">2x1 setelah makan</p>
-                        </div>
-                        <span class="text-sm font-bold text-gray-700">14 kapsul</span>
-                    </div>
-                </div>
-
-                <!-- Total & Order -->
-                <div class="p-4 bg-gray-50">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-sm text-gray-500 font-medium">Total Biaya Obat</span>
-                        <span class="text-lg font-bold text-gray-800">Rp 45.000</span>
-                    </div>
-                    <button class="w-full btn-primary text-white py-3 rounded-xl font-bold text-sm">
-                        Pesan Obat Sekarang
-                    </button>
-                </div>
-            </div>
-
-            <!-- Notes Card -->
-            <div class="bg-blue-50 rounded-2xl p-4 border border-blue-100">
-                <div class="flex items-start space-x-3">
-                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            <?php if (empty($prescriptions)): ?>
+                <div class="bg-white rounded-2xl p-10 text-center border border-dashed border-gray-300">
+                    <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
                         </svg>
                     </div>
-                    <div>
-                        <h5 class="font-semibold text-blue-800 text-sm mb-1">Catatan Dokter</h5>
-                        <p class="text-xs text-blue-600">Minum obat sesuai anjuran. Istirahat cukup dan perbanyak minum air putih. Kontrol kembali jika gejala tidak membaik dalam 3 hari.</p>
-                    </div>
+                    <p class="text-gray-500 font-medium">Belum ada resep obat.</p>
+                    <p class="text-gray-400 text-xs mt-1">Resep akan muncul setelah Anda menyelesaikan sesi konsultasi dengan dokter.</p>
                 </div>
-            </div>
+            <?php else: ?>
+                <?php foreach ($prescriptions as $p): ?>
+                    <!-- Prescription Card -->
+                    <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+                        <!-- Card Header -->
+                        <div class="p-4 border-b border-gray-50">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold <?= $p['status'] == 'issued' ? 'text-blue-600 bg-blue-50' : 'text-green-600 bg-green-50' ?> px-3 py-1 rounded-full">
+                                    <?= $p['status'] == 'issued' ? 'Aktif' : 'Selesai' ?>
+                                </span>
+                                <span class="text-xs text-gray-400"><?= date('d M Y', strtotime($p['created_at'])) ?></span>
+                            </div>
+                            <h4 class="font-bold text-gray-800 text-sm">Resep dari <?= esc($p['doctor_name']) ?></h4>
+                            <p class="text-xs text-gray-500 mt-0.5">Diagnosis: <?= esc($p['diagnosis'] ?? 'Konsultasi Umum') ?></p>
+                        </div>
+
+                        <!-- Medicine List -->
+                        <div class="divide-y divide-gray-50">
+                            <?php foreach ($p['items'] as $item): ?>
+                                <div class="p-4 flex items-center">
+                                    <div class="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center mr-3 flex-shrink-0">
+                                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h5 class="font-semibold text-gray-800 text-sm"><?= esc($item['medicine_name']) ?> <?= esc($item['dosage']) ?></h5>
+                                        <p class="text-xs text-gray-400"><?= esc($item['frequency']) ?> • <?= esc($item['duration']) ?></p>
+                                    </div>
+                                    <span class="text-sm font-bold text-gray-700"><?= esc($item['quantity']) ?> unit</span>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <?php if ($p['notes']): ?>
+                            <div class="p-4 bg-blue-50/50 border-t border-gray-50">
+                                <p class="text-xs text-blue-600"><span class="font-bold">Catatan:</span> <?= esc($p['notes']) ?></p>
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="p-4 bg-gray-50">
+                            <button class="w-full btn-primary text-white py-3 rounded-xl font-bold text-sm">
+                                Tebus Obat
+                            </button>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
 
         </div>
     </div>

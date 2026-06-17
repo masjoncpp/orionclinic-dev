@@ -35,22 +35,20 @@
         </div>
 
         <?php if (empty($messages)): ?>
-            <div class="text-center py-10">
+            <div id="no-messages" class="text-center py-10">
                 <p class="text-xs text-gray-400">Belum ada pesan. Silakan mulai percakapan.</p>
             </div>
         <?php else: ?>
             <?php foreach ($messages as $msg): ?>
                 <?php if ($msg['sender_id'] == session()->get('user_id')): ?>
-                    <!-- Patient message (Current User) -->
-                    <div class="flex justify-end">
+                    <div class="flex justify-end message-item" data-id="<?= $msg['id'] ?>">
                         <div class="bg-blue-600 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[78%] shadow-sm">
                             <p class="text-white text-sm leading-relaxed"><?= esc($msg['message']) ?></p>
                             <span class="text-xs text-blue-200 mt-1 block text-right"><?= date('H:i', strtotime($msg['created_at'])) ?></span>
                         </div>
                     </div>
                 <?php else: ?>
-                    <!-- Doctor message -->
-                    <div class="flex justify-start items-end space-x-2">
+                    <div class="flex justify-start items-end space-x-2 message-item" data-id="<?= $msg['id'] ?>">
                         <div class="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                             <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -69,65 +67,121 @@
 
     <!-- Chat Input - fixed to bottom -->
     <div class="bg-white border-t border-gray-100 px-4 py-3 flex-shrink-0">
-        <div class="flex items-center space-x-3">
-            <button class="p-2 text-gray-400 hover:text-blue-600 transition-colors flex-shrink-0">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
-                </svg>
-            </button>
-            <input id="chat-input" type="text" placeholder="Ketik pesan..."
-                class="flex-1 bg-gray-100 rounded-2xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:bg-white transition-all">
-            <button id="send-btn"
-                class="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center hover:bg-blue-700 transition-all active:scale-95 flex-shrink-0 shadow-md shadow-blue-200">
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                </svg>
-            </button>
-        </div>
+        <?php if ($consultation && $consultation['status'] === 'active'): ?>
+            <div class="flex items-center space-x-3">
+                <input id="chat-input" type="text" placeholder="Ketik pesan..."
+                    class="flex-1 bg-gray-100 rounded-2xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:bg-white transition-all">
+                <button id="send-btn"
+                    class="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center hover:bg-blue-700 transition-all active:scale-95 flex-shrink-0 shadow-md shadow-blue-200">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                    </svg>
+                </button>
+            </div>
+        <?php else: ?>
+            <div class="text-center py-2">
+                <p class="text-xs text-gray-500 font-medium bg-gray-100 py-2 rounded-xl">Konsultasi telah berakhir.</p>
+            </div>
+        <?php endif; ?>
     </div>
 
 </div>
 
 <script>
 $(document).ready(function() {
-    function sendMessage() {
-        var text = $('#chat-input').val().trim();
-        if (!text) return;
+    var consultationId = "<?= $consultation['id'] ?? '' ?>";
+    var currentUserId = "<?= session()->get('user_id') ?>";
+    var lastId = 0;
 
-        var time = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-        var msgHtml = `
-            <div class="flex justify-end">
-                <div class="bg-blue-600 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[78%] shadow-sm">
-                    <p class="text-white text-sm leading-relaxed">${$('<div>').text(text).html()}</p>
-                    <span class="text-xs text-blue-200 mt-1 block text-right">${time}</span>
-                </div>
-            </div>`;
-        $('#chat-messages').append(msgHtml);
-        $('#chat-input').val('');
+    // Get the last message ID
+    $('.message-item').each(function() {
+        var id = parseInt($(this).data('id'));
+        if (id > lastId) lastId = id;
+    });
+
+    function scrollToBottom() {
         $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+    }
 
-        setTimeout(function() {
-            var replies = [
-                'Baik, terima kasih informasinya.',
-                'Silakan ikuti petunjuk pengobatan yang sudah diberikan ya.',
-                'Jika dalam 3 hari tidak membaik, segera hubungi kembali.',
-                'Semoga lekas sembuh!'
-            ];
-            var reply = replies[Math.floor(Math.random() * replies.length)];
-            var replyTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-            var replyHtml = `
-                <div class="flex justify-start items-end space-x-2">
+    function appendMessage(msg) {
+        $('#no-messages').remove();
+        
+        // Skip if message already exists
+        if ($(`.message-item[data-id="${msg.id}"]`).length > 0) return;
+
+        var isMe = (msg.sender_id == currentUserId);
+        var time = new Date(msg.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        
+        var html = '';
+        if (isMe) {
+            html = `
+                <div class="flex justify-end message-item" data-id="${msg.id}">
+                    <div class="bg-blue-600 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[78%] shadow-sm">
+                        <p class="text-white text-sm leading-relaxed">${$('<div>').text(msg.message).html()}</p>
+                        <span class="text-xs text-blue-200 mt-1 block text-right">${time}</span>
+                    </div>
+                </div>`;
+        } else {
+            html = `
+                <div class="flex justify-start items-end space-x-2 message-item" data-id="${msg.id}">
                     <div class="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                         <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                     </div>
                     <div class="bg-white rounded-2xl rounded-tl-sm px-4 py-3 max-w-[78%] shadow-sm border border-gray-50">
-                        <p class="text-gray-800 text-sm leading-relaxed">${reply}</p>
-                        <span class="text-xs text-gray-400 mt-1 block">${replyTime}</span>
+                        <p class="text-gray-800 text-sm leading-relaxed">${$('<div>').text(msg.message).html()}</p>
+                        <span class="text-xs text-gray-400 mt-1 block">${time}</span>
                     </div>
                 </div>`;
-            $('#chat-messages').append(replyHtml);
-            $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
-        }, 1200);
+        }
+        
+        $('#chat-messages').append(html);
+        if (parseInt(msg.id) > lastId) lastId = parseInt(msg.id);
+        scrollToBottom();
+    }
+
+    function sendMessage() {
+        var text = $('#chat-input').val().trim();
+        if (!text || !consultationId) return;
+
+        $('#send-btn').prop('disabled', true).addClass('opacity-50');
+
+        $.ajax({
+            url: "<?= base_url('chat/send') ?>",
+            method: "POST",
+            data: {
+                consultation_id: consultationId,
+                message: text
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    $('#chat-input').val('');
+                    fetchUpdates();
+                } else {
+                    alert(response.message);
+                }
+            },
+            complete: function() {
+                $('#send-btn').prop('disabled', false).removeClass('opacity-50');
+            }
+        });
+    }
+
+    function fetchUpdates() {
+        if (!consultationId) return;
+
+        $.ajax({
+            url: "<?= base_url('chat/updates') ?>",
+            method: "GET",
+            data: {
+                consultation_id: consultationId,
+                last_id: lastId
+            },
+            success: function(messages) {
+                if (messages && messages.length > 0) {
+                    messages.forEach(appendMessage);
+                }
+            }
+        });
     }
 
     $('#send-btn').on('click', sendMessage);
@@ -135,7 +189,10 @@ $(document).ready(function() {
         if (e.which === 13) sendMessage();
     });
 
-    $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+    // Poll for new messages every 3 seconds
+    setInterval(fetchUpdates, 3000);
+
+    scrollToBottom();
 });
 </script>
 
