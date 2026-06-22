@@ -47,4 +47,6 @@ $routes->group('doctor', ['filter' => ['auth', 'role:doctor']], static function 
     $routes->post('end_consultation', 'Doctor::endConsultation');
     $routes->get('prescription_form', 'Doctor::prescriptionForm');
     $routes->post('write_prescription', 'Doctor::writePrescription');
+    $routes->get('schedules', 'Doctor::schedules');
+    $routes->post('updateSchedule', 'Doctor::updateSchedule');
 });

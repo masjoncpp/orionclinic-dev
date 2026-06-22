@@ -259,6 +259,67 @@ class Doctor extends BaseController
         ]);
     }
     public function profile()      { return view('doctor/profile',      ['role' => 'doctor', 'title' => 'Profil Dokter']); }
+    
+    public function schedules()
+    {
+        $userId = session()->get('user_id');
+        $doctor = $this->doctorModel->where('user_id', $userId)->first();
+        
+        if (!$doctor) {
+            return redirect()->to('/auth/login')->with('error', 'Profil dokter tidak ditemukan.');
+        }
+
+        $scheduleModel = new \App\Models\DoctorScheduleModel();
+        $schedules = $scheduleModel->where('doctor_id', $doctor['id'])->findAll();
+
+        // Organize schedules by day
+        $scheduleMap = [];
+        foreach ($schedules as $s) {
+            $scheduleMap[$s['day_of_week']] = $s;
+        }
+
+        return view('doctor/schedules', [
+            'role' => 'doctor',
+            'title' => 'Atur Jadwal Praktik',
+            'scheduleMap' => $scheduleMap
+        ]);
+    }
+
+    public function updateSchedule()
+    {
+        $userId = session()->get('user_id');
+        $doctor = $this->doctorModel->where('user_id', $userId)->first();
+        
+        if (!$doctor) return redirect()->to('/auth/login');
+
+        $scheduleModel = new \App\Models\DoctorScheduleModel();
+        
+        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+        $activeDays = $this->request->getPost('active_days') ?? [];
+        $startTimes = $this->request->getPost('start_time');
+        $endTimes = $this->request->getPost('end_time');
+
+        // Delete all old schedules
+        $scheduleModel->where('doctor_id', $doctor['id'])->delete();
+
+        // Insert new schedules
+        foreach ($days as $day) {
+            if (in_array($day, $activeDays)) {
+                $start = $startTimes[$day] ?? '08:00';
+                $end = $endTimes[$day] ?? '16:00';
+                
+                $scheduleModel->insert([
+                    'doctor_id' => $doctor['id'],
+                    'day_of_week' => $day,
+                    'start_time' => $start,
+                    'end_time' => $end,
+                    'is_active' => true
+                ]);
+            }
+        }
+
+        return redirect()->to('doctor/schedules')->with('success', 'Jadwal praktik berhasil diperbarui.');
+    }
     public function chat()
     {
         $appointmentId = $this->request->getGet('id');

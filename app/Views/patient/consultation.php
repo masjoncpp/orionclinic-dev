@@ -54,6 +54,27 @@
                                     </div>
                                     <p class="text-xs text-[#626260] font-medium"><?= esc($doctor['specialization']) ?></p>
                                     <p class="text-xs text-[#7b7b78] mt-0.5"><?= esc($doctor['experience_years']) ?> tahun pengalaman</p>
+                                    
+                                    <!-- Schedule Info -->
+                                    <div class="mt-2.5 bg-[#f9f8f6] p-2.5 rounded-[12px] border border-gray-100">
+                                        <p class="text-[10px] font-semibold text-[#626260] mb-1.5 uppercase tracking-wider flex items-center">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            Jadwal Praktik
+                                        </p>
+                                        <?php if (!empty($doctor['schedules'])): ?>
+                                            <ul class="text-[11px] text-[#111111] space-y-1">
+                                                <?php foreach ($doctor['schedules'] as $sch): ?>
+                                                    <li class="flex justify-between items-center">
+                                                        <span class="font-medium"><?= esc($sch['day_of_week']) ?></span>
+                                                        <span class="text-[#626260]"><?= date('H:i', strtotime($sch['start_time'])) ?> - <?= date('H:i', strtotime($sch['end_time'])) ?> WIB</span>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        <?php else: ?>
+                                            <p class="text-[11px] text-[#7b7b78] italic">Jadwal belum tersedia</p>
+                                        <?php endif; ?>
+                                    </div>
+
                                     <div class="flex items-center justify-between mt-3">
                                         <div class="flex items-center">
                                             <span class="w-2 h-2 <?= $doctor['status'] == 'online' ? 'bg-[#4CAF50] status-online' : 'bg-gray-300' ?> rounded-full mr-1.5"></span>

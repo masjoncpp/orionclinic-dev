@@ -25,6 +25,12 @@
                 <span class="font-normal text-[14px]">Dashboard</span>
             </button>
 
+            <button onclick="window.location.href='<?= base_url('doctor/schedules') ?>'"
+                class="w-full flex items-center space-x-3 px-3 py-2.5 text-[#111111] rounded-[8px] hover:bg-[#f5f1ec] transition-all group">
+                <svg class="icon-nav w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="font-normal text-[14px]">Atur Jadwal</span>
+            </button>
+
             <button onclick="window.location.href='<?= base_url('doctor/consultation') ?>'"
                 class="w-full flex items-center space-x-3 px-3 py-2.5 text-[#111111] rounded-[8px] hover:bg-[#f5f1ec] transition-all group">
                 <?= icon('appointments', 20, 'icon-nav w-5 h-5 flex-shrink-0') ?>

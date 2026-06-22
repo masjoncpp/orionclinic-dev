@@ -65,7 +65,7 @@
                                 </div>
                                 <svg class="w-5 h-5 text-[#7b7b78]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                             </button>
-                            <button class="w-full flex items-center justify-between text-left text-sm py-2 group">
+                            <button onclick="window.location.href='<?= base_url('doctor/schedules') ?>'" class="w-full flex items-center justify-between text-left text-sm py-2 group">
                                 <div class="flex items-center text-gray-700 group-hover:text-[#111111] transition-colors">
                                     <svg class="w-5 h-5 text-[#7b7b78] mr-3 group-hover:text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     Atur Jadwal Praktek

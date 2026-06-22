@@ -69,6 +69,18 @@ class Patient extends BaseController
                               ->join('users', 'users.id = doctors.user_id')
                               ->findAll();
 
+        $scheduleModel = new \App\Models\DoctorScheduleModel();
+        $schedules = $scheduleModel->where('is_active', true)->findAll();
+        
+        $doctorSchedules = [];
+        foreach ($schedules as $s) {
+            $doctorSchedules[$s['doctor_id']][] = $s;
+        }
+
+        foreach ($doctors as &$doc) {
+            $doc['schedules'] = $doctorSchedules[$doc['id']] ?? [];
+        }
+
         return view('patient/consultation', [
             'title'   => 'Konsultasi - Orion Clinic',
             'doctors' => $doctors
@@ -88,6 +100,28 @@ class Patient extends BaseController
         
         if (!$patient || !$doctorId) {
             return redirect()->back()->with('error', 'Gagal membuat sesi konsultasi.');
+        }
+
+        // Validate Schedule
+        $scheduleModel = new \App\Models\DoctorScheduleModel();
+        $daysIndo = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        $dayIndex = date('w', strtotime($appointmentDate));
+        $dayName = $daysIndo[$dayIndex];
+
+        $schedule = $scheduleModel->where('doctor_id', $doctorId)
+                                  ->where('day_of_week', $dayName)
+                                  ->where('is_active', true)
+                                  ->first();
+
+        if (!$schedule) {
+            return redirect()->back()->with('error', "Dokter tidak memiliki jadwal praktik pada hari $dayName.");
+        }
+
+        $timeInput = date('H:i:s', strtotime($timeSlot));
+        if ($timeInput < $schedule['start_time'] || $timeInput > $schedule['end_time']) {
+            $startFormatted = date('H:i', strtotime($schedule['start_time']));
+            $endFormatted = date('H:i', strtotime($schedule['end_time']));
+            return redirect()->back()->with('error', "Waktu dipilih di luar jam praktik dokter ($startFormatted - $endFormatted WIB).");
         }
 
         // Generate unique queue number
