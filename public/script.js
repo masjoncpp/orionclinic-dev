@@ -135,13 +135,3 @@ if (window.elementSdk) {
     });
 }
 
-// Highlight active nav item based on current URL
-$(document).ready(function() {
-    var path = window.location.pathname;
-    $('.nav-item').each(function() {
-        var onclick = $(this).attr('onclick') || '';
-        if (onclick && onclick.includes(path)) {
-            $(this).addClass('active text-blue-600').removeClass('text-gray-400');
-        }
-    });
-});

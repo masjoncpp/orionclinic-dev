@@ -108,9 +108,13 @@ class Auth extends BaseController
                 'isLoggedIn' => true,
             ]);
 
-            return $user['role'] === 'doctor'
-                ? redirect()->to('/doctor')
-                : redirect()->to('/patient');
+            if ($user['role'] === 'doctor') {
+                $doctorModel = new \App\Models\DoctorModel();
+                $doctorModel->where('user_id', $user['id'])->set(['status' => 'online'])->update();
+                return redirect()->to('/doctor');
+            } else {
+                return redirect()->to('/patient');
+            }
         }
 
         return redirect()->back()
@@ -121,6 +125,10 @@ class Auth extends BaseController
     public function logout()
     {
         if (session()->get('isLoggedIn')) {
+            if (session()->get('role') === 'doctor') {
+                $doctorModel = new \App\Models\DoctorModel();
+                $doctorModel->where('user_id', session()->get('user_id'))->set(['status' => 'offline'])->update();
+            }
             session()->destroy();
         }
 

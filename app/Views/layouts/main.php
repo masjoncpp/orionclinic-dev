@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'Orion Clinic' ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('style.css') ?>">
 </head>
-<body class="h-full bg-blue-50">
+<body class="h-full bg-[#ebe7e1]">
     <div id="app" class="h-full w-full flex overflow-hidden">
         <?php if(!isset($hide_sidebar)): ?>
             <?= $this->include('components/sidebar') ?>
@@ -18,21 +19,34 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="<?= base_url('script.js') ?>"></script>
     <script>
         $(document).ready(function() {
             var currentPath = window.location.pathname.replace(/\/$/, '');
             $('.nav-item').each(function() {
                 var onclick = $(this).attr('onclick') || '';
-                if (onclick && onclick.includes(currentPath)) {
-                    $(this).addClass('active').removeClass('text-gray-400');
+                var match = onclick.match(/href='([^']+)'/);
+                if (match) {
+                    var targetUrl = match[1].split('?')[0]; // Remove query params
+                    // Get path from targetUrl
+                    var targetPath = targetUrl.replace(/^(?:\/\/|[^/]+)*\//, '/'); // Get relative path
+                    targetPath = targetPath.replace(/\/$/, ''); // Remove trailing slash
+                    if (targetPath === currentPath) {
+                        $(this).addClass('active').removeClass('text-[#626260]');
+                    }
                 }
             });
             $('aside nav button').each(function() {
                 var onclick = $(this).attr('onclick') || '';
-                if (onclick && onclick.includes(currentPath)) {
-                    $(this).addClass('bg-blue-50 text-blue-600').removeClass('text-gray-600');
+                var match = onclick.match(/href='([^']+)'/);
+                if (match) {
+                    var targetUrl = match[1].split('?')[0]; // Remove query params
+                    // Get path from targetUrl
+                    var targetPath = targetUrl.replace(/^(?:\/\/|[^/]+)*\//, '/'); // Get relative path
+                    targetPath = targetPath.replace(/\/$/, ''); // Remove trailing slash
+                    if (targetPath === currentPath) {
+                        $(this).addClass('bg-[#ebe7e1] text-[#111111]').removeClass('text-[#626260]');
+                    }
                 }
             });
         });

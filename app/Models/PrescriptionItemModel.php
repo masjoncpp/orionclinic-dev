@@ -6,13 +6,13 @@ use CodeIgniter\Model;
 
 class PrescriptionItemModel extends Model
 {
-    protected $table            = 'prescriptionitems';
+    protected $table            = 'prescription_items';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = ['prescription_id', 'medicine_name', 'dosage', 'frequency', 'duration', 'quantity'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

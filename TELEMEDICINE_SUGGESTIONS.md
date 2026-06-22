@@ -190,6 +190,7 @@ Tabel yang seharusnya mulai dibuat:
 - `payments`
 - `notifications`
 
+
 ### Prioritas 3. Ubah view statis menjadi data dinamis
 
 Yang perlu diubah:

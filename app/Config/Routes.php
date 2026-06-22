@@ -27,15 +27,24 @@ $routes->group('patient', ['filter' => ['auth', 'role:patient']], static functio
     $routes->get('consultation', 'Patient::consultation');
     $routes->get('prescription', 'Patient::prescription');
     $routes->get('history', 'Patient::history');
+    $routes->get('historyDetail', 'Patient::historyDetail');
     $routes->get('profile', 'Patient::profile');
     $routes->get('chat', 'Patient::chat');
     $routes->get('wellness', 'Patient::wellness');
+    $routes->post('book_appointment', 'Patient::bookAppointment');
 });
 
 $routes->group('doctor', ['filter' => ['auth', 'role:doctor']], static function ($routes) {
     $routes->get('/', 'Doctor::index');
     $routes->get('consultation', 'Doctor::consultation');
     $routes->get('patients', 'Doctor::patients');
+    $routes->get('patientHistory', 'Doctor::patientHistory');
     $routes->get('profile', 'Doctor::profile');
+    $routes->get('historyDetail', 'Doctor::historyDetail');
     $routes->get('chat', 'Doctor::chat');
+    $routes->post('accept_appointment', 'Doctor::acceptAppointment');
+    $routes->post('reject_appointment', 'Doctor::rejectAppointment');
+    $routes->post('end_consultation', 'Doctor::endConsultation');
+    $routes->get('prescription_form', 'Doctor::prescriptionForm');
+    $routes->post('write_prescription', 'Doctor::writePrescription');
 });
