@@ -14,7 +14,17 @@
         <?php if(!isset($hide_sidebar)): ?>
             <?= $this->include('components/sidebar') ?>
         <?php endif; ?>
-        <div class="flex-1 flex flex-col min-h-0 overflow-hidden">
+        <div class="flex-1 flex flex-col min-h-0 overflow-hidden relative">
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline"><?= session()->getFlashdata('error') ?></span>
+                </div>
+            <?php endif; ?>
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline"><?= session()->getFlashdata('success') ?></span>
+                </div>
+            <?php endif; ?>
             <?= $this->renderSection('content') ?>
         </div>
     </div>

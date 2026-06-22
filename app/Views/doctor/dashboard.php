@@ -69,12 +69,22 @@
                         <div class="bg-[#ffffff] rounded-[24px] p-4 card-hover relative overflow-hidden shadow-sm hover:shadow-orange-500/20">
                             <div class="flex justify-between items-start mb-4">
                                 <div class="w-12 h-12 bg-orange-50 rounded-[16px] flex items-center justify-center">
-                                    <?= icon('pending', 26) ?>
+                                    <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                            </div>
+                            <p class="text-3xl font-extrabold text-[#111111] tracking-tight"><?= $stats['pending'] ?></p>
+                            <p class="text-sm text-[#626260] font-semibold mt-1">Permintaan Baru</p>
+                            <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-400 to-amber-300"></div>
+                        </div>
+                        <div class="bg-[#ffffff] rounded-[24px] p-4 card-hover relative overflow-hidden shadow-sm hover:shadow-purple-500/20">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 bg-purple-50 rounded-[16px] flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                                 </div>
                             </div>
                             <p class="text-3xl font-extrabold text-[#111111] tracking-tight"><?= $stats['waiting'] ?></p>
-                            <p class="text-sm text-[#626260] font-semibold mt-1">Menunggu</p>
-                            <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-400 to-amber-300"></div>
+                            <p class="text-sm text-[#626260] font-semibold mt-1">Dalam Antrean</p>
+                            <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 to-purple-400"></div>
                         </div>
                          <div class="bg-[#ffffff] rounded-[24px] p-4 card-hover relative overflow-hidden shadow-sm hover:shadow-green-500/20">
                             <div class="flex justify-between items-start mb-4">
@@ -85,16 +95,6 @@
                             <p class="text-3xl font-extrabold text-[#111111] tracking-tight"><?= $stats['completed'] ?></p>
                             <p class="text-sm text-[#626260] font-semibold mt-1">Selesai</p>
                             <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 to-green-400"></div>
-                        </div>
-                        <div class="bg-[#ffffff] rounded-[24px] p-4 card-hover relative overflow-hidden shadow-sm hover:shadow-purple-500/20">
-                            <div class="flex justify-between items-start mb-4">
-                                <div class="w-12 h-12 bg-purple-50 rounded-[16px] flex items-center justify-center">
-                                    <?= icon('medical_records', 26) ?>
-                                </div>
-                            </div>
-                            <p class="text-3xl font-extrabold text-[#111111] tracking-tight">Rp <?= number_format($doctor['consultation_fee'] * $stats['completed'] / 1000, 1) ?>K</p>
-                            <p class="text-sm text-[#626260] font-semibold mt-1">Pendapatan Est.</p>
-                            <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 to-purple-400"></div>
                         </div>
                     </div>
                 </div>

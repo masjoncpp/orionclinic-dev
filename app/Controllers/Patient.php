@@ -118,7 +118,14 @@ class Patient extends BaseController
         }
 
         $timeInput = date('H:i:s', strtotime($timeSlot));
-        if ($timeInput < $schedule['start_time'] || $timeInput > $schedule['end_time']) {
+        $endTime = $schedule['end_time'];
+        
+        // Handle midnight as the end of the day
+        if ($endTime === '00:00:00') {
+            $endTime = '23:59:59';
+        }
+
+        if ($timeInput < $schedule['start_time'] || $timeInput > $endTime) {
             $startFormatted = date('H:i', strtotime($schedule['start_time']));
             $endFormatted = date('H:i', strtotime($schedule['end_time']));
             return redirect()->back()->with('error', "Waktu dipilih di luar jam praktik dokter ($startFormatted - $endFormatted WIB).");

@@ -212,7 +212,6 @@ Kalau alur ini sudah matang, barulah aplikasi terasa sebagai produk telemedisin 
 
 Setelah fondasi stabil, baru masuk ke:
 
-- video call
 - pembayaran online
 - notifikasi otomatis
 - integrasi farmasi

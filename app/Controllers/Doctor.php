@@ -31,6 +31,9 @@ class Doctor extends BaseController
             'total_today' => $this->appointmentModel->where('doctor_id', $doctor['id'])
                                                     ->where('appointment_date', $today)
                                                     ->countAllResults(),
+            'pending'     => $this->appointmentModel->where('doctor_id', $doctor['id'])
+                                                    ->where('status', 'pending')
+                                                    ->countAllResults(),
             'waiting'     => $this->appointmentModel->where('doctor_id', $doctor['id'])
                                                     ->where('appointment_date', $today)
                                                     ->where('status', 'confirmed')
@@ -348,7 +351,7 @@ class Doctor extends BaseController
             $consultationModel->insert([
                 'appointment_id' => $appointmentId,
                 'diagnosis' => '',
-                'notes' => '',
+                'doctor_notes' => '',
                 'status' => 'active'
             ]);
             $consultation = $consultationModel->where('appointment_id', $appointmentId)->first();
