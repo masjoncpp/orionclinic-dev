@@ -31,9 +31,9 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center space-x-2">
-                                        <form action="<?= base_url('doctor/reject_appointment') ?>" method="POST">
+                                        <form action="<?= base_url('doctor/reject_appointment') ?>" method="POST" class="form-reject">
                                             <input type="hidden" name="appointment_id" value="<?= $apt['id'] ?>">
-                                            <button type="submit" onclick="return confirm('Tolak permintaan konsultasi ini?')" class="bg-red-50 text-red-600 text-sm px-4 py-2 rounded-[12px] font-semibold hover:bg-red-100 transition">Tolak</button>
+                                            <button type="button" class="btn-reject bg-red-50 text-red-600 text-sm px-4 py-2 rounded-[12px] font-semibold hover:bg-red-100 transition">Tolak</button>
                                         </form>
                                         <form action="<?= base_url('doctor/accept_appointment') ?>" method="POST">
                                             <input type="hidden" name="appointment_id" value="<?= $apt['id'] ?>">
@@ -148,4 +148,32 @@
             <!-- Mobile Bottom Nav -->
 </div>
 <?= $this->include('components/bottom_nav') ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const rejectButtons = document.querySelectorAll('.btn-reject');
+    rejectButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            Swal.fire({
+                title: 'Tolak Konsultasi?',
+                text: "Permintaan konsultasi dari pasien ini akan dibatalkan.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#626260',
+                confirmButtonText: 'Ya, Tolak',
+                cancelButtonText: 'Batal',
+                customClass: {
+                    container: 'z-[100]'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.closest('form').submit();
+                }
+            });
+        });
+    });
+});
+</script>
+
 <?= $this->endSection() ?>

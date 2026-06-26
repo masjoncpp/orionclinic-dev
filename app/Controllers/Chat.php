@@ -28,8 +28,10 @@ class Chat extends BaseController
         $userId = session()->get('user_id');
         $consultationId = $this->request->getPost('consultation_id');
         $messageText = $this->request->getPost('message');
+        
+        $attachment = $this->request->getFile('attachment');
 
-        if (!$consultationId || !$messageText) {
+        if (!$consultationId || (!$messageText && (!$attachment || !$attachment->isValid()))) {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Missing data']);
         }
 
@@ -39,14 +41,23 @@ class Chat extends BaseController
             return $this->response->setJSON(['status' => 'error', 'message' => 'Konsultasi sudah berakhir atau tidak ditemukan.']);
         }
 
+        $attachmentPath = null;
+        if ($attachment && $attachment->isValid() && !$attachment->hasMoved()) {
+            $newName = $attachment->getRandomName();
+            $attachment->move('uploads/chat', $newName);
+            $attachmentPath = 'uploads/chat/' . $newName;
+        }
+
         $data = [
             'consultation_id' => $consultationId,
             'sender_id'       => $userId,
-            'message'         => $messageText,
+            'message'         => $messageText ?? '',
+            'attachment_path' => $attachmentPath,
             'created_at'      => date('Y-m-d H:i:s'),
         ];
 
         if ($this->messageModel->insert($data)) {
+            $data['id'] = $this->messageModel->getInsertID();
             return $this->response->setJSON(['status' => 'success', 'data' => $data]);
         }
 

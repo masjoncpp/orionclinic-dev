@@ -49,68 +49,62 @@
                 <div class="bg-[#ffffff] rounded-[24px]  p-4">
                     <div class="flex items-center justify-between mb-3">
                         <h3 class="font-bold text-[#111111] text-sm">Anggota Keluarga</h3>
-                        <button class="text-xs text-[#111111] font-bold bg-[#ebe7e1] px-3 py-1.5 rounded-[12px] hover:bg-[#ebe7e1] transition-all">+ Tambah</button>
+                        <button onclick="document.getElementById('add-family-modal').classList.remove('hidden')" class="text-xs text-[#111111] font-bold bg-[#ebe7e1] px-3 py-1.5 rounded-[12px] hover:bg-[#d3cec6] transition-all">+ Tambah</button>
                     </div>
                     <div class="space-y-2">
-                        <div class="flex items-center p-3 bg-[#f5f1ec] rounded-[16px] hover:bg-[#f5f1ec] transition-all cursor-pointer">
-                            <div class="w-9 h-9 bg-pink-100 rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
-                                <svg class="w-4 h-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                </svg>
+                        <?php if (empty($family_members)): ?>
+                            <div class="p-4 text-center border border-dashed border-gray-300 rounded-[16px]">
+                                <p class="text-xs text-[#7b7b78]">Belum ada anggota keluarga yang didaftarkan.</p>
                             </div>
-                            <div class="flex-1">
-                                <h5 class="font-semibold text-[#111111] text-sm">Sari Santoso</h5>
-                                <p class="text-xs text-[#7b7b78]">Istri • 35 tahun</p>
+                        <?php else: ?>
+                            <?php foreach ($family_members as $member): ?>
+                            <div class="flex items-center p-3 bg-[#f5f1ec] rounded-[16px] hover:bg-[#ebe7e1] transition-all cursor-pointer">
+                                <div class="w-9 h-9 <?= $member['gender'] == 'female' ? 'bg-pink-100' : 'bg-[#ebe7e1]' ?> rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
+                                    <svg class="w-4 h-4 <?= $member['gender'] == 'female' ? 'text-pink-600' : 'text-[#111111]' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <h5 class="font-semibold text-[#111111] text-sm"><?= esc($member['name']) ?></h5>
+                                    <?php 
+                                        $age = date_diff(date_create($member['date_of_birth']), date_create('today'))->y;
+                                    ?>
+                                    <p class="text-xs text-[#7b7b78]"><?= esc($member['relation']) ?> • <?= $age ?> tahun</p>
+                                </div>
+                                <a href="<?= base_url('patient/family/delete/' . $member['id']) ?>" onclick="return confirm('Hapus anggota keluarga ini?')" class="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </a>
                             </div>
-                            <svg class="w-4 h-4 text-[#7b7b78]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </div>
-                        <div class="flex items-center p-3 bg-[#f5f1ec] rounded-[16px] hover:bg-[#f5f1ec] transition-all cursor-pointer">
-                            <div class="w-9 h-9 bg-[#ebe7e1] rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
-                                <svg class="w-4 h-4 text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                </svg>
-                            </div>
-                            <div class="flex-1">
-                                <h5 class="font-semibold text-[#111111] text-sm">Anisa Santoso</h5>
-                                <p class="text-xs text-[#7b7b78]">Anak • 8 tahun</p>
-                            </div>
-                            <svg class="w-4 h-4 text-[#7b7b78]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </div>
-                        <div class="flex items-center p-3 bg-[#f5f1ec] rounded-[16px] hover:bg-[#f5f1ec] transition-all cursor-pointer">
-                            <div class="w-9 h-9 bg-[#ebe7e1] rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
-                                <svg class="w-4 h-4 text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                </svg>
-                            </div>
-                            <div class="flex-1">
-                                <h5 class="font-semibold text-[#111111] text-sm">Raka Santoso</h5>
-                                <p class="text-xs text-[#7b7b78]">Anak • 5 tahun</p>
-                            </div>
-                            <svg class="w-4 h-4 text-[#7b7b78]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
 
             <!-- Menu Items -->
+            <?php if (session()->getFlashdata('success')) : ?>
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-[16px] relative mb-4 shadow-sm" role="alert">
+                    <span class="block sm:inline font-medium"><?= session()->getFlashdata('success') ?></span>
+                </div>
+            <?php endif; ?>
+            <?php if (session()->getFlashdata('error')) : ?>
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-[16px] relative mb-4 shadow-sm" role="alert">
+                    <span class="block sm:inline font-medium"><?= session()->getFlashdata('error') ?></span>
+                </div>
+            <?php endif; ?>
+
             <div class="bg-[#ffffff] rounded-[24px]  overflow-hidden mb-6">
-                <button class="w-full flex items-center p-4 hover:bg-[#f5f1ec] transition-all border-b border-gray-50">
+                <a href="<?= base_url('patient/edit_profile') ?>" class="w-full flex items-center p-4 hover:bg-[#f5f1ec] transition-all border-b border-gray-50">
                     <div class="w-9 h-9 bg-[#ebe7e1] rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
                         <svg class="w-4 h-4 text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
                     </div>
-                    <span class="flex-1 text-left font-semibold text-[#111111] text-sm">Edit Profil</span>
+                    <span class="flex-1 text-left font-semibold text-[#111111] text-sm">Edit Profil & Info Medis</span>
                     <svg class="w-4 h-4 text-[#7b7b78]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                </button>
+                </a>
 
                 <button class="w-full flex items-center p-4 hover:bg-[#f5f1ec] transition-all border-b border-gray-50">
                     <div class="w-9 h-9 bg-teal-50 rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
@@ -169,4 +163,62 @@
 
 </div>
 <?= $this->include('components/bottom_nav') ?>
+<!-- Modal Tambah Keluarga -->
+<div id="add-family-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="document.getElementById('add-family-modal').classList.add('hidden')"></div>
+    <div class="absolute bottom-0 left-0 right-0 bg-[#ffffff] rounded-t-[32px] p-6 slide-up-fast max-h-[90vh] overflow-y-auto">
+        <div class="w-12 h-1.5 bg-[#ebe7e1] rounded-full mx-auto mb-6"></div>
+        <h3 class="font-bold text-lg text-[#111111] mb-4">Tambah Anggota Keluarga</h3>
+        <form action="<?= base_url('patient/family/add') ?>" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-[#111111] mb-2">Nama Lengkap</label>
+                <input type="text" name="name" required class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm focus:outline-none focus:border-[#003E7E]">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-[#111111] mb-2">Hubungan</label>
+                <select name="relation" required class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm focus:outline-none focus:border-[#003E7E]">
+                    <option value="Suami">Suami</option>
+                    <option value="Istri">Istri</option>
+                    <option value="Anak">Anak</option>
+                    <option value="Orang Tua">Orang Tua</option>
+                    <option value="Saudara">Saudara</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-[#111111] mb-2">Tanggal Lahir</label>
+                    <input type="date" name="date_of_birth" required class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm focus:outline-none focus:border-[#003E7E]">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-[#111111] mb-2">Jenis Kelamin</label>
+                    <select name="gender" required class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm focus:outline-none focus:border-[#003E7E]">
+                        <option value="male">Laki-laki</option>
+                        <option value="female">Perempuan</option>
+                    </select>
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-xs font-semibold text-[#111111] mb-2">Golongan Darah</label>
+                    <select name="blood_type" class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm focus:outline-none focus:border-[#003E7E]">
+                        <option value="">-- Pilih --</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="AB">AB</option>
+                        <option value="O">O</option>
+                    </select>
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-xs font-semibold text-[#111111] mb-2">Riwayat Alergi (Opsional)</label>
+                    <textarea name="allergies" rows="2" placeholder="Contoh: Kacang, Penisilin" class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm focus:outline-none focus:border-[#003E7E]"></textarea>
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-xs font-semibold text-[#111111] mb-2">Penyakit Bawaan (Opsional)</label>
+                    <textarea name="pre_existing_conditions" rows="2" placeholder="Contoh: Asma, Diabetes" class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm focus:outline-none focus:border-[#003E7E]"></textarea>
+                </div>
+            </div>
+            <button type="submit" class="w-full bg-[#003E7E] hover:bg-[#002a5c] transition-colors text-white py-4 rounded-[16px] font-bold mt-4 shadow-sm">Simpan Anggota Keluarga</button>
+        </form>
+    </div>
+</div>
+
 <?= $this->endSection() ?>

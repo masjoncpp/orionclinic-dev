@@ -83,7 +83,6 @@ Fitur inti:
 Fitur penting:
 
 - chat real-time
-- voice call atau video call
 - upload lampiran seperti foto keluhan, hasil lab, atau dokumen
 - catatan dokter
 - diagnosis

@@ -1,5 +1,5 @@
 <div id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-[#f5f1ec] border-t border-[#d3cec6] px-1 pt-2 pb-3 flex justify-around items-center md:hidden z-50">
-    <?php if(isset($role) && $role == 'doctor'): ?>
+    <?php if(session()->get('role') == 'doctor'): ?>
 
         <button onclick="window.location.href='<?= base_url('doctor') ?>'"
             class="nav-item flex flex-col items-center px-4 py-1 text-[#626260] hover:text-[#111111] transition-colors rounded-[8px]">

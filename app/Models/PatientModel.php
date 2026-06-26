@@ -13,8 +13,8 @@ class PatientModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'user_id', 'date_of_birth', 'gender', 'address', 'allergies', 
-        'pre_existing_conditions', 'emergency_contact'
+        'user_id', 'date_of_birth', 'blood_type', 'gender', 'address', 'allergies', 
+        'pre_existing_conditions', 'emergency_contact', 'emergency_contact_phone'
     ];
 
     protected bool $allowEmptyInserts = false;

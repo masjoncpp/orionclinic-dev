@@ -41,12 +41,14 @@
                             <h2 class="text-white font-bold text-base md:text-xl"><?= esc(session()->get('name') ?? 'Pengguna') ?></h2>
                         </div>
                     </div>
-                    <button class="relative p-2.5 bg-[#ffffff]/10 rounded-full hover:bg-[#ffffff]/20 transition-all">
+                    <a href="<?= base_url('patient/notifications') ?>" class="relative p-2.5 bg-[#ffffff]/10 rounded-full hover:bg-[#ffffff]/20 transition-all cursor-pointer">
                         <svg class="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                         </svg>
-                        <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-400 rounded-full border-2 border-blue-600"></span>
-                    </button>
+                        <?php if (isset($unread_count) && $unread_count > 0): ?>
+                            <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-400 rounded-full border-2 border-blue-600"></span>
+                        <?php endif; ?>
+                    </a>
                 </div>
 
                 <!-- Search -->
@@ -110,6 +112,32 @@
                     <button onclick="window.location.href='<?= base_url('patient/history') ?>'" class="text-sm text-[#111111] font-semibold hover:text-[#111111]">Lihat Semua</button>
                 </div>
                 
+                <?php 
+                    $hasReminder = false;
+                    if (!empty($upcoming)) {
+                        $firstApt = $upcoming[0];
+                        $aptTime = strtotime($firstApt['appointment_date'] . ' ' . $firstApt['time_slot']);
+                        $timeDiff = $aptTime - time();
+                        if ($timeDiff > 0 && $timeDiff <= 86400) { // Within 24 hours
+                            $hasReminder = true;
+                        }
+                    }
+                ?>
+                
+                <?php if ($hasReminder): ?>
+                    <div class="mb-4 bg-[#FF9800]/10 border border-[#FF9800]/20 rounded-[16px] p-4 flex items-start">
+                        <div class="w-8 h-8 bg-[#FF9800]/20 rounded-full flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
+                            <svg class="w-4 h-4 text-[#FF9800]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[#FF9800] text-sm">Pengingat Jadwal!</h4>
+                            <p class="text-xs text-[#111111] mt-1">Anda memiliki jadwal konsultasi dengan <?= esc($upcoming[0]['doctor_name']) ?> dalam waktu kurang dari 24 jam.</p>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
                 <?php if (empty($upcoming)): ?>
                     <div class="bg-[#ffffff] rounded-[24px] p-6 text-center border border-dashed border-[#d3cec6]">
                         <p class="text-[#7b7b78] text-sm">Belum ada jadwal konsultasi mendatang.</p>

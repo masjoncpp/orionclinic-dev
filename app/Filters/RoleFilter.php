@@ -35,6 +35,9 @@ class RoleFilter implements FilterInterface
 
     private function defaultRouteForRole(?string $role): string
     {
-        return $role === 'doctor' ? '/doctor' : '/patient';
+        if ($role === 'doctor') return '/doctor';
+        if ($role === 'farmasi') return '/pharmacy';
+        if ($role === 'admin') return '/admin';
+        return '/patient';
     }
 }

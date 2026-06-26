@@ -55,12 +55,18 @@ class Doctor extends BaseController
             ->orderBy('appointments.time_slot', 'ASC')
             ->findAll();
 
+        $notificationModel = new \App\Models\NotificationModel();
+        $unreadCount = $notificationModel->where('user_id', $userId)
+                                         ->where('is_read', 0)
+                                         ->countAllResults();
+
         return view('doctor/dashboard', [
             'role' => 'doctor',
             'title' => 'Dashboard Dokter',
             'doctor' => $doctor,
             'stats' => $stats,
-            'upcoming' => $upcoming
+            'upcoming' => $upcoming,
+            'unread_count' => $unreadCount
         ]);
     }
     public function consultation()
@@ -134,6 +140,23 @@ class Doctor extends BaseController
             'status' => 'active'
         ]);
 
+        // Notify patient
+        $appointment = $this->appointmentModel->find($appointmentId);
+        if ($appointment) {
+            $patientModel = new \App\Models\PatientModel();
+            $patient = $patientModel->find($appointment['patient_id']);
+            if ($patient) {
+                $notificationModel = new \App\Models\NotificationModel();
+                $notificationModel->insert([
+                    'user_id' => $patient['user_id'],
+                    'title' => 'Sesi Konsultasi Dimulai',
+                    'message' => 'Dokter telah menyetujui sesi Anda. Silakan masuk ke ruang chat konsultasi.',
+                    'is_read' => 0,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+            }
+        }
+
         return redirect()->to('doctor/consultation')->with('success', 'Jadwal konsultasi berhasil diterima.');
     }
 
@@ -143,6 +166,23 @@ class Doctor extends BaseController
         if (!$appointmentId) return redirect()->back()->with('error', 'ID tidak valid');
 
         $this->appointmentModel->update($appointmentId, ['status' => 'cancelled']);
+
+        // Notify patient
+        $appointment = $this->appointmentModel->find($appointmentId);
+        if ($appointment) {
+            $patientModel = new \App\Models\PatientModel();
+            $patient = $patientModel->find($appointment['patient_id']);
+            if ($patient) {
+                $notificationModel = new \App\Models\NotificationModel();
+                $notificationModel->insert([
+                    'user_id' => $patient['user_id'],
+                    'title' => 'Sesi Konsultasi Ditolak',
+                    'message' => 'Mohon maaf, dokter sedang tidak tersedia sehingga sesi konsultasi Anda dibatalkan.',
+                    'is_read' => 0,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+            }
+        }
 
         return redirect()->to('doctor/consultation')->with('success', 'Jadwal konsultasi telah ditolak.');
     }
@@ -214,6 +254,60 @@ class Doctor extends BaseController
         ]);
     }
 
+    public function patientProfile($patientId)
+    {
+        $userId = session()->get('user_id');
+        $doctor = $this->doctorModel->where('user_id', $userId)->first();
+        
+        if (!$doctor || !$patientId) {
+            return redirect()->to('doctor/consultation')->with('error', 'Akses ditolak.');
+        }
+
+        // Verify that this doctor has an appointment with this patient
+        $hasAppointment = $this->appointmentModel
+            ->where('patient_id', $patientId)
+            ->where('doctor_id', $doctor['id'])
+            ->first();
+
+        if (!$hasAppointment) {
+            return redirect()->to('doctor/consultation')->with('error', 'Anda tidak memiliki akses ke rekam medis pasien ini.');
+        }
+
+        $patientModel = new \App\Models\PatientModel();
+        $patient = $patientModel
+            ->select('patients.*, users.name, users.email, users.phone, users.created_at as user_created_at')
+            ->join('users', 'users.id = patients.user_id')
+            ->where('patients.id', $patientId)
+            ->first();
+
+        // Fetch medical history for this patient (all history, even from other doctors if relevant, or maybe just from this clinic)
+        $history = $this->appointmentModel
+            ->select('appointments.*, users.name as doctor_name, doctors.specialization, consultations.diagnosis, consultations.follow_up, consultations.status as consultation_status')
+            ->join('doctors', 'doctors.id = appointments.doctor_id')
+            ->join('users', 'users.id = doctors.user_id')
+            ->join('consultations', 'consultations.appointment_id = appointments.id', 'left')
+            ->where('patient_id', $patientId)
+            ->orderBy('appointment_date', 'DESC')
+            ->orderBy('time_slot', 'DESC')
+            ->findAll();
+
+        $backTo = $this->request->getGet('back_to');
+        $chatId = $this->request->getGet('id');
+        
+        $backUrl = base_url('doctor/patients');
+        if ($backTo === 'chat' && $chatId) {
+            $backUrl = base_url('doctor/chat?id=' . $chatId);
+        }
+
+        return view('admin/patient_detail', [
+            'title' => 'Rekam Medis Pasien - Orion Clinic',
+            'patient' => $patient,
+            'history' => $history,
+            'hide_sidebar' => true,
+            'back_url' => $backUrl
+        ]);
+    }
+
     public function historyDetail()
     {
         $appointmentId = $this->request->getGet('id');
@@ -261,7 +355,34 @@ class Doctor extends BaseController
             'prescriptionItems' => $prescriptionItems
         ]);
     }
-    public function profile()      { return view('doctor/profile',      ['role' => 'doctor', 'title' => 'Profil Dokter']); }
+    public function profile()
+    {
+        $userId = session()->get('user_id');
+        $userModel = new \App\Models\UserModel();
+        $doctor = $this->doctorModel->where('user_id', $userId)->first();
+        $user = $userModel->find($userId);
+
+        return view('doctor/profile', [
+            'role'   => 'doctor',
+            'title'  => 'Profil Dokter',
+            'doctor' => $doctor,
+            'user'   => $user
+        ]);
+    }
+
+    public function toggleStatus()
+    {
+        $userId = session()->get('user_id');
+        $doctor = $this->doctorModel->where('user_id', $userId)->first();
+        
+        if ($doctor) {
+            $newStatus = $doctor['status'] === 'online' ? 'offline' : 'online';
+            $this->doctorModel->update($doctor['id'], ['status' => $newStatus]);
+            return redirect()->to('doctor/profile')->with('success', 'Status berhasil diubah menjadi ' . ucfirst($newStatus));
+        }
+
+        return redirect()->to('doctor/profile')->with('error', 'Gagal mengubah status');
+    }
     
     public function schedules()
     {
@@ -378,6 +499,10 @@ class Doctor extends BaseController
     public function endConsultation()
     {
         $appointmentId = $this->request->getPost('appointment_id');
+        $diagnosis = $this->request->getPost('diagnosis');
+        $doctorNotes = $this->request->getPost('doctor_notes');
+        $followUp = $this->request->getPost('follow_up');
+        
         if (!$appointmentId) return redirect()->back()->with('error', 'Invalid appointment ID');
         
         $this->appointmentModel->update($appointmentId, ['status' => 'completed']);
@@ -385,7 +510,12 @@ class Doctor extends BaseController
         $consultationModel = new \App\Models\ConsultationModel();
         $consultation = $consultationModel->where('appointment_id', $appointmentId)->first();
         if ($consultation) {
-            $consultationModel->update($consultation['id'], ['status' => 'completed']);
+            $consultationModel->update($consultation['id'], [
+                'status' => 'completed',
+                'diagnosis' => $diagnosis,
+                'doctor_notes' => $doctorNotes,
+                'follow_up' => $followUp
+            ]);
         }
         
         return redirect()->to('doctor/consultation')->with('success', 'Konsultasi selesai.');
@@ -453,6 +583,52 @@ class Doctor extends BaseController
         $this->appointmentModel->update($appointmentId, ['status' => 'completed']);
         if ($consultation) $consultationModel->update($consultation['id'], ['status' => 'completed']);
 
+        // Notify patient
+        $appointment = $this->appointmentModel->find($appointmentId);
+        if ($appointment) {
+            $patientModel = new \App\Models\PatientModel();
+            $patient = $patientModel->find($appointment['patient_id']);
+            if ($patient) {
+                $notificationModel = new \App\Models\NotificationModel();
+                $notificationModel->insert([
+                    'user_id' => $patient['user_id'],
+                    'title' => 'Resep Dokter Diterbitkan',
+                    'message' => 'Dokter telah menyelesaikan sesi dan menerbitkan resep untuk Anda. Silakan cek menu Resep & Obat untuk menebusnya.',
+                    'is_read' => 0,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+            }
+        }
+
         return redirect()->to('doctor/consultation')->with('success', 'Resep berhasil dibuat dan konsultasi selesai.');
+    }
+
+    public function notifications()
+    {
+        $userId = session()->get('user_id');
+        $notificationModel = new \App\Models\NotificationModel();
+        
+        $notifications = $notificationModel->where('user_id', $userId)
+                                           ->orderBy('created_at', 'DESC')
+                                           ->findAll();
+
+        return view('patient/notifications', [
+            'role' => 'doctor',
+            'title' => 'Notifikasi - Orion Clinic',
+            'notifications' => $notifications
+        ]);
+    }
+
+    public function readAllNotifications()
+    {
+        $userId = session()->get('user_id');
+        $notificationModel = new \App\Models\NotificationModel();
+        
+        $notificationModel->where('user_id', $userId)
+                          ->where('is_read', 0)
+                          ->set(['is_read' => 1])
+                          ->update();
+
+        return redirect()->back()->with('success', 'Semua notifikasi telah ditandai dibaca.');
     }
 }

@@ -39,7 +39,8 @@
                         <!-- History Item -->
                         <div class="relative pl-12 pb-6">
                             <?php 
-                                $colorClass = 'bg-[#003E7E]';
+                                $colorClass = 'bg-[#003E7E]'; // pending
+                                if ($h['status'] == 'unpaid') $colorClass = 'bg-[#FF9800]';
                                 if ($h['status'] == 'cancelled') $colorClass = 'bg-[#E53935]';
                                 if ($h['status'] == 'completed') $colorClass = 'bg-[#4CAF50]';
                             ?>
@@ -54,7 +55,11 @@
                                 <?php if ($h['diagnosis']): ?>
                                     <p class="text-xs text-[#7b7b78] mt-1">Diagnosis: <?= esc($h['diagnosis']) ?></p>
                                 <?php endif; ?>
-                                <button onclick="window.location.href='<?= base_url('patient/historyDetail?id=' . $h['id']) ?>'" class="mt-3 text-xs text-blue-600 font-bold hover:text-blue-800 transition-colors">Lihat Detail →</button>
+                                <?php if ($h['status'] == 'unpaid' && $h['payment_id']): ?>
+                                    <button onclick="window.location.href='<?= base_url('patient/payment?id=' . $h['payment_id']) ?>'" class="mt-3 text-xs text-orange-600 font-bold hover:text-orange-800 transition-colors">Bayar Sekarang →</button>
+                                <?php else: ?>
+                                    <button onclick="window.location.href='<?= base_url('patient/historyDetail?id=' . $h['id']) ?>'" class="mt-3 text-xs text-blue-600 font-bold hover:text-blue-800 transition-colors">Lihat Detail →</button>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>

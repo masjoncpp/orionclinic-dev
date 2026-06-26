@@ -11,9 +11,8 @@ class PaymentModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = [];
-
+    protected $allowedFields    = ['appointment_id', 'type', 'amount', 'payment_method', 'status', 'payment_date', 'bukti_transfer'];
+    
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
 
@@ -21,7 +20,7 @@ class PaymentModel extends Model
     protected array $castHandlers = [];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';

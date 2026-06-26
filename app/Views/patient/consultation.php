@@ -110,53 +110,67 @@
 </div>
 
 <!-- Booking Modal -->
-<div id="booking-modal" class="hidden fixed inset-0 z-50 flex items-end md:items-center justify-center bg-[#111111]/40 backdrop-blur-sm transition-opacity">
-    <div class="bg-white rounded-t-[24px] md:rounded-[24px] shadow-2xl w-full max-w-md mx-auto overflow-hidden transform transition-transform translate-y-full md:translate-y-0" id="booking-modal-content">
-        <div class="px-6 py-4 border-b border-[#d3cec6] flex justify-between items-center bg-[#f5f1ec]">
-            <h3 class="text-base font-bold text-[#111111]">Mulai Konsultasi</h3>
-            <button type="button" onclick="closeBookingModal()" class="p-2 text-[#7b7b78] hover:bg-[#ebe7e1] rounded-full transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+<div id="booking-modal" class="fixed inset-0 z-[60] hidden flex items-end sm:items-center justify-center bg-[#111111]/40 backdrop-blur-sm transition-opacity">
+    <div class="bg-[#ffffff] w-full sm:w-[400px] max-h-[90vh] flex flex-col rounded-t-[32px] sm:rounded-[32px] overflow-hidden transform translate-y-full transition-transform duration-300 shadow-2xl" id="booking-modal-content">
+        <!-- Handle for mobile drag -->
+        <div class="w-full flex justify-center pt-3 pb-1 sm:hidden">
+            <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+        </div>
+        
+        <div class="px-6 py-4 border-b border-[#ebe7e1] flex items-center justify-between sticky top-0 bg-white z-10">
+            <h3 class="text-lg font-bold text-[#111111]">Mulai Konsultasi</h3>
+            <button onclick="closeBookingModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-[#f5f1ec] text-[#626260] hover:bg-[#ebe7e1] transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
         </div>
-        <div class="p-6">
-            <form action="<?= base_url('patient/book_appointment') ?>" method="POST">
+        
+        <div class="p-6 overflow-y-auto flex-1">
+            <form action="<?= base_url('patient/book_appointment') ?>" method="POST" class="flex flex-col h-full">
                 <input type="hidden" name="doctor_id" id="modal-doctor-id" value="">
                 
-                <div class="mb-4">
-                    <p class="text-xs text-[#7b7b78] mb-1">Dokter Tujuan</p>
-                    <p class="text-sm font-bold text-[#111111]" id="modal-doctor-name">-</p>
+                <div class="mb-5 bg-[#f5f1ec] p-4 rounded-[16px] flex items-center">
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mr-3 shadow-sm">
+                        <svg class="w-6 h-6 text-[#003E7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-[#7b7b78] mb-0.5">Dokter Tujuan</p>
+                        <p class="text-sm font-bold text-[#003E7E]" id="modal-doctor-name">-</p>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="grid grid-cols-2 gap-4 mb-5">
                     <div>
                         <label for="appointment_date" class="block text-xs font-semibold text-[#111111] mb-2">Tanggal</label>
                         <input type="date" name="appointment_date" id="appointment_date" required min="<?= date('Y-m-d') ?>" 
-                            class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/50 focus:border-[#003E7E] transition-all">
+                            class="w-full bg-[#ffffff] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/50 focus:border-[#003E7E] transition-all shadow-sm">
                     </div>
                     <div>
                         <label for="time_slot" class="block text-xs font-semibold text-[#111111] mb-2">Waktu (Format 24 Jam)</label>
                         <input type="text" name="time_slot" id="time_slot" required 
                             placeholder="Misal: 14:30" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" maxlength="5"
-                            class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/50 focus:border-[#003E7E] transition-all">
+                            class="w-full bg-[#ffffff] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/50 focus:border-[#003E7E] transition-all shadow-sm">
                     </div>
                 </div>
 
                 <div class="mb-5">
-                    <label for="reason" class="block text-xs font-semibold text-[#111111] mb-2">Keluhan Utama (Wajib)</label>
+                    <label for="reason" class="block text-xs font-semibold text-[#111111] mb-2">Keluhan Utama <span class="text-red-500">*</span></label>
                     <textarea name="reason" id="reason" rows="3" required
                         placeholder="Ceritakan secara singkat keluhan yang Anda rasakan saat ini..."
-                        class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/50 focus:border-[#003E7E] transition-all resize-none"></textarea>
+                        class="w-full bg-[#ffffff] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/50 focus:border-[#003E7E] transition-all resize-none shadow-sm"></textarea>
                 </div>
                 
-                <div class="flex items-center justify-between py-3 mb-6 border-t border-b border-[#ebe7e1]">
-                    <span class="text-sm font-semibold text-[#626260]">Biaya Konsultasi</span>
-                    <span class="text-base font-bold text-[#111111]" id="modal-fee">Rp 0</span>
-                </div>
+                <div class="mt-auto pt-4 border-t border-[#ebe7e1]">
+                    <div class="flex items-center justify-between mb-4 bg-blue-50/50 p-4 rounded-[16px] border border-blue-100">
+                        <span class="text-sm font-semibold text-[#003E7E]">Biaya Konsultasi</span>
+                        <span class="text-lg font-extrabold text-[#111111]" id="modal-fee">Rp 0</span>
+                    </div>
 
-                <button type="submit"
-                        class="w-full py-3.5 bg-[#003E7E] text-white rounded-[16px] font-bold text-sm hover:bg-[#002855] transition-all shadow-lg shadow-blue-500/20">
-                    Ajukan Jadwal Konsultasi
-                </button>
+                    <button type="submit"
+                            class="w-full py-4 bg-[#003E7E] text-white rounded-[16px] font-bold text-sm hover:bg-[#002855] transition-all shadow-[0_8px_20px_rgba(0,62,126,0.25)] flex justify-center items-center">
+                        Ajukan Jadwal Sekarang
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </button>
+                </div>
             </form>
         </div>
     </div>

@@ -42,7 +42,60 @@
                     </div>
                 </div>
                 <div class="px-6 -mt-8 space-y-4 relative z-10">
-                    <div class="bg-[#ffffff] rounded-[24px] p-4  border border-[#d3cec6]">
+                    <?php if (session()->getFlashdata('success')) : ?>
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-[16px] relative shadow-sm" role="alert">
+                            <span class="block sm:inline font-medium"><?= session()->getFlashdata('success') ?></span>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (session()->getFlashdata('error')) : ?>
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-[16px] relative shadow-sm" role="alert">
+                            <span class="block sm:inline font-medium"><?= session()->getFlashdata('error') ?></span>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Informasi Profesional -->
+                    <div class="bg-[#ffffff] rounded-[24px] p-5 border border-[#d3cec6]">
+                        <div class="flex items-center justify-between mb-4 border-b border-[#d3cec6] pb-2">
+                            <h4 class="font-bold text-[#111111]">Informasi Profesional</h4>
+                            <?php if ($doctor['is_verified']): ?>
+                                <span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full flex items-center">
+                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    Terverifikasi
+                                </span>
+                            <?php else: ?>
+                                <span class="bg-orange-100 text-orange-700 text-xs font-bold px-2 py-1 rounded-full flex items-center">
+                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    Menunggu Verifikasi
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-xs text-[#7b7b78] font-medium mb-1">Spesialisasi</p>
+                                <p class="text-sm font-semibold text-[#111111]"><?= esc($doctor['specialization'] ?? '-') ?></p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-[#7b7b78] font-medium mb-1">Pengalaman</p>
+                                <p class="text-sm font-semibold text-[#111111]"><?= esc($doctor['experience_years'] ?? '0') ?> Tahun</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-[#7b7b78] font-medium mb-1">No. STR</p>
+                                <p class="text-sm font-semibold text-[#111111]"><?= esc($doctor['str_number'] ?? '-') ?></p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-[#7b7b78] font-medium mb-1">No. SIP</p>
+                                <p class="text-sm font-semibold text-[#111111]"><?= esc($doctor['sip_number'] ?? '-') ?></p>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-xs text-[#7b7b78] font-medium mb-1">Tarif Konsultasi</p>
+                                <p class="text-sm font-semibold text-[#003E7E]">Rp <?= number_format($doctor['consultation_fee'] ?? 0, 0, ',', '.') ?></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informasi Kontak -->
+                    <div class="bg-[#ffffff] rounded-[24px] p-5 border border-[#d3cec6]">
                         <h4 class="font-bold text-[#111111] mb-4 border-b border-[#d3cec6] pb-2">Informasi Kontak</h4>
                         <div class="space-y-3">
                             <div class="flex items-center text-sm">
@@ -55,16 +108,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="bg-[#ffffff] rounded-[24px] p-4  border border-[#d3cec6]">
+
+                    <!-- Pengaturan -->
+                    <div class="bg-[#ffffff] rounded-[24px] p-5 border border-[#d3cec6]">
                         <h4 class="font-bold text-[#111111] mb-4 border-b border-[#d3cec6] pb-2">Pengaturan</h4>
                         <div class="space-y-3">
-                            <button class="w-full flex items-center justify-between text-left text-sm py-2 group">
-                                <div class="flex items-center text-gray-700 group-hover:text-[#111111] transition-colors">
-                                    <svg class="w-5 h-5 text-[#7b7b78] mr-3 group-hover:text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                                    Ubah Kata Sandi
-                                </div>
-                                <svg class="w-5 h-5 text-[#7b7b78]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                            </button>
+                            <form action="<?= base_url('doctor/profile/toggle-status') ?>" method="POST" class="w-full">
+                                <button type="submit" class="w-full flex items-center justify-between text-left text-sm py-2 group">
+                                    <div class="flex items-center text-gray-700 group-hover:text-[#111111] transition-colors">
+                                        <?php if ($doctor['status'] == 'online'): ?>
+                                            <div class="w-5 h-5 rounded-full bg-green-500 mr-3 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+                                            <span class="font-medium">Status: Online</span>
+                                        <?php else: ?>
+                                            <div class="w-5 h-5 rounded-full bg-gray-400 mr-3 border-2 border-gray-200"></div>
+                                            <span class="font-medium">Status: Offline</span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <span class="text-xs text-[#003E7E] font-bold bg-blue-50 px-3 py-1 rounded-full">Ubah</span>
+                                </button>
+                            </form>
+                            
                             <button onclick="window.location.href='<?= base_url('doctor/schedules') ?>'" class="w-full flex items-center justify-between text-left text-sm py-2 group">
                                 <div class="flex items-center text-gray-700 group-hover:text-[#111111] transition-colors">
                                     <svg class="w-5 h-5 text-[#7b7b78] mr-3 group-hover:text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -72,19 +135,27 @@
                                 </div>
                                 <svg class="w-5 h-5 text-[#7b7b78]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                             </button>
+
+                            <button class="w-full flex items-center justify-between text-left text-sm py-2 group">
+                                <div class="flex items-center text-gray-700 group-hover:text-[#111111] transition-colors">
+                                    <svg class="w-5 h-5 text-[#7b7b78] mr-3 group-hover:text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                    Ubah Kata Sandi
+                                </div>
+                                <svg class="w-5 h-5 text-[#7b7b78]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </button>
                         </div>
                     </div>
 
                     <!-- Logout Button -->
-                    <div class="bg-[#ffffff] rounded-[24px]  overflow-hidden mb-6">
+                    <div class="bg-[#ffffff] rounded-[24px] overflow-hidden mb-6 shadow-sm border border-red-100">
                         <button onclick="window.location.href='<?= base_url('logout') ?>'"
                             class="w-full flex items-center p-4 hover:bg-red-50 transition-all">
-                            <div class="w-9 h-9 bg-red-50 rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
+                            <div class="w-9 h-9 bg-red-100 rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
                                 <svg class="w-4 h-4 text-[#E53935]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                                 </svg>
                             </div>
-                            <span class="flex-1 text-left font-semibold text-[#E53935] text-sm">Keluar dari Akun</span>
+                            <span class="flex-1 text-left font-bold text-[#E53935] text-sm">Keluar dari Akun</span>
                         </button>
                     </div>
                 </div>

@@ -15,22 +15,40 @@
             <?= $this->include('components/sidebar') ?>
         <?php endif; ?>
         <div class="flex-1 flex flex-col min-h-0 overflow-hidden relative">
-            <?php if (session()->getFlashdata('error')): ?>
-                <div class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                    <span class="block sm:inline"><?= session()->getFlashdata('error') ?></span>
-                </div>
-            <?php endif; ?>
-            <?php if (session()->getFlashdata('success')): ?>
-                <div class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                    <span class="block sm:inline"><?= session()->getFlashdata('success') ?></span>
-                </div>
-            <?php endif; ?>
+            <!-- Flash data removed in favor of SweetAlert2 JS below -->
             <?= $this->renderSection('content') ?>
         </div>
     </div>
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?= base_url('script.js') ?>"></script>
     <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
+        <?php if (session()->getFlashdata('success')): ?>
+        Toast.fire({
+            icon: 'success',
+            title: <?= json_encode(session()->getFlashdata('success')) ?>
+        });
+        <?php endif; ?>
+
+        <?php if (session()->getFlashdata('error')): ?>
+        Toast.fire({
+            icon: 'error',
+            title: <?= json_encode(session()->getFlashdata('error')) ?>
+        });
+        <?php endif; ?>
         $(document).ready(function() {
             var currentPath = window.location.pathname.replace(/\/$/, '');
             $('.nav-item').each(function() {

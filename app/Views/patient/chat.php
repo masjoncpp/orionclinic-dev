@@ -58,6 +58,9 @@
                     <?php if ($msg['sender_id'] == session()->get('user_id')): ?>
                         <div class="flex justify-end message-item" data-id="<?= $msg['id'] ?>">
                             <div class="bg-[#003E7E] rounded-[24px] rounded-tr-sm px-4 py-3 max-w-[78%] ">
+                                <?php if ($msg['attachment_path']): ?>
+                                    <img src="<?= base_url($msg['attachment_path']) ?>" class="max-w-full rounded-lg mb-2">
+                                <?php endif; ?>
                                 <p class="text-white text-sm leading-relaxed"><?= esc($msg['message']) ?></p>
                                 <span class="text-xs text-blue-200 mt-1 block text-right"><?= date('H:i', strtotime($msg['created_at'])) ?></span>
                             </div>
@@ -70,6 +73,9 @@
                                 </svg>
                             </div>
                             <div class="bg-[#ffffff] rounded-[24px] rounded-tl-sm px-4 py-3 max-w-[78%]  border border-gray-50">
+                                <?php if ($msg['attachment_path']): ?>
+                                    <img src="<?= base_url($msg['attachment_path']) ?>" class="max-w-full rounded-lg mb-2">
+                                <?php endif; ?>
                                 <p class="text-[#111111] text-sm leading-relaxed"><?= esc($msg['message']) ?></p>
                                 <span class="text-xs text-[#7b7b78] mt-1 block"><?= date('H:i', strtotime($msg['created_at'])) ?></span>
                             </div>
@@ -89,6 +95,12 @@
             </div>
         <?php elseif ($consultation && $consultation['status'] === 'active'): ?>
             <div class="flex items-center space-x-3">
+                <label for="chat-attachment" class="w-10 h-10 bg-[#f5f1ec] rounded-[24px] flex items-center justify-center cursor-pointer hover:bg-[#ebe7e1] transition-all flex-shrink-0 text-[#626260]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                    </svg>
+                </label>
+                <input type="file" id="chat-attachment" class="hidden" accept="image/*,.pdf,.doc,.docx">
                 <input id="chat-input" type="text" placeholder="Ketik pesan..."
                     class="flex-1 bg-[#f5f1ec] rounded-[24px] px-4 py-2.5 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-blue-300 focus:bg-[#ffffff] transition-all">
                 <button id="send-btn"
@@ -137,7 +149,8 @@ $(document).ready(function() {
         if (isMe) {
             html = `
                 <div class="flex justify-end message-item" data-id="${msg.id}">
-                    <div class="bg-[#003E7E] rounded-[24px] rounded-tr-sm px-4 py-3 max-w-[78%] ">
+                    <div class="bg-[#003E7E] rounded-[24px] rounded-tr-sm px-4 py-3 max-w-[78%]">
+                        ${msg.attachment_path ? '<img src="<?= base_url() ?>' + msg.attachment_path + '" class="max-w-full rounded-lg mb-2">' : ''}
                         <p class="text-white text-sm leading-relaxed">${$('<div>').text(msg.message).html()}</p>
                         <span class="text-xs text-blue-200 mt-1 block text-right">${time}</span>
                     </div>
@@ -149,6 +162,7 @@ $(document).ready(function() {
                         <svg class="w-3.5 h-3.5 text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                     </div>
                     <div class="bg-[#ffffff] rounded-[24px] rounded-tl-sm px-4 py-3 max-w-[78%]  border border-gray-50">
+                        ${msg.attachment_path ? '<img src="<?= base_url() ?>' + msg.attachment_path + '" class="max-w-full rounded-lg mb-2">' : ''}
                         <p class="text-[#111111] text-sm leading-relaxed">${$('<div>').text(msg.message).html()}</p>
                         <span class="text-xs text-[#7b7b78] mt-1 block">${time}</span>
                     </div>
@@ -162,23 +176,32 @@ $(document).ready(function() {
 
     function sendMessage() {
         var text = $('#chat-input').val().trim();
-        if (!text || !consultationId) return;
+        var fileInput = document.getElementById('chat-attachment');
+        var file = fileInput ? fileInput.files[0] : null;
+
+        if (!text && !file) return;
+        if (!consultationId) return;
 
         $('#send-btn').prop('disabled', true).addClass('opacity-50');
+
+        var formData = new FormData();
+        formData.append('consultation_id', consultationId);
+        if (text) formData.append('message', text);
+        if (file) formData.append('attachment', file);
 
         $.ajax({
             url: "<?= base_url('chat/send') ?>",
             method: "POST",
-            data: {
-                consultation_id: consultationId,
-                message: text
-            },
+            data: formData,
+            processData: false,
+            contentType: false,
             success: function(response) {
                 if (response.status === 'success') {
                     $('#chat-input').val('');
+                    if (fileInput) fileInput.value = '';
                     fetchUpdates();
                 } else {
-                    alert(response.message);
+                    Toast.fire({ icon: 'error', title: response.message });
                 }
             },
             complete: function() {

@@ -80,6 +80,14 @@
                     </div>
                 </div>
                 <?php endif; ?>
+                <?php if (!empty($consultation['follow_up'])): ?>
+                <div>
+                    <h4 class="text-xs font-semibold text-[#7b7b78] uppercase tracking-wider mb-2">Tindak Lanjut</h4>
+                    <div class="p-3 bg-blue-50/50 rounded-[16px] border border-blue-100">
+                        <p class="text-sm text-[#111111] leading-relaxed"><?= nl2br(esc($consultation['follow_up'])) ?></p>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
         <?php endif; ?>
@@ -131,10 +139,49 @@
             </button>
             <?php endif; ?>
             
-            <button class="py-3.5 bg-[#003E7E] text-white rounded-[16px] text-sm font-bold hover:bg-[#002855] transition-all  -blue-200 col-span-<?= ($appointment['status'] == 'cancelled') ? '2' : '1' ?>">
-                Jadwalkan Ulang
-            </button>
+            <?php if (in_array($appointment['status'], ['unpaid', 'pending', 'confirmed'])): ?>
+                <button onclick="document.getElementById('reschedule-modal').classList.remove('hidden')" class="py-3.5 bg-[#003E7E] text-white rounded-[16px] text-sm font-bold hover:bg-[#002855] transition-all shadow-sm">
+                    Jadwalkan Ulang
+                </button>
+                <form action="<?= base_url('patient/cancel_appointment') ?>" method="POST" class="col-span-2 mt-2" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan janji temu ini?');">
+                    <input type="hidden" name="appointment_id" value="<?= $appointment['id'] ?>">
+                    <button type="submit" class="w-full py-3.5 bg-[#ffffff] text-[#E53935] border border-red-100 rounded-[16px] text-sm font-bold hover:bg-red-50 transition-all text-center">
+                        Batalkan Janji Temu
+                    </button>
+                </form>
+            <?php elseif ($appointment['status'] == 'cancelled'): ?>
+                <button onclick="window.location.href='<?= base_url('patient/consultation') ?>'" class="py-3.5 bg-[#003E7E] text-white rounded-[16px] text-sm font-bold hover:bg-[#002855] transition-all col-span-2 shadow-sm">
+                    Buat Janji Baru
+                </button>
+            <?php endif; ?>
         </div>
+    </div>
+</div>
+
+<!-- Modal Jadwal Ulang -->
+<div id="reschedule-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="document.getElementById('reschedule-modal').classList.add('hidden')"></div>
+    <div class="absolute bottom-0 left-0 right-0 bg-[#ffffff] rounded-t-[32px] p-6 slide-up-fast">
+        <div class="w-12 h-1.5 bg-[#ebe7e1] rounded-full mx-auto mb-6"></div>
+        <h3 class="font-bold text-lg text-[#111111] mb-4">Jadwalkan Ulang Janji Temu</h3>
+        <form action="<?= base_url('patient/reschedule_appointment') ?>" method="POST" class="space-y-4">
+            <input type="hidden" name="appointment_id" value="<?= $appointment['id'] ?>">
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-[#111111] mb-2">Tanggal Baru</label>
+                    <input type="date" name="appointment_date" required min="<?= date('Y-m-d') ?>" value="<?= $appointment['appointment_date'] ?>"
+                        class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm focus:outline-none focus:border-[#003E7E]">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-[#111111] mb-2">Waktu Baru</label>
+                    <input type="text" name="time_slot" required placeholder="Misal: 14:30" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" maxlength="5" value="<?= date('H:i', strtotime($appointment['time_slot'])) ?>"
+                        class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm focus:outline-none focus:border-[#003E7E]">
+                </div>
+            </div>
+            
+            <button type="submit" class="w-full bg-[#003E7E] hover:bg-[#002a5c] transition-colors text-white py-4 rounded-[16px] font-bold mt-4 shadow-sm">Simpan Jadwal Baru</button>
+        </form>
     </div>
 </div>
 <?= $this->endSection() ?>

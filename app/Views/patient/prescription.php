@@ -67,10 +67,35 @@
                             </div>
                         <?php endif; ?>
 
-                        <div class="p-4 bg-[#f5f1ec]">
-                            <button class="w-full btn-primary text-white py-3 rounded-[16px] font-bold text-sm">
-                                Tebus Obat
-                            </button>
+                        <div class="p-4 bg-[#f5f1ec] border-t border-gray-50 flex justify-between items-center">
+                            <div>
+                                <p class="text-xs text-[#7b7b78] mb-0.5">Total Harga Obat</p>
+                                <p class="font-bold text-[#111111] text-sm">Rp <?= number_format($p['total_cost'], 0, ',', '.') ?></p>
+                            </div>
+                            <?php if ($p['status'] == 'issued'): ?>
+                            <form action="<?= base_url('patient/checkout_prescription') ?>" method="POST" class="w-1/2">
+                                <input type="hidden" name="prescription_id" value="<?= $p['id'] ?>">
+                                <button type="submit" class="w-full btn-primary text-white py-2.5 rounded-[12px] font-bold text-sm shadow-sm">
+                                    Tebus Obat
+                                </button>
+                            </form>
+                            <?php elseif ($p['status'] == 'redeemed'): ?>
+                            <div class="w-1/2 text-right">
+                                <span class="bg-blue-100 text-blue-700 font-bold text-xs px-4 py-2 rounded-[12px]">Menunggu Apotek</span>
+                            </div>
+                            <?php elseif ($p['status'] == 'preparing'): ?>
+                            <div class="w-1/2 text-right">
+                                <span class="bg-yellow-100 text-yellow-700 font-bold text-xs px-4 py-2 rounded-[12px]">Sedang Disiapkan</span>
+                            </div>
+                            <?php elseif ($p['status'] == 'ready'): ?>
+                            <div class="w-1/2 text-right">
+                                <span class="bg-green-100 text-green-700 font-bold text-xs px-4 py-2 rounded-[12px]">Siap Diambil!</span>
+                            </div>
+                            <?php elseif ($p['status'] == 'completed'): ?>
+                            <div class="w-1/2 text-right">
+                                <span class="bg-gray-100 text-gray-700 font-bold text-xs px-4 py-2 rounded-[12px]">Selesai</span>
+                            </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>

@@ -7,11 +7,12 @@
 
         <!-- Nav Links -->
         <nav class="flex items-center gap-2">
-            <a href="#hero"       class="sidebar-link px-4 py-2 text-[#111111] font-normal text-[14px]">Beranda</a>
-            <a href="#tentang"    class="sidebar-link px-4 py-2 text-[#111111] font-normal text-[14px]">Tentang Kami</a>
-            <a href="#layanan"    class="sidebar-link px-4 py-2 text-[#111111] font-normal text-[14px]">Layanan</a>
-            <a href="#cara-kerja" class="sidebar-link px-4 py-2 text-[#111111] font-normal text-[14px]">Cara Kerja</a>
-            <a href="#statistik"  class="sidebar-link px-4 py-2 text-[#111111] font-normal text-[14px]">Statistik</a>
+            <a href="<?= base_url('/#hero') ?>"       class="sidebar-link px-4 py-2 text-[#111111] font-normal text-[14px]">Beranda</a>
+            <a href="<?= base_url('/#tentang') ?>"    class="sidebar-link px-4 py-2 text-[#111111] font-normal text-[14px]">Tentang Kami</a>
+            <a href="<?= base_url('/#layanan') ?>"    class="sidebar-link px-4 py-2 text-[#111111] font-normal text-[14px]">Layanan</a>
+            <a href="<?= base_url('/#cara-kerja') ?>" class="sidebar-link px-4 py-2 text-[#111111] font-normal text-[14px]">Cara Kerja</a>
+            <a href="<?= base_url('/#statistik') ?>"  class="sidebar-link px-4 py-2 text-[#111111] font-normal text-[14px]">Statistik</a>
+            <a href="<?= base_url('mitra-dokter') ?>" class="sidebar-link px-4 py-2 text-[#003E7E] font-bold text-[14px]">Gabung Dokter</a>
         </nav>
 
         <!-- Auth Buttons (pojok kanan atas) -->
@@ -60,11 +61,12 @@
             </button>
         </div>
         <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
-            <a href="#hero"       onclick="toggleMobileMenu()" class="flex items-center px-3 py-2.5 text-[#111111] rounded-[8px] hover:bg-[#ebe7e1] font-normal text-[16px]">Beranda</a>
-            <a href="#tentang"    onclick="toggleMobileMenu()" class="flex items-center px-3 py-2.5 text-[#111111] rounded-[8px] hover:bg-[#ebe7e1] font-normal text-[16px]">Tentang Kami</a>
-            <a href="#layanan"    onclick="toggleMobileMenu()" class="flex items-center px-3 py-2.5 text-[#111111] rounded-[8px] hover:bg-[#ebe7e1] font-normal text-[16px]">Layanan</a>
-            <a href="#cara-kerja" onclick="toggleMobileMenu()" class="flex items-center px-3 py-2.5 text-[#111111] rounded-[8px] hover:bg-[#ebe7e1] font-normal text-[16px]">Cara Kerja</a>
-            <a href="#statistik"  onclick="toggleMobileMenu()" class="flex items-center px-3 py-2.5 text-[#111111] rounded-[8px] hover:bg-[#ebe7e1] font-normal text-[16px]">Statistik</a>
+            <a href="<?= base_url('/#hero') ?>"       onclick="toggleMobileMenu()" class="flex items-center px-3 py-2.5 text-[#111111] rounded-[8px] hover:bg-[#ebe7e1] font-normal text-[16px]">Beranda</a>
+            <a href="<?= base_url('/#tentang') ?>"    onclick="toggleMobileMenu()" class="flex items-center px-3 py-2.5 text-[#111111] rounded-[8px] hover:bg-[#ebe7e1] font-normal text-[16px]">Tentang Kami</a>
+            <a href="<?= base_url('/#layanan') ?>"    onclick="toggleMobileMenu()" class="flex items-center px-3 py-2.5 text-[#111111] rounded-[8px] hover:bg-[#ebe7e1] font-normal text-[16px]">Layanan</a>
+            <a href="<?= base_url('/#cara-kerja') ?>" onclick="toggleMobileMenu()" class="flex items-center px-3 py-2.5 text-[#111111] rounded-[8px] hover:bg-[#ebe7e1] font-normal text-[16px]">Cara Kerja</a>
+            <a href="<?= base_url('/#statistik') ?>"  onclick="toggleMobileMenu()" class="flex items-center px-3 py-2.5 text-[#111111] rounded-[8px] hover:bg-[#ebe7e1] font-normal text-[16px]">Statistik</a>
+            <a href="<?= base_url('mitra-dokter') ?>" onclick="toggleMobileMenu()" class="flex items-center px-3 py-2.5 text-[#003E7E] rounded-[8px] hover:bg-[#ebe7e1] font-bold text-[16px]">Gabung Dokter</a>
         </nav>
         <div class="px-4 py-4 border-t border-[#d3cec6] space-y-2">
             <a href="<?= base_url('auth/login') ?>"  class="block w-full text-center px-[18px] py-[10px] rounded-[8px] bg-[#ffffff] text-[#111111] border border-[#d3cec6] font-medium text-[15px]">Masuk</a>

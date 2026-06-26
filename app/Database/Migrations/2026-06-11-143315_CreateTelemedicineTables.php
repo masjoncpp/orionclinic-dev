@@ -52,7 +52,11 @@ class CreateTelemedicineTables extends Migration
             'time_slot'   => ['type' => 'TIME'],
             'reason'      => ['type' => 'TEXT', 'null' => true],
             'queue_number' => ['type' => 'INT', 'constraint' => 11, 'null' => true],
-            'status'      => ['type' => 'ENUM', 'constraint' => ['pending', 'confirmed', 'cancelled', 'completed'], 'default' => 'pending'],
+            'status' => [
+                'type' => 'ENUM',
+                'constraint' => ['unpaid', 'pending', 'confirmed', 'completed', 'cancelled'],
+                'default' => 'unpaid'
+            ],
             'created_at'  => ['type' => 'DATETIME', 'null' => true],
             'updated_at'  => ['type' => 'DATETIME', 'null' => true],
         ]);
@@ -136,13 +140,15 @@ class CreateTelemedicineTables extends Migration
 
         // 9. Payments Table
         $this->forge->addField([
-            'id'          => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+            'id' => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
             'appointment_id' => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true],
-            'amount'      => ['type' => 'DECIMAL', 'constraint' => '15,2'],
-            'payment_method' => ['type' => 'VARCHAR', 'constraint' => '100', 'null' => true],
-            'status'      => ['type' => 'ENUM', 'constraint' => ['pending', 'paid', 'failed'], 'default' => 'pending'],
-            'created_at'  => ['type' => 'DATETIME', 'null' => true],
-            'updated_at'  => ['type' => 'DATETIME', 'null' => true],
+            'type' => ['type' => 'ENUM', 'constraint' => ['consultation', 'prescription'], 'default' => 'consultation'],
+            'amount' => ['type' => 'DECIMAL', 'constraint' => '10,2'],
+            'payment_method' => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => true],
+            'status' => ['type' => 'ENUM', 'constraint' => ['pending', 'paid', 'failed'], 'default' => 'pending'],
+            'payment_date' => ['type' => 'DATETIME', 'null' => true],
+            'created_at' => ['type' => 'DATETIME', 'null' => true],
+            'updated_at' => ['type' => 'DATETIME', 'null' => true],
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('appointment_id', 'appointments', 'id', 'CASCADE', 'CASCADE');

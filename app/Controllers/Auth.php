@@ -110,8 +110,15 @@ class Auth extends BaseController
 
             if ($user['role'] === 'doctor') {
                 $doctorModel = new \App\Models\DoctorModel();
-                $doctorModel->where('user_id', $user['id'])->set(['status' => 'online'])->update();
+                $doctor = $doctorModel->where('user_id', $user['id'])->first();
+                if ($doctor) {
+                    $doctorModel->update($doctor['id'], ['status' => 'online']);
+                }
                 return redirect()->to('/doctor');
+            } elseif ($user['role'] === 'farmasi') {
+                return redirect()->to('/pharmacy');
+            } elseif ($user['role'] === 'admin') {
+                return redirect()->to('/admin');
             } else {
                 return redirect()->to('/patient');
             }
@@ -127,7 +134,10 @@ class Auth extends BaseController
         if (session()->get('isLoggedIn')) {
             if (session()->get('role') === 'doctor') {
                 $doctorModel = new \App\Models\DoctorModel();
-                $doctorModel->where('user_id', session()->get('user_id'))->set(['status' => 'offline'])->update();
+                $doctor = $doctorModel->where('user_id', session()->get('user_id'))->first();
+                if ($doctor) {
+                    $doctorModel->update($doctor['id'], ['status' => 'offline']);
+                }
             }
             session()->destroy();
         }
