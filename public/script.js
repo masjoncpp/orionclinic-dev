@@ -135,15 +135,3 @@ if (window.elementSdk) {
     });
 }
 
-// Prevent form submissions
-$(document).ready(function() {
-    $('#login-form').on('submit', (e) => {
-        e.preventDefault();
-        showScreen('home-screen');
-    });
-
-    $('#register-form').on('submit', (e) => {
-        e.preventDefault();
-        showScreen('home-screen');
-    });
-});

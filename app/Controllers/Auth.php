@@ -1,11 +1,33 @@
-<?php namespace App\Controllers;
+<?php
+
+namespace App\Controllers;
 
 use App\Models\UserModel;
+use Throwable;
 
 class Auth extends BaseController
 {
+    public function login()
+    {
+        if (session()->get('isLoggedIn')) {
+            $role = session()->get('role');
+            return ($role === 'doctor')
+                ? redirect()->to('/doctor')
+                : redirect()->to('/patient');
+        }
+        return view('auth/login', ['hide_sidebar' => true, 'title' => 'Masuk - Orion Clinic']);
+    }
+
     public function register()
     {
+        if (session()->get('isLoggedIn')) {
+            $role = session()->get('role');
+
+            return $role === 'doctor'
+                ? redirect()->to('/doctor')
+                : redirect()->to('/patient');
+        }
+
         return view('auth/register', ['hide_sidebar' => true, 'title' => 'Daftar Akun - Orion Clinic']);
     }
 
@@ -14,56 +36,112 @@ class Auth extends BaseController
         $model = new UserModel();
 
         $data = [
-            'name'     => $this->request->getPost('name'),
-            'email'    => $this->request->getPost('email'),
-            'phone'    => $this->request->getPost('phone'),
-            'password' => $this->request->getPost('password'),
+            'name'     => trim((string) $this->request->getPost('name')),
+            'email'    => trim((string) $this->request->getPost('email')),
+            'phone'    => trim((string) $this->request->getPost('phone')),
+            'password' => (string) $this->request->getPost('password'),
             'role'     => 'patient',
         ];
 
-        if (!$model->save($data)) {
-            return view('auth/register', [
-                'hide_sidebar' => true,
-                'title'        => 'Daftar Akun - Orion Clinic',
-                'validation'   => $model->errors()
+        try {
+            $saved = $model->save($data);
+        } catch (Throwable $exception) {
+            log_message('error', 'Register failed because the user store is unavailable: {message}', [
+                'message' => $exception->getMessage(),
             ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Pendaftaran belum dapat diproses karena koneksi database belum tersedia.');
         }
 
-        // Simpan notifikasi sukses di session agar muncul saat dialihkan
-        return redirect()->to('/')->with('success', 'Pendaftaran berhasil. Silakan coba masuk dengan akun baru Anda!');
+        if (! $saved) {
+            return redirect()->back()
+                ->withInput()
+                ->with('errors', $model->errors());
+        }
+
+        // Create Patient Profile
+        $userId = $model->getInsertID();
+        $patientModel = new \App\Models\PatientModel();
+        $patientModel->save([
+            'user_id' => $userId,
+            'gender'  => 'male', // default
+        ]);
+
+        return redirect()->to('/auth/login')->with('success', 'Pendaftaran Akun berhasil. Silahkan masuk dengan akun baru Anda!');
     }
 
     public function processLogin()
     {
-        $model = new UserModel();
-        $email = $this->request->getPost('email');
-        $password = $this->request->getPost('password');
+        $email    = trim((string) $this->request->getPost('email'));
+        $password = (string) $this->request->getPost('password');
 
-        $user = $model->where('email', $email)->first();
+        if ($email === '' || $password === '') {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Email dan kata sandi wajib diisi.');
+        }
+
+        $model = new UserModel();
+        try {
+            $user = $model->where('email', $email)->first();
+        } catch (Throwable $exception) {
+            log_message('error', 'Login failed because the user store is unavailable: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Login belum dapat diproses karena koneksi database belum tersedia.');
+        }
 
         if ($user && password_verify($password, $user['password'])) {
-            $sessionData = [
+            session()->regenerate();
+
+            session()->set([
                 'user_id'    => $user['id'],
                 'name'       => $user['name'],
                 'email'      => $user['email'],
                 'phone'      => $user['phone'],
                 'role'       => $user['role'],
                 'isLoggedIn' => true,
-            ];
-            session()->set($sessionData);
-            
-            if ($user['role'] == 'doctor') {
+            ]);
+
+            if ($user['role'] === 'doctor') {
+                $doctorModel = new \App\Models\DoctorModel();
+                $doctor = $doctorModel->where('user_id', $user['id'])->first();
+                if ($doctor) {
+                    $doctorModel->update($doctor['id'], ['status' => 'online']);
+                }
                 return redirect()->to('/doctor');
+            } elseif ($user['role'] === 'farmasi') {
+                return redirect()->to('/pharmacy');
+            } elseif ($user['role'] === 'admin') {
+                return redirect()->to('/admin');
+            } else {
+                return redirect()->to('/patient');
             }
-            return redirect()->to('/patient');
         }
 
-        return redirect()->to('/')->with('error', 'Email atau kata sandi yang Anda masukkan salah.');
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Email atau kata sandi yang Anda masukkan salah!');
     }
 
     public function logout()
     {
-        session()->destroy();
-        return redirect()->to('/')->with('success', 'Anda telah berhasil keluar.');
+        if (session()->get('isLoggedIn')) {
+            if (session()->get('role') === 'doctor') {
+                $doctorModel = new \App\Models\DoctorModel();
+                $doctor = $doctorModel->where('user_id', session()->get('user_id'))->first();
+                if ($doctor) {
+                    $doctorModel->update($doctor['id'], ['status' => 'offline']);
+                }
+            }
+            session()->destroy();
+        }
+
+        return redirect()->to('/auth/login')->with('success', 'Anda berhasil logout!');
     }
 }
