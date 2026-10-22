@@ -30,10 +30,27 @@ table(patients) {
   foreign_key(user_id) : INT
   date_of_birth : DATE
   gender : ENUM
+  blood_type : VARCHAR
   address : TEXT
   allergies : TEXT
   pre_existing_conditions : TEXT
   emergency_contact : VARCHAR
+  emergency_contact_phone : VARCHAR
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+table(family_members) {
+  primary_key(id) : INT
+  --
+  foreign_key(user_id) : INT
+  name : VARCHAR
+  relation : VARCHAR
+  date_of_birth : DATE
+  gender : ENUM
+  blood_type : VARCHAR
+  allergies : TEXT
+  pre_existing_conditions : TEXT
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -53,6 +70,27 @@ table(doctors) {
   updated_at : DATETIME
 }
 
+table(doctor_schedules) {
+  primary_key(id) : INT
+  --
+  foreign_key(doctor_id) : INT
+  day_of_week : VARCHAR
+  start_time : TIME
+  end_time : TIME
+  is_active : BOOLEAN
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+table(specializations) {
+  primary_key(id) : INT
+  --
+  name : VARCHAR
+  description : TEXT
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
 table(appointments) {
   primary_key(id) : INT
   --
@@ -61,7 +99,7 @@ table(appointments) {
   appointment_date : DATE
   time_slot : TIME
   reason : TEXT
-  queue_number : INT
+  queue_number : VARCHAR
   status : ENUM
   created_at : DATETIME
   updated_at : DATETIME
@@ -108,6 +146,8 @@ table(prescription_items) {
   frequency : VARCHAR
   duration : VARCHAR
   quantity : INT
+  created_at : DATETIME
+  updated_at : DATETIME
 }
 
 table(medical_records) {
@@ -127,9 +167,12 @@ table(payments) {
   primary_key(id) : INT
   --
   foreign_key(appointment_id) : INT
+  type : ENUM
   amount : DECIMAL
   payment_method : VARCHAR
   status : ENUM
+  payment_date : DATETIME
+  bukti_transfer : VARCHAR
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -140,7 +183,18 @@ table(notifications) {
   foreign_key(user_id) : INT
   title : VARCHAR
   message : TEXT
+  type : VARCHAR
   is_read : BOOLEAN
+  created_at : DATETIME
+}
+
+table(audit_logs) {
+  primary_key(id) : INT
+  --
+  foreign_key(user_id) : INT
+  action : VARCHAR
+  details : TEXT
+  ip_address : VARCHAR
   created_at : DATETIME
 }
 
@@ -152,6 +206,8 @@ appointments "1" -- "1" payments
 consultations "1" -- "1" prescriptions
 
 ' Relasi One-to-Many
+users "1" -- "many" family_members
+doctors "1" -- "many" doctor_schedules
 patients "1" -- "many" appointments
 doctors "1" -- "many" appointments
 consultations "1" -- "many" messages
@@ -160,5 +216,6 @@ prescriptions "1" -- "many" prescription_items
 patients "1" -- "many" medical_records
 consultations "1" -- "0..1" medical_records : "opsional"
 users "1" -- "many" notifications
+users "1" -- "many" audit_logs
 
 @enduml

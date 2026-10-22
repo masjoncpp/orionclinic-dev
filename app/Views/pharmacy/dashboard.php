@@ -15,7 +15,7 @@
                     <p class="text-xs text-[#7b7b78]">Apoteker</p>
                 </div>
                 <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-700 font-bold text-sm">
-                    <?= substr(session()->get('name'), 0, 1) ?>
+                    <?= esc(mb_strtoupper(mb_substr(session()->get('name') ?? 'Farmasi', 0, 1))) ?>
                 </div>
             </div>
             <a href="<?= base_url('logout') ?>" class="text-red-500 hover:text-red-700 font-bold text-sm bg-red-50 px-4 py-2 rounded-[12px] transition-colors">Logout</a>

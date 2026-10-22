@@ -109,6 +109,10 @@ class Icons
             <path d="M20 12 L30 18 L24 24" fill="#2196F3"/>
             <path d="M44 12 L34 18 L40 24" fill="#2196F3"/>
         ',
+        'receipt' => '
+            <rect x="14" y="8" width="36" height="48" rx="4" fill="#ffffff" stroke="#FF9800" stroke-width="3"/>
+            <path d="M22 18 h20 M22 26 h20 M22 34 h14 M22 42 h20" stroke="#FF9800" stroke-width="2" stroke-linecap="round"/>
+        ',
         'arrow_right' => '
             <circle cx="32" cy="32" r="28" fill="#003E7E"/>
             <path d="M26 16 L42 32 L26 48" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>

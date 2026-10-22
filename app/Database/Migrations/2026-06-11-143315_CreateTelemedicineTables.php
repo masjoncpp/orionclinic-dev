@@ -14,10 +14,12 @@ class CreateTelemedicineTables extends Migration
             'user_id'     => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true],
             'date_of_birth' => ['type' => 'DATE', 'null' => true],
             'gender'      => ['type' => 'ENUM', 'constraint' => ['male', 'female'], 'default' => 'male'],
+            'blood_type'  => ['type' => 'VARCHAR', 'constraint' => '5', 'null' => true],
             'address'     => ['type' => 'TEXT', 'null' => true],
             'allergies'   => ['type' => 'TEXT', 'null' => true],
             'pre_existing_conditions' => ['type' => 'TEXT', 'null' => true],
             'emergency_contact' => ['type' => 'VARCHAR', 'constraint' => '100', 'null' => true],
+            'emergency_contact_phone' => ['type' => 'VARCHAR', 'constraint' => '20', 'null' => true],
             'created_at'  => ['type' => 'DATETIME', 'null' => true],
             'updated_at'  => ['type' => 'DATETIME', 'null' => true],
         ]);
@@ -51,7 +53,7 @@ class CreateTelemedicineTables extends Migration
             'appointment_date' => ['type' => 'DATE'],
             'time_slot'   => ['type' => 'TIME'],
             'reason'      => ['type' => 'TEXT', 'null' => true],
-            'queue_number' => ['type' => 'INT', 'constraint' => 11, 'null' => true],
+            'queue_number' => ['type' => 'VARCHAR', 'constraint' => '50', 'null' => true],
             'status' => [
                 'type' => 'ENUM',
                 'constraint' => ['unpaid', 'pending', 'confirmed', 'completed', 'cancelled'],
@@ -98,7 +100,11 @@ class CreateTelemedicineTables extends Migration
         $this->forge->addField([
             'id'          => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
             'consultation_id' => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true],
-            'status'      => ['type' => 'ENUM', 'constraint' => ['issued', 'redeemed'], 'default' => 'issued'],
+            'status'      => [
+                'type' => 'ENUM',
+                'constraint' => ['issued', 'redeemed', 'preparing', 'ready', 'completed'],
+                'default' => 'issued'
+            ],
             'notes'       => ['type' => 'TEXT', 'null' => true],
             'created_at'  => ['type' => 'DATETIME', 'null' => true],
             'updated_at'  => ['type' => 'DATETIME', 'null' => true],
@@ -147,6 +153,7 @@ class CreateTelemedicineTables extends Migration
             'payment_method' => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => true],
             'status' => ['type' => 'ENUM', 'constraint' => ['pending', 'paid', 'failed'], 'default' => 'pending'],
             'payment_date' => ['type' => 'DATETIME', 'null' => true],
+            'bukti_transfer' => ['type' => 'VARCHAR', 'constraint' => '255', 'null' => true],
             'created_at' => ['type' => 'DATETIME', 'null' => true],
             'updated_at' => ['type' => 'DATETIME', 'null' => true],
         ]);
@@ -160,6 +167,7 @@ class CreateTelemedicineTables extends Migration
             'user_id'     => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true],
             'title'       => ['type' => 'VARCHAR', 'constraint' => '255'],
             'message'     => ['type' => 'TEXT'],
+            'type'        => ['type' => 'VARCHAR', 'constraint' => '50', 'default' => 'system'],
             'is_read'     => ['type' => 'BOOLEAN', 'default' => false],
             'created_at'  => ['type' => 'DATETIME', 'null' => true],
         ]);

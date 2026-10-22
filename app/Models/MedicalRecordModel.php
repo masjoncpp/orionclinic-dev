@@ -6,13 +6,20 @@ use CodeIgniter\Model;
 
 class MedicalRecordModel extends Model
 {
-    protected $table            = 'medicalrecords';
+    protected $table            = 'medical_records';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        'patient_id',
+        'consultation_id',
+        'blood_pressure',
+        'weight',
+        'height',
+        'summary',
+    ];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -21,7 +28,7 @@ class MedicalRecordModel extends Model
     protected array $castHandlers = [];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';

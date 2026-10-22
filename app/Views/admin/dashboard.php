@@ -1,6 +1,12 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
+<?php
+helper(['icon', 'form', 'url']);
+$adminName = session()->get('name') ?? 'Administrator';
+$initial = mb_strtoupper(mb_substr($adminName, 0, 1));
+?>
+
 <div class="h-full flex flex-col bg-[#f5f1ec] overflow-hidden fade-in">
     <!-- Header -->
     <header class="bg-[#ffffff] px-6 py-4 flex items-center justify-between border-b border-[#d3cec6] sticky top-0 z-10">
@@ -11,11 +17,11 @@
         <div class="flex items-center space-x-4">
             <div class="flex items-center space-x-3 border-r border-[#ebe7e1] pr-4">
                 <div class="text-right hidden md:block">
-                    <p class="text-sm font-bold text-[#111111]"><?= esc(session()->get('name')) ?></p>
+                    <p class="text-sm font-bold text-[#111111]"><?= esc($adminName) ?></p>
                     <p class="text-xs text-[#7b7b78]">Administrator</p>
                 </div>
                 <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-700 font-bold text-sm">
-                    <?= substr(session()->get('name'), 0, 1) ?>
+                    <?= esc($initial) ?>
                 </div>
             </div>
             <a href="<?= base_url('logout') ?>" class="text-red-500 hover:text-red-700 font-bold text-sm bg-red-50 px-4 py-2 rounded-[12px] transition-colors">Logout</a>
@@ -30,7 +36,7 @@
                 <div class="bg-white rounded-[24px] p-6 shadow-sm border border-[#ebe7e1] flex items-center justify-between">
                     <div>
                         <p class="text-[#7b7b78] text-sm font-semibold mb-1">Total Pendapatan</p>
-                        <h3 class="text-2xl font-extrabold text-[#003E7E]">Rp <?= number_format($totalRevenue, 0, ',', '.') ?></h3>
+                        <h3 class="text-2xl font-extrabold text-[#003E7E]">Rp <?= number_format((float)($totalRevenue ?? 0), 0, ',', '.') ?></h3>
                     </div>
                     <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600">
                         <?= icon('medical_records', 24) ?>
@@ -40,7 +46,7 @@
                 <div class="bg-white rounded-[24px] p-6 shadow-sm border border-[#ebe7e1] flex items-center justify-between">
                     <div>
                         <p class="text-[#7b7b78] text-sm font-semibold mb-1">Total Pasien</p>
-                        <h3 class="text-2xl font-extrabold text-[#111111]"><?= $totalPatients ?></h3>
+                        <h3 class="text-2xl font-extrabold text-[#111111]"><?= (int)($totalPatients ?? 0) ?></h3>
                     </div>
                     <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-600">
                         <?= icon('patient', 24) ?>
@@ -50,7 +56,7 @@
                 <div class="bg-white rounded-[24px] p-6 shadow-sm border border-[#ebe7e1] flex items-center justify-between">
                     <div>
                         <p class="text-[#7b7b78] text-sm font-semibold mb-1">Total Dokter</p>
-                        <h3 class="text-2xl font-extrabold text-[#111111]"><?= $totalDoctors ?></h3>
+                        <h3 class="text-2xl font-extrabold text-[#111111]"><?= (int)($totalDoctors ?? 0) ?></h3>
                     </div>
                     <div class="w-12 h-12 bg-yellow-50 rounded-full flex items-center justify-center text-yellow-600">
                         <?= icon('doctor', 24) ?>
@@ -60,7 +66,7 @@
                 <div class="bg-white rounded-[24px] p-6 shadow-sm border border-[#ebe7e1] flex items-center justify-between">
                     <div>
                         <p class="text-[#7b7b78] text-sm font-semibold mb-1">Konsultasi Selesai</p>
-                        <h3 class="text-2xl font-extrabold text-[#111111]"><?= $totalAppointments ?></h3>
+                        <h3 class="text-2xl font-extrabold text-[#111111]"><?= (int)($totalAppointments ?? 0) ?></h3>
                     </div>
                     <div class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center text-purple-600">
                         <?= icon('success', 24) ?>
@@ -134,14 +140,16 @@
                             <?php else: ?>
                                 <?php foreach($recentTransactions as $tx): ?>
                                     <tr class="hover:bg-[#f9f8f6] transition-colors">
-                                        <td class="py-4 px-6 text-sm text-[#7b7b78]"><?= date('d M Y, H:i', strtotime($tx['created_at'])) ?></td>
-                                        <td class="py-4 px-6 text-sm font-bold text-[#111111]"><?= esc($tx['patient_name']) ?></td>
-                                        <td class="py-4 px-6 text-sm text-[#111111] capitalize"><?= esc($tx['type']) ?></td>
-                                        <td class="py-4 px-6 text-sm font-bold text-[#111111]">Rp <?= number_format($tx['amount'], 0, ',', '.') ?></td>
+                                        <td class="py-4 px-6 text-sm text-[#7b7b78]">
+                                            <?= !empty($tx['created_at']) ? date('d M Y, H:i', strtotime($tx['created_at'])) : '-' ?>
+                                        </td>
+                                        <td class="py-4 px-6 text-sm font-bold text-[#111111]"><?= esc($tx['patient_name'] ?? 'Pasien') ?></td>
+                                        <td class="py-4 px-6 text-sm text-[#111111] capitalize"><?= esc($tx['type'] ?? '-') ?></td>
+                                        <td class="py-4 px-6 text-sm font-bold text-[#111111]">Rp <?= number_format((float)($tx['amount'] ?? 0), 0, ',', '.') ?></td>
                                         <td class="py-4 px-6 text-center">
-                                            <?php if($tx['status'] == 'paid'): ?>
+                                            <?php if(($tx['status'] ?? '') == 'paid'): ?>
                                                 <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Lunas</span>
-                                            <?php elseif($tx['status'] == 'pending'): ?>
+                                            <?php elseif(($tx['status'] ?? '') == 'pending'): ?>
                                                 <span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full">Pending</span>
                                             <?php else: ?>
                                                 <span class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Gagal</span>
