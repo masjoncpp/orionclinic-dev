@@ -1,69 +1,279 @@
-# CodeIgniter 4 Application Starter
+<p align="center">
+  <img src="public/assets/img/logoorion.png" alt="Orion Clinic Logo" width="120">
+</p>
 
-## What is CodeIgniter?
+<h1 align="center">🏥 Orion Clinic — Platform Telemedisin</h1>
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+<p align="center">
+  <strong>Sistem konsultasi kesehatan digital berbasis web untuk klinik modern</strong>
+</p>
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+<p align="center">
+  <img src="https://img.shields.io/badge/PHP-8.2+-8892BF?style=for-the-badge&logo=php&logoColor=white" alt="PHP 8.2+">
+  <img src="https://img.shields.io/badge/CodeIgniter-4.7-EF4223?style=for-the-badge&logo=codeigniter&logoColor=white" alt="CodeIgniter 4.7">
+  <img src="https://img.shields.io/badge/MySQL%20/%20MariaDB-Database-4479A1?style=for-the-badge&logo=mariadb&logoColor=white" alt="MySQL/MariaDB">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-CDN-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS">
+</p>
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+---
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+## 📋 Tentang Proyek
 
-## Installation & updates
+**Orion Clinic** adalah platform telemedisin terpadu yang menghubungkan pasien, dokter, apoteker, dan administrator klinik dalam satu ekosistem digital. Dibangun menggunakan **CodeIgniter 4** dengan antarmuka responsif **Tailwind CSS**, sistem ini mendukung alur konsultasi kesehatan dari booking jadwal hingga penebusan resep obat secara *end-to-end*.
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+> Proyek ini dikembangkan sebagai bagian dari tugas mata kuliah Semester 5 (SMT5) — Universitas Dian Nuswantoro.
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+---
 
-## Setup
+## ✨ Fitur Utama
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+### 👤 Pasien
+- Pendaftaran akun & manajemen profil lengkap (alergi, riwayat penyakit, golongan darah)
+- Pencarian & booking konsultasi dokter berdasarkan jadwal praktik
+- Sistem antrean digital dengan kode unik
+- Pembayaran konsultasi dengan upload bukti transfer
+- Chat real-time dengan dokter selama sesi konsultasi
+- Riwayat konsultasi & detail rekam medis
+- E-resep digital dan penebusan obat
+- Pengelolaan data anggota keluarga (dependents)
+- Notifikasi real-time untuk status booking & resep
+- Halaman Wellness untuk informasi kesehatan
 
-## Important Change with index.php
+### 🩺 Dokter
+- Dashboard ringkasan jadwal & pasien hari ini
+- Manajemen jadwal praktik per hari (Senin–Jumat)
+- Persetujuan / penolakan janji temu pasien
+- Ruang chat konsultasi dengan lampiran file
+- Penulisan catatan klinis, diagnosis, dan e-resep
+- Riwayat lengkap pasien yang pernah ditangani
+- Toggle status ketersediaan (Online / Offline / Busy)
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+### 💊 Farmasi (Apoteker)
+- Dashboard penerimaan resep digital dari dokter
+- Alur status obat: *Redeemed → Preparing → Ready → Completed*
+- Notifikasi otomatis ke pasien saat status obat berubah
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+### 🛡️ Administrator
+- Dashboard statistik klinik (pendapatan, jumlah pasien, jumlah dokter)
+- Manajemen akun pengguna (semua role)
+- Verifikasi dokter baru
+- Kelola master spesialisasi dokter
+- Laporan keuangan dan riwayat transaksi
+- Audit log aktivitas admin
 
-**Please** read the user guide for a better explanation of how CI4 works!
+---
 
-## Repository Management
+## 🏗️ Arsitektur Database
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+Sistem menggunakan **15 tabel** yang saling berelasi:
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+```
+users ──┬── patients ──── appointments ──── consultations ──┬── prescriptions ──── prescription_items
+        │                      │                │           └── medical_records
+        │                      │                └── messages
+        │                      └── payments
+        ├── doctors ──── doctor_schedules
+        ├── family_members
+        ├── notifications
+        └── audit_logs
 
-## Server Requirements
+specializations (Master Spesialisasi)
+```
 
-PHP version 8.2 or higher is required, with the following extensions installed:
+Diagram lengkap tersedia di [`database-schema.puml`](database-schema.puml) (format PlantUML).
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+---
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - The end of life date for PHP 8.1 was December 31, 2025.
-> - If you are still using below PHP 8.2, you should upgrade immediately.
-> - The end of life date for PHP 8.2 will be December 31, 2026.
+## 🚀 Instalasi & Menjalankan
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+### Prasyarat
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+| Software | Versi Minimum |
+| :--- | :--- |
+| PHP | 8.2+ |
+| Composer | 2.x |
+| MySQL / MariaDB | 5.7+ / 10.3+ |
+| Ekstensi PHP | `intl`, `mbstring`, `mysqli`, `mysqlnd`, `json` |
+
+### Langkah-langkah
+
+**1. Clone repository**
+
+```bash
+git clone https://github.com/masjoncpp/devorionclinic.git
+cd devorionclinic
+```
+
+**2. Install dependensi**
+
+```bash
+composer install
+```
+
+**3. Konfigurasi environment**
+
+```bash
+cp .env.example .env
+```
+
+Edit file `.env` dan sesuaikan kredensial database:
+
+```ini
+database.default.hostname = localhost
+database.default.database = orionclinic
+database.default.username = root
+database.default.password = 
+database.default.port = 3306
+```
+
+**4. Buat database**
+
+Pilih salah satu metode:
+
+<details>
+<summary><strong>Metode A: Import file SQL (Tercepat)</strong></summary>
+
+```bash
+# Menggunakan sudo (Ubuntu/Debian)
+sudo mysql < orionclinic.sql
+
+# Atau dengan user & password
+mysql -u root -p < orionclinic.sql
+```
+
+File `orionclinic.sql` sudah mencakup pembuatan database, seluruh tabel, foreign keys, dan data awal.
+
+</details>
+
+<details>
+<summary><strong>Metode B: Menggunakan Migration & Seeder (CI4 Spark)</strong></summary>
+
+```sql
+-- Di MySQL/MariaDB prompt:
+CREATE DATABASE orionclinic CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+```bash
+php spark migrate
+php spark db:seed TelemedicineSeeder
+```
+
+</details>
+
+**5. Jalankan development server**
+
+```bash
+php spark serve
+```
+
+Buka browser di **http://localhost:8080** 🚀
+
+---
+
+## 🔐 Akun Default
+
+Setelah seeding/import, akun berikut tersedia untuk pengujian:
+
+| Role | Email | Password | Halaman |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@clinic.com` | `admin123` | `/admin` |
+| **Farmasi** | `farmasi@clinic.com` | `farmasi123` | `/pharmacy` |
+| **Dokter** | `sarah@clinic.com` | `password123` | `/doctor` |
+| **Dokter** | `andi@clinic.com` | `password123` | `/doctor` |
+| **Dokter** | `maya@clinic.com` | `password123` | `/doctor` |
+| **Pasien** | `budi@gmail.com` | `password123` | `/patient` |
+
+---
+
+## 📁 Struktur Proyek
+
+```
+devorionclinic/
+├── app/
+│   ├── Config/            # Konfigurasi framework (Routes, Database, Filters)
+│   ├── Constants/         # Konstanta aplikasi (SVG Icons)
+│   ├── Controllers/       # Controller utama (Auth, Patient, Doctor, Admin, Pharmacy, Chat)
+│   ├── Database/
+│   │   ├── Migrations/    # File migrasi skema database
+│   │   └── Seeds/         # Seeder data awal
+│   ├── Filters/           # Auth & Role middleware
+│   ├── Helpers/           # Helper kustom (icon_helper)
+│   ├── Models/            # 14 model Eloquent-style
+│   └── Views/
+│       ├── admin/         # 7 halaman panel admin
+│       ├── auth/          # Login & register
+│       ├── components/    # Sidebar & navigasi
+│       ├── doctor/        # 8 halaman panel dokter
+│       ├── layouts/       # Template utama
+│       ├── patient/       # 12 halaman panel pasien
+│       └── pharmacy/      # Dashboard farmasi
+├── public/                # Document root (index.php, assets, CSS, JS)
+├── orionclinic.sql        # Dump SQL lengkap (DDL + data awal)
+├── database-schema.puml   # Diagram ER (PlantUML)
+└── .env.example           # Template konfigurasi environment
+```
+
+---
+
+## 🛣️ Alur Sistem
+
+```
+┌─────────┐    Booking     ┌─────────────┐    Bayar     ┌──────────┐
+│  Pasien  │──────────────▶│ Janji Temu   │────────────▶│ Payment  │
+└─────────┘                └─────────────┘              └──────────┘
+                                  │                          │
+                           Dokter Setujui               Lunas ✓
+                                  ▼                          │
+                           ┌─────────────┐                   │
+                           │ Konsultasi  │◀──────────────────┘
+                           │   (Chat)    │
+                           └─────────────┘
+                                  │
+                        Diagnosis & Resep
+                                  ▼
+                           ┌─────────────┐    Siapkan    ┌──────────┐
+                           │  E-Resep    │──────────────▶│ Farmasi  │
+                           └─────────────┘               └──────────┘
+                                  │                          │
+                           Rekam Medis                  Obat Siap ✓
+                                  ▼                          │
+                           ┌─────────────┐                   │
+                           │  Riwayat    │◀──────────────────┘
+                           └─────────────┘
+```
+
+---
+
+## 🧪 Menjalankan Test
+
+```bash
+vendor/bin/phpunit
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Teknologi |
+| :--- | :--- |
+| **Backend** | PHP 8.2+, CodeIgniter 4.7 |
+| **Frontend** | Tailwind CSS (CDN), jQuery 3.7, SweetAlert2 |
+| **Database** | MySQL / MariaDB dengan Foreign Key Constraints |
+| **Font** | Plus Jakarta Sans (Google Fonts) |
+| **Icon** | Custom SVG Icon System (inline, tanpa dependensi) |
+
+---
+
+## 👥 Tim Pengembang
+
+| Nama | NIM | Peran |
+| :--- | :--- | :--- |
+| M. Jottie Ramadhan Putu Sigit | 111202416048 | Fullstack Developer |
+
+> **Universitas Dian Nuswantoro** — Semarang, 2026
+
+---
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah [MIT License](LICENSE).
