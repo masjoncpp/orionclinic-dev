@@ -1,0 +1,59 @@
+# Git & Version Control
+.git
+.gitignore
+.gitattributes
+
+# Local Environment & Secrets (NEVER include in build context)
+.env
+.env.*
+!.env.example
+
+# Docker & Documentation files not needed inside image
+Dockerfile
+compose.yaml
+docker-compose*.yml
+.dockerignore
+README.md
+AGENTS.md
+database-schema.puml
+
+# Dependencies & Build Artifacts (installed cleanly inside Dockerfile)
+/vendor/
+/node_modules/
+/build/
+/coverage/
+.phpunit.result.cache
+
+# CI4 Runtime / Writable Data (logs, sessions, cache, user uploads, local sqlite db)
+/writable/cache/*
+!/writable/cache/index.html
+/writable/logs/*
+!/writable/logs/index.html
+/writable/session/*
+!/writable/session/index.html
+/writable/debugbar/*
+!/writable/debugbar/index.html
+/writable/uploads/*
+!/writable/uploads/index.html
+/writable/*.db
+/writable/*.sqlite
+/public/uploads/*
+
+# SQL Dumps & Backups (mounted only to db service, not baked into app image)
+*.sql
+*.sqlite
+*.db
+*.bak
+*.backup
+*.tmp
+*.temp
+*.log
+
+# IDE & OS metadata
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db

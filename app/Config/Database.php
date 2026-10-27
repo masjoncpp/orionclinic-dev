@@ -27,8 +27,8 @@ class Database extends Config
     public array $default = [
         'DSN'          => '',
         'hostname'     => 'localhost',
-        'username'     => 'jojo',
-        'password'     => 'masjottie12',
+        'username'     => 'root',
+        'password'     => '',
         'database'     => 'orionclinic',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
@@ -193,6 +193,28 @@ class Database extends Config
     public function __construct()
     {
         parent::__construct();
+
+        // Allow Docker / OS environment variables (DB_*) to configure connection consistently
+        if (($dbHost = getenv('DB_HOST', true) ?: getenv('DB_HOST')) !== false && $dbHost !== '') {
+            $this->default['hostname'] = $dbHost;
+            $this->tests['hostname']   = $dbHost;
+        }
+        if (($dbName = getenv('DB_DATABASE', true) ?: getenv('DB_DATABASE')) !== false && $dbName !== '') {
+            $this->default['database'] = $dbName;
+            $this->tests['database']   = $dbName;
+        }
+        if (($dbUser = getenv('DB_USERNAME', true) ?: getenv('DB_USERNAME')) !== false && $dbUser !== '') {
+            $this->default['username'] = $dbUser;
+            $this->tests['username']   = $dbUser;
+        }
+        if (($dbPass = getenv('DB_PASSWORD', true)) !== false || ($dbPass = getenv('DB_PASSWORD')) !== false) {
+            $this->default['password'] = $dbPass;
+            $this->tests['password']   = $dbPass;
+        }
+        if (($dbPort = getenv('DB_PORT', true) ?: getenv('DB_PORT')) !== false && $dbPort !== '') {
+            $this->default['port'] = (int) $dbPort;
+            $this->tests['port']   = (int) $dbPort;
+        }
 
         // Ensure that we always set the database group to 'tests' if
         // we are currently running an automated test suite, so that

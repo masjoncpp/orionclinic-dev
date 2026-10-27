@@ -22,9 +22,6 @@ Thumbs.db
 .LSOverride
 *.log
 
-# Composer
-composer.lock
-
 # Database Files
 *.sqlite
 *.db
@@ -45,6 +42,7 @@ coverage/
 .env.development
 .env.test
 phpunit.xml
+AGENTS.md
 
 # Temporary Files
 *.tmp
