@@ -100,8 +100,8 @@ Diagram lengkap tersedia di [`database-schema.puml`](database-schema.puml) (form
 **1. Clone repository**
 
 ```bash
-git clone https://github.com/masjoncpp/devorionclinic.git
-cd devorionclinic
+git clone https://github.com/masjoncpp/orionclinic-dev.git
+cd orionclinic-dev
 ```
 
 **2. Install dependensi**
@@ -116,13 +116,13 @@ composer install
 cp .env.example .env
 ```
 
-Edit file `.env` dan sesuaikan kredensial database:
+Edit file `.env` dan sesuaikan kredensial database lokal:
 
 ```ini
 database.default.hostname = localhost
 database.default.database = orionclinic
-database.default.username = root
-database.default.password = 
+database.default.username = your_db_user
+database.default.password = your_db_password
 database.default.port = 3306
 ```
 
@@ -134,11 +134,7 @@ Pilih salah satu metode:
 <summary><strong>Metode A: Import file SQL (Tercepat)</strong></summary>
 
 ```bash
-# Menggunakan sudo (Ubuntu/Debian)
-sudo mysql < orionclinic.sql
-
-# Atau dengan user & password
-mysql -u root -p < orionclinic.sql
+mysql -u your_db_user -p orionclinic < orionclinic.sql
 ```
 
 File `orionclinic.sql` sudah mencakup pembuatan database, seluruh tabel, foreign keys, dan data awal.
@@ -170,25 +166,10 @@ Buka browser di **http://localhost:8080** 🚀
 
 ---
 
-## 🔐 Akun Default
-
-Setelah seeding/import, akun berikut tersedia untuk pengujian:
-
-| Role | Email | Password | Halaman |
-| :--- | :--- | :--- | :--- |
-| **Admin** | `admin@clinic.com` | `admin123` | `/admin` |
-| **Farmasi** | `farmasi@clinic.com` | `farmasi123` | `/pharmacy` |
-| **Dokter** | `sarah@clinic.com` | `password123` | `/doctor` |
-| **Dokter** | `andi@clinic.com` | `password123` | `/doctor` |
-| **Dokter** | `maya@clinic.com` | `password123` | `/doctor` |
-| **Pasien** | `budi@gmail.com` | `password123` | `/patient` |
-
----
-
 ## 📁 Struktur Proyek
 
 ```
-devorionclinic/
+orionclinic-dev/
 ├── app/
 │   ├── Config/            # Konfigurasi framework (Routes, Database, Filters)
 │   ├── Constants/         # Konstanta aplikasi (SVG Icons)
@@ -198,17 +179,17 @@ devorionclinic/
 │   │   └── Seeds/         # Seeder data awal
 │   ├── Filters/           # Auth & Role middleware
 │   ├── Helpers/           # Helper kustom (icon_helper)
-│   ├── Models/            # 14 model Eloquent-style
+│   ├── Models/            # 14 model CodeIgniter 4
 │   └── Views/
-│       ├── admin/         # 7 halaman panel admin
+│       ├── admin/         # Panel manajemen administrator
 │       ├── auth/          # Login & register
-│       ├── components/    # Sidebar & navigasi
-│       ├── doctor/        # 8 halaman panel dokter
+│       ├── components/    # Sidebar & navigasi responsif
+│       ├── doctor/        # Panel konsultasi & jadwal dokter
 │       ├── layouts/       # Template utama
-│       ├── patient/       # 12 halaman panel pasien
-│       └── pharmacy/      # Dashboard farmasi
+│       ├── patient/       # Panel reservasi & riwayat pasien
+│       └── pharmacy/      # Panel penebusan resep farmasi
 ├── public/                # Document root (index.php, assets, CSS, JS)
-├── orionclinic.sql        # Dump SQL lengkap (DDL + data awal)
+├── orionclinic.sql        # Dump skema database
 ├── database-schema.puml   # Diagram ER (PlantUML)
 └── .env.example           # Template konfigurasi environment
 ```
@@ -266,9 +247,9 @@ vendor/bin/phpunit
 
 ## 👥 Tim Pengembang
 
-| Nama | NIM | Peran |
-| :--- | :--- | :--- |
-| M. Jottie Ramadhan Putu Sigit | 111202416048 | Fullstack Developer |
+| Nama | Peran |
+| :--- | :--- |
+| M. Jottie Ramadhan Putu Sigit | Fullstack Developer |
 
 > **Universitas Dian Nuswantoro** — Semarang, 2026
 
