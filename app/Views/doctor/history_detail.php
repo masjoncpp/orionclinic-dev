@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <div id="history-detail-screen" class="flex flex-col h-full bg-[#f5f1ec] fade-in w-full">
     <!-- Header -->
-    <div class="bg-[#ffffff] px-4 py-3 border-b border-[#d3cec6] flex items-center justify-between sticky top-0 z-10 ">
+    <div class="bg-[#ffffff] px-4 py-3 border-b border-[#d3cec6] flex items-center justify-between sticky top-0 z-10 no-print">
         <div class="flex items-center">
             <button onclick="window.location.href='<?= base_url('doctor/consultation') ?>'"
                 class="p-2 -ml-1 rounded-[16px] hover:bg-[#f5f1ec] transition-all mr-2">
@@ -12,9 +12,25 @@
             </button>
             <h1 class="text-base font-bold text-[#111111]">Riwayat Pasien</h1>
         </div>
+        <button onclick="window.print()" title="Cetak Ringkasan Medis" class="flex items-center space-x-1.5 px-3 py-2 bg-[#f5f1ec] hover:bg-[#ebe7e1] rounded-[12px] transition-all text-[#003E7E] text-xs font-bold">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+            </svg>
+            <span>Cetak</span>
+        </button>
     </div>
 
     <div class="flex-1 overflow-y-auto p-5 pb-20 mx-auto w-full max-w-4xl">
+        <!-- Print Header (Only visible when printing) -->
+        <div class="print-only mb-6 pb-4 border-b-2 border-[#003E7E]">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-xl font-extrabold text-[#003E7E]">ORION CLINIC TELEMEDICINE</h1>
+                    <p class="text-xs text-[#626260]">Ringkasan Rekam Medis Pasien • ID #<?= $appointment['id'] ?></p>
+                </div>
+                <p class="text-xs text-[#626260]"><?= date('d M Y, H:i') ?></p>
+            </div>
+        </div>
         <!-- Consultation Info -->
         <div class="bg-[#ffffff] rounded-[24px] p-5 border border-gray-50 mb-4 slide-up">
             <div class="flex justify-between items-start mb-4">
@@ -66,6 +82,22 @@
             </h3>
             
             <div class="space-y-4">
+                <?php if (!empty($medicalRecord) && ($medicalRecord['blood_pressure'] || $medicalRecord['weight'] || $medicalRecord['height'])): ?>
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="p-3 bg-[#f9f8f6] rounded-[16px] border border-[#ebe7e1]">
+                        <p class="text-[10px] font-semibold text-[#7b7b78] uppercase">Tekanan Darah</p>
+                        <p class="text-sm font-bold text-[#111111] mt-0.5"><?= esc($medicalRecord['blood_pressure'] ?: '-') ?></p>
+                    </div>
+                    <div class="p-3 bg-[#f9f8f6] rounded-[16px] border border-[#ebe7e1]">
+                        <p class="text-[10px] font-semibold text-[#7b7b78] uppercase">Berat Badan</p>
+                        <p class="text-sm font-bold text-[#111111] mt-0.5"><?= $medicalRecord['weight'] ? esc($medicalRecord['weight']) . ' kg' : '-' ?></p>
+                    </div>
+                    <div class="p-3 bg-[#f9f8f6] rounded-[16px] border border-[#ebe7e1]">
+                        <p class="text-[10px] font-semibold text-[#7b7b78] uppercase">Tinggi Badan</p>
+                        <p class="text-sm font-bold text-[#111111] mt-0.5"><?= $medicalRecord['height'] ? esc($medicalRecord['height']) . ' cm' : '-' ?></p>
+                    </div>
+                </div>
+                <?php endif; ?>
                 <div>
                     <h4 class="text-xs font-semibold text-[#7b7b78] uppercase tracking-wider mb-2">Diagnosis</h4>
                     <div class="p-3 bg-[#f9f8f6] rounded-[16px] border border-[#ebe7e1]">
@@ -77,6 +109,14 @@
                     <h4 class="text-xs font-semibold text-[#7b7b78] uppercase tracking-wider mb-2">Catatan Tambahan</h4>
                     <div class="p-3 bg-[#f9f8f6] rounded-[16px] border border-[#ebe7e1]">
                         <p class="text-sm text-[#111111] leading-relaxed"><?= nl2br(esc($consultation['doctor_notes'])) ?></p>
+                    </div>
+                </div>
+                <?php endif; ?>
+                <?php if (!empty($medicalRecord['follow_up'])): ?>
+                <div>
+                    <h4 class="text-xs font-semibold text-[#7b7b78] uppercase tracking-wider mb-2">Tindak Lanjut (Follow-up)</h4>
+                    <div class="p-3 bg-[#f9f8f6] rounded-[16px] border border-[#ebe7e1]">
+                        <p class="text-sm text-[#111111] leading-relaxed"><?= nl2br(esc($medicalRecord['follow_up'])) ?></p>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -124,7 +164,7 @@
         <?php endif; ?>
 
         <!-- Action Buttons -->
-        <div class="mt-6">
+        <div class="mt-6 no-print">
             <button onclick="window.location.href='<?= base_url('doctor/chat?id=' . $appointment['id']) ?>'" class="w-full py-3.5 bg-[#ffffff] text-[#111111] border border-[#d3cec6] rounded-[16px] text-sm font-bold hover:bg-gray-50 transition-all text-center">
                 Lihat Log Chat Pasien Ini
             </button>

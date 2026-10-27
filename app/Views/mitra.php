@@ -79,7 +79,7 @@
 
                     <!-- Text -->
                     <div class="order-2 lg:order-1">
-                        <div class="inline-flex items-center bg-[#ebe7e1] text-white-700 px-4 py-1.5 rounded-full text-sm font-semibold mb-6 border-radius-50">
+                        <div class="inline-flex items-center bg-[#ebe7e1] text-[#003E7E] px-4 py-1.5 rounded-full text-sm font-bold mb-6 border border-[#d3cec6]">
                             <svg class="w-4 h-4 mr-2 text-[#003E7E]" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 11a1 1 0 112 0 1 1 0 01-2 0zm1-7a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                             </svg>
@@ -296,42 +296,6 @@
 
         document.querySelectorAll('.section-fade').forEach(el => observer.observe(el));
     });
-
-    // Mobile Menu Toggle
-    const btnMenu = document.getElementById('btn-mobile-menu');
-    const menuLayer = document.getElementById('mobile-menu');
-    const btnCloseMenu = document.getElementById('btn-close-menu');
-
-    if(btnMenu && menuLayer && btnCloseMenu) {
-        btnMenu.addEventListener('click', () => {
-            menuLayer.classList.remove('hidden');
-            // Sedikit delay agar transisi jalan
-            setTimeout(() => {
-                menuLayer.classList.add('open');
-            }, 10);
-        });
-
-        const closeMenu = () => {
-            menuLayer.classList.remove('open');
-            // Tunggu transisi selesai sebelum hide penuh
-            setTimeout(() => {
-                menuLayer.classList.add('hidden');
-            }, 300);
-        };
-
-        btnCloseMenu.addEventListener('click', closeMenu);
-        menuLayer.addEventListener('click', (e) => {
-            if (e.target === menuLayer) {
-                closeMenu();
-            }
-        });
-
-        // Close on link click
-        const mobileLinks = menuLayer.querySelectorAll('a');
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', closeMenu);
-        });
-    }
 </script>
 
 </body>

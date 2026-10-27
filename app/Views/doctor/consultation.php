@@ -3,7 +3,7 @@
 <div id="consultation-screen" class="flex flex-col h-full w-full bg-[#f5f1ec] flex-1 relative">
             <div class="flex-1 overflow-auto pb-20">
                 <div class="bg-[#ffffff] px-6 py-4 border-b border-[#d3cec6] flex items-center sticky top-0 z-10">
-                    <button onclick="window.location.href='<?= base_url('doctor') ?>'" class="p-2 -ml-2 rounded-full hover:bg-[#f5f1ec] transition-all mr-2 md:">
+                    <button onclick="window.location.href='<?= base_url('doctor') ?>'" class="p-2 -ml-2 rounded-full hover:bg-[#f5f1ec] transition-all mr-2 md:hidden">
                         <svg class="w-6 h-6 text-[#626260]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
                     </button>
                     <h1 class="text-xl font-bold text-[#111111]">Jadwal Konsultasi</h1>

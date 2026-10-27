@@ -3,8 +3,14 @@
 
 <div class="h-full bg-[#f5f1ec] overflow-y-auto fade-in">
     <!-- Header -->
-    <div class="bg-[#ffffff] px-4 py-4 border-b border-[#d3cec6] sticky top-0 z-10 flex items-center justify-center">
-        <h1 class="text-lg font-bold text-[#111111]">Pembayaran Konsultasi</h1>
+    <div class="bg-[#ffffff] px-4 py-4 border-b border-[#d3cec6] sticky top-0 z-10 flex items-center justify-between">
+        <button type="button" onclick="window.history.length > 1 ? window.history.back() : window.location.href='<?= base_url('patient/history') ?>'" class="p-2 -ml-1 rounded-[16px] hover:bg-[#f5f1ec] transition-all">
+            <svg class="w-5 h-5 text-[#626260]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <h1 class="text-lg font-bold text-[#111111]">Pembayaran <?= $payment['type'] == 'consultation' ? 'Konsultasi' : 'Resep Obat' ?></h1>
+        <div class="w-9"></div>
     </div>
 
     <div class="p-5 max-w-lg mx-auto pb-24">

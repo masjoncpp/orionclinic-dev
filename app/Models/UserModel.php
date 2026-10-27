@@ -22,8 +22,9 @@ class UserModel extends Model
 
     // Validation
     protected $validationRules      = [
+        'id'       => 'permit_empty|is_natural_no_zero',
         'name'     => 'required|min_length[3]',
-        'email'    => 'required|valid_email|is_unique[users.email]',
+        'email'    => 'required|valid_email|is_unique[users.email,id,{id}]',
         'password' => 'required|min_length[5]',
         'phone'    => 'required|numeric|min_length[10]',
     ];
@@ -41,7 +42,8 @@ class UserModel extends Model
 
     protected function hashPassword(array $data)
     {
-        if (! isset($data['data']['password'])) {
+        if (empty($data['data']['password'])) {
+            unset($data['data']['password']);
             return $data;
         }
 

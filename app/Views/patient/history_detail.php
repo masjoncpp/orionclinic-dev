@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <div id="history-detail-screen" class="flex flex-col h-full bg-[#f5f1ec] fade-in">
     <!-- Header -->
-    <div class="bg-[#ffffff] px-4 py-3 border-b border-[#d3cec6] flex items-center justify-between sticky top-0 z-10 ">
+    <div class="bg-[#ffffff] px-4 py-3 border-b border-[#d3cec6] flex items-center justify-between sticky top-0 z-10 no-print">
         <div class="flex items-center">
             <button onclick="window.location.href='<?= base_url('patient/history') ?>'"
                 class="p-2 -ml-1 rounded-[16px] hover:bg-[#f5f1ec] transition-all mr-2">
@@ -10,16 +10,27 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
             </button>
-            <h1 class="text-base font-bold text-[#111111]">Detail Riwayat</h1>
+            <h1 class="text-base font-bold text-[#111111]">Detail Rekam Medis</h1>
         </div>
-        <button class="p-2 bg-blue-50 text-blue-600 rounded-[12px] hover:bg-blue-100 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        <button onclick="window.print()" title="Cetak / Simpan PDF" class="px-3 py-1.5 bg-[#003E7E]/10 text-[#003E7E] rounded-[12px] hover:bg-[#003E7E] hover:text-white transition-colors flex items-center text-xs font-bold">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
             </svg>
+            Cetak Ringkasan
         </button>
     </div>
 
-    <div class="flex-1 overflow-y-auto p-5 pb-20 max-w-2xl mx-auto w-full">
+    <div class="flex-1 overflow-y-auto p-5 pb-20 max-w-2xl mx-auto w-full print-container">
+        <!-- Print-Only Official Header -->
+        <div class="hidden print-only border-b-2 border-[#003E7E] pb-4 mb-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-extrabold text-[#003E7E]">ORION CLINIC — RINGKASAN REKAM MEDIS</h2>
+                    <p class="text-xs text-[#626260]">Platform Telemedisin Terpadu • Dokumen Medis Pasien</p>
+                </div>
+                <span class="text-xs text-[#7b7b78]">Dicetak: <?= date('d M Y, H:i') ?> WIB</span>
+            </div>
+        </div>
         <!-- Consultation Info -->
         <div class="bg-[#ffffff] rounded-[24px] p-5 border border-gray-50 mb-4 slide-up">
             <div class="flex justify-between items-start mb-4">
@@ -66,6 +77,22 @@
             </h3>
             
             <div class="space-y-4">
+                <?php if (!empty($medicalRecord) && ($medicalRecord['blood_pressure'] || $medicalRecord['weight'] || $medicalRecord['height'])): ?>
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="p-3 bg-[#f9f8f6] rounded-[16px] border border-[#ebe7e1]">
+                        <p class="text-[10px] font-semibold text-[#7b7b78] uppercase">Tekanan Darah</p>
+                        <p class="text-sm font-bold text-[#111111] mt-0.5"><?= esc($medicalRecord['blood_pressure'] ?: '-') ?></p>
+                    </div>
+                    <div class="p-3 bg-[#f9f8f6] rounded-[16px] border border-[#ebe7e1]">
+                        <p class="text-[10px] font-semibold text-[#7b7b78] uppercase">Berat Badan</p>
+                        <p class="text-sm font-bold text-[#111111] mt-0.5"><?= $medicalRecord['weight'] ? esc($medicalRecord['weight']) . ' kg' : '-' ?></p>
+                    </div>
+                    <div class="p-3 bg-[#f9f8f6] rounded-[16px] border border-[#ebe7e1]">
+                        <p class="text-[10px] font-semibold text-[#7b7b78] uppercase">Tinggi Badan</p>
+                        <p class="text-sm font-bold text-[#111111] mt-0.5"><?= $medicalRecord['height'] ? esc($medicalRecord['height']) . ' cm' : '-' ?></p>
+                    </div>
+                </div>
+                <?php endif; ?>
                 <div>
                     <h4 class="text-xs font-semibold text-[#7b7b78] uppercase tracking-wider mb-2">Diagnosis</h4>
                     <div class="p-3 bg-[#f9f8f6] rounded-[16px] border border-[#ebe7e1]">
@@ -132,7 +159,7 @@
         <?php endif; ?>
 
         <!-- Action Buttons -->
-        <div class="grid grid-cols-2 gap-3 mt-6">
+        <div class="grid grid-cols-2 gap-3 mt-6 no-print">
             <?php if ($appointment['status'] !== 'cancelled'): ?>
             <button onclick="window.location.href='<?= base_url('patient/chat?id=' . $appointment['id']) ?>'" class="py-3.5 bg-[#ffffff] text-[#111111] border border-[#d3cec6] rounded-[16px] text-sm font-bold hover:bg-gray-50 transition-all text-center">
                 Lihat Chat
@@ -143,9 +170,9 @@
                 <button onclick="document.getElementById('reschedule-modal').classList.remove('hidden')" class="py-3.5 bg-[#003E7E] text-white rounded-[16px] text-sm font-bold hover:bg-[#002855] transition-all shadow-sm">
                     Jadwalkan Ulang
                 </button>
-                <form action="<?= base_url('patient/cancel_appointment') ?>" method="POST" class="col-span-2 mt-2" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan janji temu ini?');">
+                <form action="<?= base_url('patient/cancel_appointment') ?>" method="POST" id="cancel-apt-form" class="col-span-2 mt-2">
                     <input type="hidden" name="appointment_id" value="<?= $appointment['id'] ?>">
-                    <button type="submit" class="w-full py-3.5 bg-[#ffffff] text-[#E53935] border border-red-100 rounded-[16px] text-sm font-bold hover:bg-red-50 transition-all text-center">
+                    <button type="button" onclick="confirmCancelApt()" class="w-full py-3.5 bg-[#ffffff] text-[#E53935] border border-red-200 rounded-[16px] text-sm font-bold hover:bg-red-50 transition-all text-center">
                         Batalkan Janji Temu
                     </button>
                 </form>
@@ -159,29 +186,62 @@
 </div>
 
 <!-- Modal Jadwal Ulang -->
-<div id="reschedule-modal" class="fixed inset-0 z-50 hidden">
-    <div class="absolute inset-0 bg-black/50" onclick="document.getElementById('reschedule-modal').classList.add('hidden')"></div>
-    <div class="absolute bottom-0 left-0 right-0 bg-[#ffffff] rounded-t-[32px] p-6 slide-up-fast">
-        <div class="w-12 h-1.5 bg-[#ebe7e1] rounded-full mx-auto mb-6"></div>
-        <h3 class="font-bold text-lg text-[#111111] mb-4">Jadwalkan Ulang Janji Temu</h3>
+<div id="reschedule-modal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="document.getElementById('reschedule-modal').classList.add('hidden')"></div>
+    <div class="relative w-full sm:w-[420px] bg-[#ffffff] rounded-t-[32px] sm:rounded-[32px] p-6 slide-up-fast shadow-2xl">
+        <div class="w-12 h-1.5 bg-[#ebe7e1] rounded-full mx-auto mb-4 sm:hidden"></div>
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-lg text-[#111111]">Jadwalkan Ulang Janji Temu</h3>
+            <button type="button" onclick="document.getElementById('reschedule-modal').classList.add('hidden')" class="w-8 h-8 rounded-full bg-[#f5f1ec] flex items-center justify-center text-[#626260]">✕</button>
+        </div>
         <form action="<?= base_url('patient/reschedule_appointment') ?>" method="POST" class="space-y-4">
             <input type="hidden" name="appointment_id" value="<?= $appointment['id'] ?>">
             
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-xs font-semibold text-[#111111] mb-2">Tanggal Baru</label>
+                    <label class="block text-xs font-semibold text-[#111111] mb-1.5">Tanggal Baru</label>
                     <input type="date" name="appointment_date" required min="<?= date('Y-m-d') ?>" value="<?= $appointment['appointment_date'] ?>"
-                        class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm focus:outline-none focus:border-[#003E7E]">
+                        class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-3.5 py-2.5 text-sm focus:outline-none focus:border-[#003E7E]">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-[#111111] mb-2">Waktu Baru</label>
-                    <input type="text" name="time_slot" required placeholder="Misal: 14:30" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" maxlength="5" value="<?= date('H:i', strtotime($appointment['time_slot'])) ?>"
-                        class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-sm focus:outline-none focus:border-[#003E7E]">
+                    <label class="block text-xs font-semibold text-[#111111] mb-1.5">Waktu Baru</label>
+                    <input type="time" id="reschedule-time" name="time_slot" required value="<?= date('H:i', strtotime($appointment['time_slot'])) ?>"
+                        class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-3.5 py-2.5 text-sm focus:outline-none focus:border-[#003E7E]">
+                </div>
+            </div>
+
+            <div>
+                <p class="text-[11px] font-semibold text-[#626260] mb-1.5">Pilihan Jam Cepat (WIB):</p>
+                <div class="flex flex-wrap gap-1.5">
+                    <?php foreach (['08:00', '09:00', '10:00', '13:00', '14:00', '15:00', '16:00', '19:00'] as $slot): ?>
+                        <button type="button" onclick="document.getElementById('reschedule-time').value='<?= $slot ?>'"
+                            class="px-2.5 py-1 text-xs font-semibold rounded-[10px] border border-[#d3cec6] bg-[#f5f1ec] text-[#111111] hover:bg-[#003E7E] hover:text-white transition-all">
+                            <?= $slot ?>
+                        </button>
+                    <?php endforeach; ?>
                 </div>
             </div>
             
-            <button type="submit" class="w-full bg-[#003E7E] hover:bg-[#002a5c] transition-colors text-white py-4 rounded-[16px] font-bold mt-4 shadow-sm">Simpan Jadwal Baru</button>
+            <button type="submit" class="w-full bg-[#003E7E] hover:bg-[#002a5c] transition-colors text-white py-3.5 rounded-[16px] font-bold mt-2 shadow-sm">Simpan Jadwal Baru</button>
         </form>
     </div>
 </div>
+<script>
+function confirmCancelApt() {
+    Swal.fire({
+        title: 'Batalkan Janji Temu?',
+        text: 'Jadwal konsultasi Anda akan dibatalkan.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#E53935',
+        cancelButtonColor: '#626260',
+        confirmButtonText: 'Ya, Batalkan',
+        cancelButtonText: 'Kembali'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('cancel-apt-form').submit();
+        }
+    });
+}
+</script>
 <?= $this->endSection() ?>

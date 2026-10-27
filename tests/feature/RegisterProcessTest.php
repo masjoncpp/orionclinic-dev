@@ -14,12 +14,14 @@ final class RegisterProcessTest extends CIUnitTestCase
 
     protected $namespace = 'App';
     protected $basePath = APPPATH . 'Database';
+    protected $refresh = false;
 
     public function testRegisterCreatesPatientAccount(): void
     {
+        $email = 'test-pasien-' . uniqid() . '@example.com';
         $result = $this->post('/auth/register', [
             'name'     => 'Test Pasien',
-            'email'    => 'test-pasien@example.com',
+            'email'    => $email,
             'phone'    => '081234567890',
             'password' => 'rahasia123',
         ]);
@@ -29,7 +31,7 @@ final class RegisterProcessTest extends CIUnitTestCase
 
         $this->seeInDatabase('users', [
             'name'  => 'Test Pasien',
-            'email' => 'test-pasien@example.com',
+            'email' => $email,
             'role'  => 'patient',
             'phone' => '081234567890',
         ]);

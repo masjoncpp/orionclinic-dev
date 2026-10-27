@@ -31,6 +31,10 @@
                             <input type="email" name="email" required placeholder="budi@orion.com" class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-[#111111] text-sm focus:outline-none focus:border-[#003E7E] transition-colors">
                         </div>
                         <div>
+                            <label class="block text-xs font-semibold text-[#111111] mb-2">No. Telepon</label>
+                            <input type="tel" name="phone" required placeholder="081234567890" class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-[#111111] text-sm focus:outline-none focus:border-[#003E7E] transition-colors">
+                        </div>
+                        <div>
                             <label class="block text-xs font-semibold text-[#111111] mb-2">Password</label>
                             <input type="password" name="password" required placeholder="Minimal 6 karakter" class="w-full bg-[#f9f8f6] border border-[#d3cec6] rounded-[16px] px-4 py-3 text-[#111111] text-sm focus:outline-none focus:border-[#003E7E] transition-colors">
                         </div>
@@ -70,6 +74,13 @@
 
             <!-- Tabel Dokter -->
             <div class="bg-white rounded-[32px] shadow-sm border border-[#ebe7e1] overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <h3 class="font-bold text-[#111111]">Daftar Dokter Terdaftar (<?= count($doctors) ?>)</h3>
+                    <div class="relative w-full sm:w-72">
+                        <input id="admin-doctor-search" type="text" placeholder="Cari nama, spesialisasi, STR..." class="w-full pl-9 pr-4 py-2 bg-[#f9f8f6] border border-[#d3cec6] rounded-[12px] text-xs text-[#111111] focus:outline-none focus:border-[#003E7E]">
+                        <svg class="w-4 h-4 text-[#7b7b78] absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse min-w-[800px]">
                         <thead>
@@ -83,7 +94,7 @@
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             <?php foreach($doctors as $doctor): ?>
-                                <tr class="hover:bg-[#f9f8f6] transition-colors">
+                                <tr class="admin-doctor-row hover:bg-[#f9f8f6] transition-colors">
                                     <td class="py-4 px-6 align-middle">
                                         <p class="text-sm font-bold text-[#111111]"><?= esc($doctor['name']) ?></p>
                                         <p class="text-xs text-[#7b7b78] mt-1"><?= esc($doctor['email']) ?></p>
@@ -106,9 +117,9 @@
                                         <form action="<?= base_url('admin/doctors/verify') ?>" method="POST" class="inline-block form-status">
                                             <input type="hidden" name="doctor_id" value="<?= $doctor['id'] ?>">
                                             <?php if($doctor['is_verified']): ?>
-                                                <button type="button" class="btn-update-status text-red-600 hover:text-red-800 text-xs font-bold">Cabut Verifikasi</button>
+                                                <button type="button" data-action="revoke" data-name="<?= esc($doctor['name']) ?>" class="btn-update-status text-red-600 hover:text-red-800 text-xs font-bold px-3 py-1.5 rounded-[10px] hover:bg-red-50 transition-colors">Cabut Verifikasi</button>
                                             <?php else: ?>
-                                                <button type="button" class="btn-update-status bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-[12px] text-xs font-bold transition-all shadow-sm">Verifikasi</button>
+                                                <button type="button" data-action="verify" data-name="<?= esc($doctor['name']) ?>" class="btn-update-status bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-[12px] text-xs font-bold transition-all shadow-sm">Verifikasi</button>
                                             <?php endif; ?>
                                         </form>
                                     </td>
@@ -121,5 +132,41 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-update-status').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const form = this.closest('.form-status');
+            const isRevoke = this.getAttribute('data-action') === 'revoke';
+            const docName = this.getAttribute('data-name') || 'Dokter ini';
+            Swal.fire({
+                title: isRevoke ? 'Cabut Verifikasi Dokter?' : 'Verifikasi Dokter?',
+                text: isRevoke
+                    ? `Status verifikasi ${docName} akan dicabut dan tidak tampil di pencarian pasien.`
+                    : `Verifikasi kredensial STR/SIP untuk ${docName}?`,
+                icon: isRevoke ? 'warning' : 'question',
+                showCancelButton: true,
+                confirmButtonColor: isRevoke ? '#E53935' : '#003E7E',
+                cancelButtonColor: '#7b7b78',
+                confirmButtonText: isRevoke ? 'Ya, Cabut' : 'Ya, Verifikasi',
+                cancelButtonText: 'Batal'
+            }).then((res) => {
+                if (res.isConfirmed && form) form.submit();
+            });
+        });
+    });
+
+    const searchInput = document.getElementById('admin-doctor-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const q = this.value.trim().toLowerCase();
+            document.querySelectorAll('.admin-doctor-row').forEach(row => {
+                row.classList.toggle('hidden', q && !row.textContent.toLowerCase().includes(q));
+            });
+        });
+    }
+});
+</script>
 
 <?= $this->endSection() ?>

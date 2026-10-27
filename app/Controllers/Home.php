@@ -4,13 +4,11 @@ class Home extends BaseController
 {
     public function index()
     {
-        $db = \Config\Database::connect();
-        $db->table('doctors')->update(['status' => 'offline']);
-
         $session = session();
-        if ($session->has('user_id')) {
+        if ($session->get('isLoggedIn')) {
             $role = $session->get('role');
-            return redirect()->to($role === 'doctor' ? '/doctor' : '/patient');
+            $routes = ['doctor' => '/doctor', 'farmasi' => '/pharmacy', 'admin' => '/admin'];
+            return redirect()->to($routes[$role] ?? '/patient');
         }
         return view('landing');
     }

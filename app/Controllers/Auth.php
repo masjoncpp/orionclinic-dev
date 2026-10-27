@@ -7,13 +7,16 @@ use Throwable;
 
 class Auth extends BaseController
 {
+    private function redirectByRole(?string $role)
+    {
+        $routes = ['doctor' => '/doctor', 'farmasi' => '/pharmacy', 'admin' => '/admin'];
+        return redirect()->to($routes[$role] ?? '/patient');
+    }
+
     public function login()
     {
         if (session()->get('isLoggedIn')) {
-            $role = session()->get('role');
-            return ($role === 'doctor')
-                ? redirect()->to('/doctor')
-                : redirect()->to('/patient');
+            return $this->redirectByRole(session()->get('role'));
         }
         return view('auth/login', ['hide_sidebar' => true, 'title' => 'Masuk - Orion Clinic']);
     }
@@ -21,11 +24,7 @@ class Auth extends BaseController
     public function register()
     {
         if (session()->get('isLoggedIn')) {
-            $role = session()->get('role');
-
-            return $role === 'doctor'
-                ? redirect()->to('/doctor')
-                : redirect()->to('/patient');
+            return $this->redirectByRole(session()->get('role'));
         }
 
         return view('auth/register', ['hide_sidebar' => true, 'title' => 'Daftar Akun - Orion Clinic']);

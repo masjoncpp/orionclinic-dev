@@ -157,11 +157,11 @@
             <div class="mb-5">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="font-bold text-[#111111] text-sm">Tips Kesehatan</h3>
-                    <button class="text-xs text-[#111111] font-bold hover:text-green-700">Lihat Semua</button>
+                    <button type="button" onclick="showAllHealthTips()" class="text-xs text-[#003E7E] font-bold hover:underline">Lihat Semua</button>
                 </div>
                 <div class="space-y-3">
-                    <div class="bg-[#ffffff] rounded-[24px] p-4  flex items-center space-x-3 cursor-pointer card-hover">
-                        <div class="w-12 h-12    rounded-[16px] flex items-center justify-center flex-shrink-0">
+                    <div onclick="showWellnessTip('Jaga Kesehatan Jantung', '1. Rutin berolahraga ringan minimal 30 menit sehari.\n2. Kurangi konsumsi garam berlebih dan makanan olahan.\n3. Perbanyak konsumsi sayur, buah, dan lemak sehat (omega-3).\n4. Kelola stres dengan baik dan tidur cukup 7-8 jam.\n5. Rutin periksa tekanan darah dan kolesterol secara berkala.')" class="bg-[#ffffff] rounded-[24px] p-4 border border-[#ebe7e1] flex items-center space-x-3 cursor-pointer card-hover">
+                        <div class="w-12 h-12 bg-gradient-to-br from-[#E53935] to-rose-400 rounded-[16px] flex items-center justify-center flex-shrink-0 shadow-sm">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                             </svg>
@@ -175,8 +175,8 @@
                         </svg>
                     </div>
 
-                    <div class="bg-[#ffffff] rounded-[24px] p-4  flex items-center space-x-3 cursor-pointer card-hover">
-                        <div class="w-12 h-12    rounded-[16px] flex items-center justify-center flex-shrink-0">
+                    <div onclick="showWellnessTip('Manfaat Vitamin D', '1. Berjemur di bawah sinar matahari pagi (pukul 07.00-09.00) selama 10-15 menit.\n2. Vitamin D membantu penyerapan kalsium untuk kekuatan tulang dan gigi.\n3. Mendukung sistem kekebalan tubuh agar tidak mudah terserang infeksi.\n4. Sumber makanan kaya Vitamin D: ikan salmon, kuning telur, susu terfortifikasi.')" class="bg-[#ffffff] rounded-[24px] p-4 border border-[#ebe7e1] flex items-center space-x-3 cursor-pointer card-hover">
+                        <div class="w-12 h-12 bg-gradient-to-br from-[#FF9800] to-amber-400 rounded-[16px] flex items-center justify-center flex-shrink-0 shadow-sm">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
                             </svg>
@@ -190,8 +190,8 @@
                         </svg>
                     </div>
 
-                    <div class="bg-[#ffffff] rounded-[24px] p-4  flex items-center space-x-3 cursor-pointer card-hover">
-                        <div class="w-12 h-12    rounded-[16px] flex items-center justify-center flex-shrink-0">
+                    <div onclick="showWellnessTip('Pentingnya Hidrasi', '1. Minum minimal 8 gelas (2 liter) air putih setiap hari.\n2. Awali pagi hari dengan segelas air hangat untuk mengaktifkan metabolisme.\n3. Jangan tunggu haus—rasa haus adalah tanda tubuh sudah mulai dehidrasi.\n4. Kurangi minuman tinggi gula dan kafein berlebih.')" class="bg-[#ffffff] rounded-[24px] p-4 border border-[#ebe7e1] flex items-center space-x-3 cursor-pointer card-hover">
+                        <div class="w-12 h-12 bg-gradient-to-br from-[#1BA098] to-teal-400 rounded-[16px] flex items-center justify-center flex-shrink-0 shadow-sm">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                             </svg>
@@ -211,27 +211,27 @@
             <div class="mb-5">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="font-bold text-[#111111] text-sm">Pengingat Hari Ini</h3>
-                    <button class="text-xs text-[#111111] font-bold bg-green-50 px-3 py-1.5 rounded-[12px] hover:bg-[#ebe7e1] transition-all">+ Tambah</button>
+                    <button type="button" onclick="addWellnessReminder()" class="text-xs text-[#003E7E] font-bold bg-[#ebe7e1] px-3 py-1.5 rounded-[12px] hover:bg-[#d3cec6] transition-all">+ Tambah</button>
                 </div>
-                <div class="space-y-3">
-                    <div class="bg-[#ffffff] rounded-[24px] p-4  flex items-center">
+                <div id="reminders-list" class="space-y-3">
+                    <div onclick="toggleReminder(this)" class="bg-[#ffffff] rounded-[24px] p-4 border border-[#ebe7e1] flex items-center cursor-pointer transition-all hover:border-[#003E7E]/30">
                         <div class="w-9 h-9 bg-yellow-100 rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
                             <svg class="w-4 h-4 text-[#FF9800]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
                         <div class="flex-1">
-                            <p class="text-sm font-semibold text-[#111111]">Minum Obat</p>
-                            <p class="text-xs text-[#7b7b78]">Paracetamol 500mg • 08:00, 14:00, 20:00</p>
+                            <p class="text-sm font-semibold text-[#111111]">Minum Obat / Vitamin</p>
+                            <p class="text-xs text-[#7b7b78]">08:00, 14:00, 20:00 WIB</p>
                         </div>
-                        <div class="w-6 h-6 bg-[#4CAF50] rounded-full flex items-center justify-center flex-shrink-0">
+                        <div class="reminder-check w-6 h-6 bg-[#4CAF50] rounded-full flex items-center justify-center flex-shrink-0" data-done="1">
                             <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
                     </div>
 
-                    <div class="bg-[#ffffff] rounded-[24px] p-4  flex items-center">
+                    <div onclick="toggleReminder(this)" class="bg-[#ffffff] rounded-[24px] p-4 border border-[#ebe7e1] flex items-center cursor-pointer transition-all hover:border-[#003E7E]/30">
                         <div class="w-9 h-9 bg-[#ebe7e1] rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
                             <svg class="w-4 h-4 text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
@@ -241,7 +241,7 @@
                             <p class="text-sm font-semibold text-[#111111]">Minum Air Putih</p>
                             <p class="text-xs text-[#7b7b78]">Target 8 gelas per hari</p>
                         </div>
-                        <div class="w-6 h-6 bg-gray-200 rounded-full flex-shrink-0"></div>
+                        <div class="reminder-check w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0" data-done="0"></div>
                     </div>
                 </div>
             </div>
@@ -250,6 +250,89 @@
     </div>
 
 </div>
+
+<script>
+function showWellnessTip(title, body) {
+    Swal.fire({
+        title: title,
+        html: '<div class="text-left text-sm text-[#626260] leading-relaxed whitespace-pre-line bg-[#f5f1ec] p-4 rounded-[16px] border border-[#d3cec6]">' + body + '</div>',
+        confirmButtonText: 'Tutup',
+        confirmButtonColor: '#003E7E',
+        customClass: { popup: 'rounded-[24px]' }
+    });
+}
+
+function showAllHealthTips() {
+    Swal.fire({
+        title: 'Panduan Hidup Sehat Orion Clinic',
+        html: `<div class="text-left space-y-3 text-xs text-[#626260]">
+            <div class="p-3 bg-[#f5f1ec] rounded-[14px] border border-[#d3cec6]"><strong class="text-[#111111] block mb-1">❤️ Kesehatan Jantung</strong>Olahraga 30 menit/hari, kurangi garam & lemak jenuh, tidur 7-8 jam.</div>
+            <div class="p-3 bg-[#f5f1ec] rounded-[14px] border border-[#d3cec6]"><strong class="text-[#111111] block mb-1">☀️ Vitamin D & Imunitas</strong>Berjemur 10-15 menit pukul 07.00-09.00 pagi untuk tulang & daya tahan tubuh.</div>
+            <div class="p-3 bg-[#f5f1ec] rounded-[14px] border border-[#d3cec6]"><strong class="text-[#111111] block mb-1">💧 Hidrasi Optimal</strong>Minum 8 gelas (2L) air putih per hari agar fungsi organ dan konsentrasi terjaga.</div>
+        </div>`,
+        confirmButtonText: 'Mengerti',
+        confirmButtonColor: '#003E7E',
+        customClass: { popup: 'rounded-[24px]' }
+    });
+}
+
+function toggleReminder(el) {
+    const check = el.querySelector('.reminder-check');
+    if (!check) return;
+    const isDone = check.getAttribute('data-done') === '1';
+    if (isDone) {
+        check.setAttribute('data-done', '0');
+        check.className = 'reminder-check w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0';
+        check.innerHTML = '';
+    } else {
+        check.setAttribute('data-done', '1');
+        check.className = 'reminder-check w-6 h-6 bg-[#4CAF50] rounded-full flex items-center justify-center flex-shrink-0';
+        check.innerHTML = '<svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>';
+    }
+}
+
+function addWellnessReminder() {
+    Swal.fire({
+        title: 'Tambah Pengingat Baru',
+        html: `
+            <input id="swal-rem-title" class="w-full px-4 py-3 mb-3 bg-[#f5f1ec] border border-[#d3cec6] rounded-[14px] text-sm" placeholder="Contoh: Olahraga Sore">
+            <input id="swal-rem-desc" class="w-full px-4 py-3 bg-[#f5f1ec] border border-[#d3cec6] rounded-[14px] text-sm" placeholder="Waktu / Catatan (misal: 16:30 WIB)">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Simpan',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#003E7E',
+        preConfirm: () => {
+            const title = document.getElementById('swal-rem-title').value.trim();
+            const desc = document.getElementById('swal-rem-desc').value.trim() || 'Hari ini';
+            if (!title) {
+                Swal.showValidationMessage('Nama pengingat wajib diisi');
+                return false;
+            }
+            return { title, desc };
+        }
+    }).then((res) => {
+        if (res.isConfirmed && res.value) {
+            const list = document.getElementById('reminders-list');
+            const item = document.createElement('div');
+            item.className = 'bg-[#ffffff] rounded-[24px] p-4 border border-[#ebe7e1] flex items-center cursor-pointer transition-all hover:border-[#003E7E]/30';
+            item.setAttribute('onclick', 'toggleReminder(this)');
+            item.innerHTML = `
+                <div class="w-9 h-9 bg-[#ebe7e1] rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
+                    <svg class="w-4 h-4 text-[#003E7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div class="flex-1">
+                    <p class="text-sm font-semibold text-[#111111]">${$('<div>').text(res.value.title).html()}</p>
+                    <p class="text-xs text-[#7b7b78]">${$('<div>').text(res.value.desc).html()}</p>
+                </div>
+                <div class="reminder-check w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0" data-done="0"></div>
+            `;
+            list.appendChild(item);
+            Toast.fire({ icon: 'success', title: 'Pengingat ditambahkan' });
+        }
+    });
+}
+</script>
 
 <?= $this->include('components/bottom_nav') ?>
 <?= $this->endSection() ?>

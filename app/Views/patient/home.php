@@ -52,13 +52,16 @@
                 </div>
 
                 <!-- Search -->
-                <div class="relative">
+                <form action="<?= base_url('patient/consultation') ?>" method="GET" class="relative">
                     <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#7b7b78]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
-                    <input type="text" placeholder="Cari dokter, layanan, atau obat..."
-                        class="w-full pl-12 pr-4 py-3 md:py-3.5 bg-[#ffffff] rounded-[24px] text-[#111111] text-sm  -blue-900/10 focus:outline-none focus:ring-2 focus:ring-blue-300">
-                </div>
+                    <input type="text" name="q" placeholder="Cari nama dokter atau spesialisasi (misal: Anak, Gigi)..."
+                        class="w-full pl-12 pr-24 py-3 md:py-3.5 bg-[#ffffff] rounded-[24px] text-[#111111] text-sm shadow-lg shadow-black/10 focus:outline-none focus:ring-2 focus:ring-[#1BA098]">
+                    <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 bg-[#003E7E] hover:bg-[#002855] text-white text-xs font-bold px-4 py-2 rounded-[18px] transition-colors">
+                        Cari
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -66,7 +69,7 @@
 
             <!-- Quick Actions -->
             <div class="-mt-8 mb-6 relative z-10">
-                <div class="bg-[#ffffff] rounded-[24px]  -gray-200/60 p-4 md:p-6">
+                <div class="bg-[#ffffff] rounded-[24px] shadow-sm border border-[#ebe7e1] p-4 md:p-6">
                     <div class="grid grid-cols-4 gap-1 md:gap-3">
 
                         <button onclick="window.location.href='<?= base_url('patient/consultation') ?>'"
@@ -162,7 +165,7 @@
                                         </div>
                                     </div>
                                     <button onclick="window.location.href='<?= base_url('patient/chat?id=' . $apt['id']) ?>'"
-                                        class="bg-[#ffffff] text-[#111111] px-4 py-2 rounded-[16px] font-bold text-sm bg-[#ebe7e1] transition-all flex-shrink-0 ">
+                                        class="bg-[#ffffff] text-[#003E7E] px-4 py-2 rounded-[16px] font-bold text-sm hover:bg-[#ebe7e1] transition-all flex-shrink-0 shadow-sm">
                                         Mulai Chat
                                     </button>
                                 </div>
@@ -232,11 +235,11 @@
                 <div class="mb-6 md:mb-0">
                     <div class="flex items-center justify-between mb-3">
                         <h3 class="font-bold text-[#111111] text-base md:text-lg">Tips Kesehatan</h3>
-                        <button class="text-sm text-[#111111] font-semibold hover:text-[#111111]">Lihat Semua</button>
+                        <button onclick="window.location.href='<?= base_url('patient/wellness') ?>'" class="text-sm text-[#003E7E] font-bold hover:underline">Lihat Semua</button>
                     </div>
                     <div class="space-y-3">
-                        <div class="bg-[#ffffff] rounded-[24px] p-4  flex items-center space-x-3 cursor-pointer card-hover">
-                            <div class="w-12 h-12    rounded-[16px] flex items-center justify-center flex-shrink-0">
+                        <div onclick="showHealthTip('Jaga Kesehatan Jantung', '1. Rutin berolahraga ringan minimal 30 menit sehari.\n2. Kurangi konsumsi garam berlebih dan makanan olahan.\n3. Perbanyak konsumsi sayur, buah, dan lemak sehat (omega-3).\n4. Kelola stres dengan baik dan tidur cukup 7-8 jam.\n5. Rutin periksa tekanan darah dan kolesterol secara berkala.')" class="bg-[#ffffff] rounded-[24px] p-4 border border-[#ebe7e1] flex items-center space-x-3 cursor-pointer card-hover">
+                            <div class="w-12 h-12 bg-gradient-to-br from-[#E53935] to-rose-400 rounded-[16px] flex items-center justify-center flex-shrink-0 shadow-sm">
                                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                                 </svg>
@@ -249,8 +252,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
                         </div>
-                        <div class="bg-[#ffffff] rounded-[24px] p-4  flex items-center space-x-3 cursor-pointer card-hover">
-                            <div class="w-12 h-12    rounded-[16px] flex items-center justify-center flex-shrink-0">
+                        <div onclick="showHealthTip('Manfaat Vitamin D', '1. Berjemur di bawah sinar matahari pagi (pukul 07.00-09.00) selama 10-15 menit.\n2. Vitamin D membantu penyerapan kalsium untuk kekuatan tulang dan gigi.\n3. Mendukung sistem kekebalan tubuh agar tidak mudah terserang infeksi.\n4. Sumber makanan kaya Vitamin D: ikan salmon, kuning telur, susu terfortifikasi.')" class="bg-[#ffffff] rounded-[24px] p-4 border border-[#ebe7e1] flex items-center space-x-3 cursor-pointer card-hover">
+                            <div class="w-12 h-12 bg-gradient-to-br from-[#FF9800] to-amber-400 rounded-[16px] flex items-center justify-center flex-shrink-0 shadow-sm">
                                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
                                 </svg>
@@ -263,8 +266,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
                         </div>
-                        <div class="bg-[#ffffff] rounded-[24px] p-4  flex items-center space-x-3 cursor-pointer card-hover">
-                            <div class="w-12 h-12    rounded-[16px] flex items-center justify-center flex-shrink-0">
+                        <div onclick="showHealthTip('Pentingnya Hidrasi', '1. Minum minimal 8 gelas (2 liter) air putih setiap hari.\n2. Awali pagi hari dengan segelas air hangat untuk mengaktifkan metabolisme.\n3. Jangan tunggu haus—rasa haus adalah tanda tubuh sudah mulai dehidrasi.\n4. Kurangi minuman tinggi gula dan kafein berlebih.')" class="bg-[#ffffff] rounded-[24px] p-4 border border-[#ebe7e1] flex items-center space-x-3 cursor-pointer card-hover">
+                            <div class="w-12 h-12 bg-gradient-to-br from-[#1BA098] to-teal-400 rounded-[16px] flex items-center justify-center flex-shrink-0 shadow-sm">
                                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                                 </svg>
@@ -286,5 +289,16 @@
 
 </div>
 
+<script>
+function showHealthTip(title, content) {
+    Swal.fire({
+        title: title,
+        html: '<div class="text-left text-sm text-[#626260] leading-relaxed whitespace-pre-line bg-[#f5f1ec] p-4 rounded-[16px] border border-[#d3cec6]">' + content + '</div>',
+        confirmButtonText: 'Mengerti',
+        confirmButtonColor: '#003E7E',
+        customClass: { popup: 'rounded-[24px]' }
+    });
+}
+</script>
 <?= $this->include('components/bottom_nav') ?>
 <?= $this->endSection() ?>

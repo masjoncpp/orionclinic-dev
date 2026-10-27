@@ -24,18 +24,22 @@
             <svg class="absolute top-1/3 left-10 w-8 h-8 text-white opacity-[0.05] transform rotate-45" fill="currentColor" viewBox="0 0 24 24"><path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6v-2z"/></svg>
         </div>
                 <div class="relative z-10">
-                    <img src="<?= base_url('assets/logoorion.png') ?>" alt="Logo" class="w-32 h-32 mx-auto mb-8 bg-[#ffffff] p-4 rounded-[24px]  -blue-900/20 object-contain">
+                    <img src="<?= base_url('assets/logoorion.png') ?>" alt="Logo" class="w-32 h-32 mx-auto mb-8 bg-[#ffffff] p-4 rounded-[24px] shadow-xl shadow-black/15 object-contain">
                     <h2 class="text-4xl font-bold mb-4">Buat Akun Baru</h2>
                     <p class="text-xl text-blue-100/90 leading-relaxed">Bergabunglah dengan ribuan<br>pengguna lainnya.</p>
                 </div>
             </div>
-            <div class="flex-1 overflow-auto px-6 pt-8 pb-6"><button type="button" onclick="window.location.href='<?= site_url('auth/login') ?>'"
-                    class="mb-6 p-2 -ml-2 rounded-full hover:bg-[#f5f1ec] transition-all">
-                    <svg class="w-6 h-6 text-[#626260]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+            <div class="flex-1 overflow-auto px-6 pt-8 pb-6">
+                <div class="mx-auto w-full max-w-md">
+                <button type="button" onclick="window.location.href='<?= site_url('auth/login') ?>'"
+                    class="mb-4 inline-flex items-center text-xs font-semibold text-[#626260] hover:text-[#003E7E] transition-all">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg></button>
+                    </svg>
+                    Kembali ke Halaman Masuk
+                </button>
                 <div class="mb-6">
-                    <h1 class="text-2xl font-bold text-[#111111]">Buat Akun Baru</h1>
+                    <h1 class="text-2xl font-extrabold text-[#111111]">Buat Akun Baru</h1>
                     <p class="text-[#626260] text-sm mt-1">Daftar untuk mulai menggunakan Orion Clinic</p>
                 </div>
                 <form action="<?= site_url('auth/register') ?>" method="post" class="space-y-4">
@@ -91,21 +95,25 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg><input type="password" id="reg-password-input" name="password" required placeholder="Min. 8 karakter"
-                                class="w-full pl-12 pr-4 py-3.5 border border-[#d3cec6] rounded-[16px] text-[#111111] bg-[#f5f1ec] focus:bg-[#ffffff] transition-all">
+                                class="w-full pl-12 pr-12 py-3.5 border border-[#d3cec6] rounded-[16px] text-[#111111] bg-[#f5f1ec] focus:bg-[#ffffff] transition-all">
+                            <button type="button" onclick="const p=document.getElementById('reg-password-input');p.type=p.type==='password'?'text':'password';this.classList.toggle('text-[#003E7E]')" class="absolute right-4 top-1/2 -translate-y-1/2 text-[#7b7b78] hover:text-[#111111] transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
                         </div>
                     </div>
                     <div class="flex items-start pt-2"><input type="checkbox" id="terms-checkbox" required
-                            class="mt-1 w-4 h-4 text-[#111111] border-gray-300 rounded focus:ring-blue-500"> <label
+                            class="mt-1 w-4 h-4 text-[#003E7E] border-gray-300 rounded focus:ring-blue-500"> <label
                             for="terms-checkbox" class="ml-3 text-sm text-[#626260]"> Saya menyetujui <span
-                                class="text-[#111111] font-medium">Syarat &amp; Ketentuan</span> serta <span
-                                class="text-[#111111] font-medium">Kebijakan Privasi</span> </label>
+                                class="text-[#003E7E] font-semibold">Syarat &amp; Ketentuan</span> serta <span
+                                class="text-[#003E7E] font-semibold">Kebijakan Privasi</span> </label>
                     </div><button type="submit"
-                        class="w-full btn-primary text-white py-4 rounded-[16px] font-semibold text-lg mt-4"> Daftar
+                        class="w-full btn-primary text-white py-4 rounded-[16px] font-bold text-base mt-4"> Daftar
                         Sekarang </button>
                 </form>
-                <p class="text-center mt-6 text-[#626260]">Sudah punya akun? <button type="button"
+                <p class="text-center mt-6 text-sm text-[#626260]">Sudah punya akun? <button type="button"
                         onclick="window.location.href='<?= site_url('auth/login') ?>'"
-                        class="text-[#111111] font-semibold hover:text-[#111111]">Masuk</button></p>
+                        class="text-[#003E7E] font-bold hover:underline ml-1">Masuk</button></p>
+                </div>
             </div>
         </div>
 <?= $this->endSection() ?>

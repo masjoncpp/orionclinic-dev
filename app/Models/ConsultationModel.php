@@ -16,6 +16,7 @@ class ConsultationModel extends Model
         'appointment_id',
         'doctor_notes',
         'diagnosis',
+        'follow_up',
         'status'
     ];
 

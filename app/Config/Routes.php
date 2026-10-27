@@ -32,7 +32,7 @@ $routes->group('patient', ['filter' => ['auth', 'role:patient']], static functio
     $routes->get('edit_profile', 'Patient::editProfile');
     $routes->post('profile/update', 'Patient::updateProfile');
     $routes->post('family/add', 'Patient::addFamilyMember');
-    $routes->get('family/delete/(:num)', 'Patient::deleteFamilyMember/$1');
+    $routes->post('family/delete/(:num)', 'Patient::deleteFamilyMember/$1');
     $routes->get('chat', 'Patient::chat');
     $routes->get('wellness', 'Patient::wellness');
     $routes->post('book_appointment', 'Patient::bookAppointment');
@@ -45,6 +45,7 @@ $routes->group('patient', ['filter' => ['auth', 'role:patient']], static functio
     $routes->get('invoice', 'Patient::invoice');
     $routes->get('notifications', 'Patient::notifications');
     $routes->post('notifications/read-all', 'Patient::readAllNotifications');
+    $routes->post('read_all_notifications', 'Patient::readAllNotifications');
 });
 
 $routes->group('doctor', ['filter' => ['auth', 'role:doctor']], static function ($routes) {
@@ -64,6 +65,9 @@ $routes->group('doctor', ['filter' => ['auth', 'role:doctor']], static function 
     $routes->post('write_prescription', 'Doctor::writePrescription');
     $routes->get('schedules', 'Doctor::schedules');
     $routes->post('updateSchedule', 'Doctor::updateSchedule');
+    $routes->get('notifications', 'Doctor::notifications');
+    $routes->post('notifications/read-all', 'Doctor::readAllNotifications');
+    $routes->post('read_all_notifications', 'Doctor::readAllNotifications');
 });
 
 $routes->group('pharmacy', ['filter' => ['auth', 'role:farmasi']], static function ($routes) {
@@ -75,6 +79,7 @@ $routes->group('admin', ['filter' => ['auth', 'role:admin']], static function ($
     $routes->get('/', 'Admin::index');
     $routes->get('users', 'Admin::users');
     $routes->get('transactions', 'Admin::transactions');
+    $routes->post('transactions/verify', 'Admin::verifyTransaction');
     
     $routes->get('doctors', 'Admin::doctors');
     $routes->post('doctors/add', 'Admin::addDoctor');

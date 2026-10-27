@@ -73,6 +73,7 @@ class CreateTelemedicineTables extends Migration
             'appointment_id' => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true],
             'doctor_notes' => ['type' => 'TEXT', 'null' => true],
             'diagnosis'   => ['type' => 'TEXT', 'null' => true],
+            'follow_up'   => ['type' => 'TEXT', 'null' => true],
             'status'      => ['type' => 'ENUM', 'constraint' => ['active', 'ended'], 'default' => 'active'],
             'created_at'  => ['type' => 'DATETIME', 'null' => true],
             'updated_at'  => ['type' => 'DATETIME', 'null' => true],

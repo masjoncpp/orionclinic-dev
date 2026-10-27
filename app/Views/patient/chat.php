@@ -55,14 +55,27 @@
                 </div>
             <?php else: ?>
                 <?php foreach ($messages as $msg): ?>
+                    <?php
+                        $attPath = $msg['attachment_path'] ?? '';
+                        $isDoc = $attPath && preg_match('/\.(pdf|doc|docx)$/i', $attPath);
+                    ?>
                     <?php if ($msg['sender_id'] == session()->get('user_id')): ?>
                         <div class="flex justify-end message-item" data-id="<?= $msg['id'] ?>">
-                            <div class="bg-[#003E7E] rounded-[24px] rounded-tr-sm px-4 py-3 max-w-[78%] ">
-                                <?php if ($msg['attachment_path']): ?>
-                                    <img src="<?= base_url($msg['attachment_path']) ?>" class="max-w-full rounded-lg mb-2">
+                            <div class="bg-[#003E7E] rounded-[24px] rounded-tr-sm px-4 py-3 max-w-[78%] shadow-sm">
+                                <?php if ($attPath): ?>
+                                    <?php if ($isDoc): ?>
+                                        <a href="<?= base_url($attPath) ?>" target="_blank" class="flex items-center space-x-2 bg-white/15 hover:bg-white/25 text-white px-3 py-2 rounded-[12px] mb-2 text-xs font-semibold transition-colors">
+                                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                            <span class="truncate">Buka Dokumen Lampiran</span>
+                                        </a>
+                                    <?php else: ?>
+                                        <img src="<?= base_url($attPath) ?>" onclick="window.open(this.src, '_blank')" class="max-w-full max-h-60 object-cover rounded-[14px] mb-2 cursor-pointer hover:opacity-95 transition-opacity">
+                                    <?php endif; ?>
                                 <?php endif; ?>
-                                <p class="text-white text-sm leading-relaxed"><?= esc($msg['message']) ?></p>
-                                <span class="text-xs text-blue-200 mt-1 block text-right"><?= date('H:i', strtotime($msg['created_at'])) ?></span>
+                                <?php if (!empty($msg['message'])): ?>
+                                    <p class="text-white text-sm leading-relaxed"><?= esc($msg['message']) ?></p>
+                                <?php endif; ?>
+                                <span class="text-[11px] text-blue-200 mt-1 block text-right"><?= date('H:i', strtotime($msg['created_at'])) ?> ✓</span>
                             </div>
                         </div>
                     <?php else: ?>
@@ -72,12 +85,21 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                 </svg>
                             </div>
-                            <div class="bg-[#ffffff] rounded-[24px] rounded-tl-sm px-4 py-3 max-w-[78%]  border border-gray-50">
-                                <?php if ($msg['attachment_path']): ?>
-                                    <img src="<?= base_url($msg['attachment_path']) ?>" class="max-w-full rounded-lg mb-2">
+                            <div class="bg-[#ffffff] rounded-[24px] rounded-tl-sm px-4 py-3 max-w-[78%] shadow-sm border border-[#ebe7e1]">
+                                <?php if ($attPath): ?>
+                                    <?php if ($isDoc): ?>
+                                        <a href="<?= base_url($attPath) ?>" target="_blank" class="flex items-center space-x-2 bg-[#f5f1ec] hover:bg-[#ebe7e1] text-[#003E7E] px-3 py-2 rounded-[12px] mb-2 text-xs font-semibold transition-colors">
+                                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                            <span class="truncate">Buka Dokumen Lampiran</span>
+                                        </a>
+                                    <?php else: ?>
+                                        <img src="<?= base_url($attPath) ?>" onclick="window.open(this.src, '_blank')" class="max-w-full max-h-60 object-cover rounded-[14px] mb-2 cursor-pointer hover:opacity-95 transition-opacity">
+                                    <?php endif; ?>
                                 <?php endif; ?>
-                                <p class="text-[#111111] text-sm leading-relaxed"><?= esc($msg['message']) ?></p>
-                                <span class="text-xs text-[#7b7b78] mt-1 block"><?= date('H:i', strtotime($msg['created_at'])) ?></span>
+                                <?php if (!empty($msg['message'])): ?>
+                                    <p class="text-[#111111] text-sm leading-relaxed"><?= esc($msg['message']) ?></p>
+                                <?php endif; ?>
+                                <span class="text-[11px] text-[#7b7b78] mt-1 block"><?= date('H:i', strtotime($msg['created_at'])) ?></span>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -94,17 +116,25 @@
                 <p class="text-xs text-[#7b7b78] italic">Menunggu respon dokter...</p>
             </div>
         <?php elseif ($consultation && $consultation['status'] === 'active'): ?>
+            <!-- Attachment Preview Bar -->
+            <div id="attachment-preview-bar" class="hidden mb-2.5 px-3.5 py-2 bg-[#f5f1ec] border border-[#d3cec6] rounded-[16px] flex items-center justify-between">
+                <div class="flex items-center space-x-2 min-w-0">
+                    <svg class="w-4 h-4 text-[#003E7E] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                    <span id="attachment-preview-name" class="text-xs font-semibold text-[#111111] truncate"></span>
+                </div>
+                <button type="button" id="clear-attachment-btn" class="ml-2 text-xs font-bold text-[#E53935] hover:underline flex-shrink-0">Hapus</button>
+            </div>
             <div class="flex items-center space-x-3">
-                <label for="chat-attachment" class="w-10 h-10 bg-[#f5f1ec] rounded-[24px] flex items-center justify-center cursor-pointer hover:bg-[#ebe7e1] transition-all flex-shrink-0 text-[#626260]">
+                <label for="chat-attachment" title="Lampirkan Foto / PDF (Maks 5MB)" class="w-10 h-10 bg-[#f5f1ec] rounded-[24px] flex items-center justify-center cursor-pointer hover:bg-[#ebe7e1] transition-all flex-shrink-0 text-[#626260]">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
                     </svg>
                 </label>
-                <input type="file" id="chat-attachment" class="hidden" accept="image/*,.pdf,.doc,.docx">
-                <input id="chat-input" type="text" placeholder="Ketik pesan..."
+                <input type="file" id="chat-attachment" class="hidden" accept="image/jpeg,image/png,image/webp,.pdf">
+                <input id="chat-input" type="text" placeholder="Ketik pesan atau lampirkan file..."
                     class="flex-1 bg-[#f5f1ec] rounded-[24px] px-4 py-2.5 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-blue-300 focus:bg-[#ffffff] transition-all">
                 <button id="send-btn"
-                    class="w-10 h-10 bg-[#003E7E] rounded-[24px] flex items-center justify-center hover:bg-[#002855] transition-all active:scale-95 flex-shrink-0  -blue-200">
+                    class="w-10 h-10 bg-[#003E7E] rounded-[24px] flex items-center justify-center hover:bg-[#002855] transition-all active:scale-95 flex-shrink-0 shadow-sm">
                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                     </svg>
@@ -142,17 +172,25 @@ $(document).ready(function() {
         if ($(`.message-item[data-id="${msg.id}"]`).length > 0) return;
 
         var isMe = (msg.sender_id == currentUserId);
-        // Fix to strictly use 24-hour format
         var time = new Date(msg.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false }).replace('.', ':');
+        var isDoc = msg.attachment_path && /\.(pdf|doc|docx)$/i.test(msg.attachment_path);
+        var attHtml = '';
+        if (msg.attachment_path) {
+            if (isDoc) {
+                attHtml = `<a href="<?= base_url() ?>${msg.attachment_path}" target="_blank" class="flex items-center space-x-2 ${isMe ? 'bg-white/15 text-white' : 'bg-[#f5f1ec] text-[#003E7E]'} px-3 py-2 rounded-[12px] mb-2 text-xs font-semibold"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg><span class="truncate">Buka Dokumen Lampiran</span></a>`;
+            } else {
+                attHtml = `<img src="<?= base_url() ?>${msg.attachment_path}" onclick="window.open(this.src, '_blank')" class="max-w-full max-h-60 object-cover rounded-[14px] mb-2 cursor-pointer">`;
+            }
+        }
         
         var html = '';
         if (isMe) {
             html = `
                 <div class="flex justify-end message-item" data-id="${msg.id}">
-                    <div class="bg-[#003E7E] rounded-[24px] rounded-tr-sm px-4 py-3 max-w-[78%]">
-                        ${msg.attachment_path ? '<img src="<?= base_url() ?>' + msg.attachment_path + '" class="max-w-full rounded-lg mb-2">' : ''}
-                        <p class="text-white text-sm leading-relaxed">${$('<div>').text(msg.message).html()}</p>
-                        <span class="text-xs text-blue-200 mt-1 block text-right">${time}</span>
+                    <div class="bg-[#003E7E] rounded-[24px] rounded-tr-sm px-4 py-3 max-w-[78%] shadow-sm">
+                        ${attHtml}
+                        ${msg.message ? '<p class="text-white text-sm leading-relaxed">' + $('<div>').text(msg.message).html() + '</p>' : ''}
+                        <span class="text-[11px] text-blue-200 mt-1 block text-right">${time} ✓</span>
                     </div>
                 </div>`;
         } else {
@@ -161,10 +199,10 @@ $(document).ready(function() {
                     <div class="w-7 h-7 bg-[#ebe7e1] rounded-full flex items-center justify-center flex-shrink-0">
                         <svg class="w-3.5 h-3.5 text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                     </div>
-                    <div class="bg-[#ffffff] rounded-[24px] rounded-tl-sm px-4 py-3 max-w-[78%]  border border-gray-50">
-                        ${msg.attachment_path ? '<img src="<?= base_url() ?>' + msg.attachment_path + '" class="max-w-full rounded-lg mb-2">' : ''}
-                        <p class="text-[#111111] text-sm leading-relaxed">${$('<div>').text(msg.message).html()}</p>
-                        <span class="text-xs text-[#7b7b78] mt-1 block">${time}</span>
+                    <div class="bg-[#ffffff] rounded-[24px] rounded-tl-sm px-4 py-3 max-w-[78%] shadow-sm border border-[#ebe7e1]">
+                        ${attHtml}
+                        ${msg.message ? '<p class="text-[#111111] text-sm leading-relaxed">' + $('<div>').text(msg.message).html() + '</p>' : ''}
+                        <span class="text-[11px] text-[#7b7b78] mt-1 block">${time}</span>
                     </div>
                 </div>`;
         }
@@ -199,6 +237,7 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     $('#chat-input').val('');
                     if (fileInput) fileInput.value = '';
+                    $('#attachment-preview-bar').addClass('hidden');
                     fetchUpdates();
                 } else {
                     Toast.fire({ icon: 'error', title: response.message });
@@ -228,6 +267,19 @@ $(document).ready(function() {
             }
         });
     }
+
+    $('#chat-attachment').on('change', function() {
+        if (this.files && this.files.length > 0) {
+            $('#attachment-preview-name').text(this.files[0].name);
+            $('#attachment-preview-bar').removeClass('hidden');
+        } else {
+            $('#attachment-preview-bar').addClass('hidden');
+        }
+    });
+    $('#clear-attachment-btn').on('click', function() {
+        $('#chat-attachment').val('');
+        $('#attachment-preview-bar').addClass('hidden');
+    });
 
     $('#send-btn').on('click', sendMessage);
     $('#chat-input').on('keypress', function(e) {

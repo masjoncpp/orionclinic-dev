@@ -1,6 +1,7 @@
 <?php
 
 use CodeIgniter\Test\CIUnitTestCase;
+use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
 
 /**
@@ -8,7 +9,11 @@ use CodeIgniter\Test\FeatureTestTrait;
  */
 final class AuthAccessTest extends CIUnitTestCase
 {
+    use DatabaseTestTrait;
     use FeatureTestTrait;
+
+    protected $namespace = 'App';
+    protected $refresh = false;
 
     public function testGuestIsRedirectedToLoginWhenOpeningPatientArea(): void
     {
@@ -41,8 +46,27 @@ final class AuthAccessTest extends CIUnitTestCase
 
     public function testDoctorCanOpenDoctorArea(): void
     {
+        $userModel = new \App\Models\UserModel();
+        $doctorModel = new \App\Models\DoctorModel();
+        $existing = $userModel->where('email', 'doc-access@example.com')->first();
+        $userId = $existing ? $existing['id'] : $userModel->insert([
+            'name' => 'Dr. Test',
+            'email' => 'doc-access@example.com',
+            'phone' => '081234567899',
+            'password' => 'secret123',
+            'role' => 'doctor',
+        ]);
+        if (!$doctorModel->where('user_id', $userId)->first()) {
+            $doctorModel->insert([
+                'user_id' => $userId,
+                'specialization' => 'Umum',
+                'is_verified' => 1,
+                'status' => 'online',
+            ]);
+        }
+
         $result = $this->withSession([
-            'user_id'    => 20,
+            'user_id'    => $userId,
             'role'       => 'doctor',
             'isLoggedIn' => true,
         ])->get('/doctor');
@@ -59,5 +83,17 @@ final class AuthAccessTest extends CIUnitTestCase
         ])->get('/patient');
 
         $result->assertOK();
+    }
+
+    public function testChatUpdatesBlocksUnauthorizedUser(): void
+    {
+        $result = $this->withSession([
+            'user_id'    => 99999,
+            'role'       => 'patient',
+            'isLoggedIn' => true,
+        ])->get('/chat/updates?consultation_id=1');
+
+        $result->assertOK();
+        $this->assertSame('[]', $result->getJSON());
     }
 }

@@ -125,63 +125,76 @@ class Doctor extends BaseController
 
     public function acceptAppointment()
     {
+        $userId = session()->get('user_id');
+        $doctor = $this->doctorModel->where('user_id', $userId)->first();
         $appointmentId = $this->request->getPost('appointment_id');
-        if (!$appointmentId) return redirect()->back()->with('error', 'ID tidak valid');
+        $appointment = $appointmentId ? $this->appointmentModel->find($appointmentId) : null;
+
+        if (!$doctor || !$appointment || $appointment['doctor_id'] != $doctor['id']) {
+            return redirect()->back()->with('error', 'ID janji temu tidak valid atau akses ditolak.');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
 
         // Update appointment to confirmed
         $this->appointmentModel->update($appointmentId, ['status' => 'confirmed']);
 
-        // Create consultation record for the chat
+        // Create consultation record for the chat if not exists
         $consultationModel = new \App\Models\ConsultationModel();
-        $consultationModel->insert([
-            'appointment_id' => $appointmentId,
-            'diagnosis' => '',
-            'doctor_notes' => '',
-            'status' => 'active'
-        ]);
+        if (!$consultationModel->where('appointment_id', $appointmentId)->first()) {
+            $consultationModel->insert([
+                'appointment_id' => $appointmentId,
+                'diagnosis' => '',
+                'doctor_notes' => '',
+                'status' => 'active'
+            ]);
+        }
 
         // Notify patient
-        $appointment = $this->appointmentModel->find($appointmentId);
-        if ($appointment) {
-            $patientModel = new \App\Models\PatientModel();
-            $patient = $patientModel->find($appointment['patient_id']);
-            if ($patient) {
-                $notificationModel = new \App\Models\NotificationModel();
-                $notificationModel->insert([
-                    'user_id' => $patient['user_id'],
-                    'title' => 'Sesi Konsultasi Dimulai',
-                    'message' => 'Dokter telah menyetujui sesi Anda. Silakan masuk ke ruang chat konsultasi.',
-                    'is_read' => 0,
-                    'created_at' => date('Y-m-d H:i:s')
-                ]);
-            }
+        $patientModel = new \App\Models\PatientModel();
+        $patient = $patientModel->find($appointment['patient_id']);
+        if ($patient) {
+            $notificationModel = new \App\Models\NotificationModel();
+            $notificationModel->insert([
+                'user_id' => $patient['user_id'],
+                'title' => 'Sesi Konsultasi Dimulai',
+                'message' => 'Dokter telah menyetujui sesi Anda. Silakan masuk ke ruang chat konsultasi.',
+                'is_read' => 0,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
         }
+
+        $db->transComplete();
 
         return redirect()->to('doctor/consultation')->with('success', 'Jadwal konsultasi berhasil diterima.');
     }
 
     public function rejectAppointment()
     {
+        $userId = session()->get('user_id');
+        $doctor = $this->doctorModel->where('user_id', $userId)->first();
         $appointmentId = $this->request->getPost('appointment_id');
-        if (!$appointmentId) return redirect()->back()->with('error', 'ID tidak valid');
+        $appointment = $appointmentId ? $this->appointmentModel->find($appointmentId) : null;
+
+        if (!$doctor || !$appointment || $appointment['doctor_id'] != $doctor['id']) {
+            return redirect()->back()->with('error', 'ID janji temu tidak valid atau akses ditolak.');
+        }
 
         $this->appointmentModel->update($appointmentId, ['status' => 'cancelled']);
 
         // Notify patient
-        $appointment = $this->appointmentModel->find($appointmentId);
-        if ($appointment) {
-            $patientModel = new \App\Models\PatientModel();
-            $patient = $patientModel->find($appointment['patient_id']);
-            if ($patient) {
-                $notificationModel = new \App\Models\NotificationModel();
-                $notificationModel->insert([
-                    'user_id' => $patient['user_id'],
-                    'title' => 'Sesi Konsultasi Ditolak',
-                    'message' => 'Mohon maaf, dokter sedang tidak tersedia sehingga sesi konsultasi Anda dibatalkan.',
-                    'is_read' => 0,
-                    'created_at' => date('Y-m-d H:i:s')
-                ]);
-            }
+        $patientModel = new \App\Models\PatientModel();
+        $patient = $patientModel->find($appointment['patient_id']);
+        if ($patient) {
+            $notificationModel = new \App\Models\NotificationModel();
+            $notificationModel->insert([
+                'user_id' => $patient['user_id'],
+                'title' => 'Sesi Konsultasi Ditolak',
+                'message' => 'Mohon maaf, dokter sedang tidak tersedia sehingga sesi konsultasi Anda dibatalkan.',
+                'is_read' => 0,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
         }
 
         return redirect()->to('doctor/consultation')->with('success', 'Jadwal konsultasi telah ditolak.');
@@ -335,6 +348,7 @@ class Doctor extends BaseController
 
         $prescription = null;
         $prescriptionItems = [];
+        $medicalRecord = null;
         if ($consultation) {
             $prescriptionModel = new \App\Models\PrescriptionModel();
             $prescription = $prescriptionModel->where('consultation_id', $consultation['id'])->first();
@@ -343,6 +357,8 @@ class Doctor extends BaseController
                 $itemModel = new \App\Models\PrescriptionItemModel();
                 $prescriptionItems = $itemModel->where('prescription_id', $prescription['id'])->findAll();
             }
+
+            $medicalRecord = (new \App\Models\MedicalRecordModel())->where('consultation_id', $consultation['id'])->first();
         }
 
         return view('doctor/history_detail', [
@@ -352,7 +368,8 @@ class Doctor extends BaseController
             'appointment'       => $appointment,
             'consultation'      => $consultation,
             'prescription'      => $prescription,
-            'prescriptionItems' => $prescriptionItems
+            'prescriptionItems' => $prescriptionItems,
+            'medicalRecord'     => $medicalRecord,
         ]);
     }
     public function profile()
@@ -423,6 +440,9 @@ class Doctor extends BaseController
         $startTimes = $this->request->getPost('start_time');
         $endTimes = $this->request->getPost('end_time');
 
+        $db = \Config\Database::connect();
+        $db->transStart();
+
         // Delete all old schedules
         $scheduleModel->where('doctor_id', $doctor['id'])->delete();
 
@@ -442,14 +462,17 @@ class Doctor extends BaseController
             }
         }
 
+        $db->transComplete();
+
         return redirect()->to('doctor/schedules')->with('success', 'Jadwal praktik berhasil diperbarui.');
     }
     public function chat()
     {
         $appointmentId = $this->request->getGet('id');
         $userId = session()->get('user_id');
+        $doctor = $this->doctorModel->where('user_id', $userId)->first();
         
-        if (!$appointmentId) {
+        if (!$doctor || !$appointmentId) {
             return redirect()->to('doctor/consultation')->with('error', 'Pilih jadwal konsultasi terlebih dahulu.');
         }
 
@@ -458,6 +481,7 @@ class Doctor extends BaseController
             ->join('patients', 'patients.id = appointments.patient_id')
             ->join('users', 'users.id = patients.user_id')
             ->where('appointments.id', $appointmentId)
+            ->where('appointments.doctor_id', $doctor['id'])
             ->first();
 
         if (!$appointment) {
@@ -498,38 +522,74 @@ class Doctor extends BaseController
 
     public function endConsultation()
     {
+        $userId = session()->get('user_id');
+        $doctor = $this->doctorModel->where('user_id', $userId)->first();
         $appointmentId = $this->request->getPost('appointment_id');
         $diagnosis = $this->request->getPost('diagnosis');
         $doctorNotes = $this->request->getPost('doctor_notes');
         $followUp = $this->request->getPost('follow_up');
+        $bloodPressure = trim((string) $this->request->getPost('blood_pressure')) ?: null;
+        $weight = $this->request->getPost('weight') ?: null;
+        $height = $this->request->getPost('height') ?: null;
         
-        if (!$appointmentId) return redirect()->back()->with('error', 'Invalid appointment ID');
+        $appointment = $appointmentId ? $this->appointmentModel->find($appointmentId) : null;
+        if (!$doctor || !$appointment || $appointment['doctor_id'] != $doctor['id']) {
+            return redirect()->back()->with('error', 'Invalid appointment ID');
+        }
         
+        $db = \Config\Database::connect();
+        $db->transStart();
+
         $this->appointmentModel->update($appointmentId, ['status' => 'completed']);
         
         $consultationModel = new \App\Models\ConsultationModel();
         $consultation = $consultationModel->where('appointment_id', $appointmentId)->first();
         if ($consultation) {
             $consultationModel->update($consultation['id'], [
-                'status' => 'completed',
+                'status' => 'ended',
                 'diagnosis' => $diagnosis,
                 'doctor_notes' => $doctorNotes,
                 'follow_up' => $followUp
             ]);
+
+            $medicalRecordModel = new \App\Models\MedicalRecordModel();
+            $existingRecord = $medicalRecordModel->where('consultation_id', $consultation['id'])->first();
+            $recordData = [
+                'patient_id'      => $appointment['patient_id'],
+                'consultation_id' => $consultation['id'],
+                'blood_pressure'  => $bloodPressure,
+                'weight'          => $weight,
+                'height'          => $height,
+                'summary'         => trim($diagnosis . ($doctorNotes ? " - $doctorNotes" : '')),
+            ];
+            if ($existingRecord) {
+                $medicalRecordModel->update($existingRecord['id'], $recordData);
+            } else {
+                $medicalRecordModel->insert($recordData);
+            }
         }
+
+        $db->transComplete();
         
-        return redirect()->to('doctor/consultation')->with('success', 'Konsultasi selesai.');
+        return redirect()->to('doctor/consultation')->with('success', 'Konsultasi selesai dan rekam medis tersimpan.');
     }
 
     public function prescriptionForm()
     {
+        $userId = session()->get('user_id');
+        $doctor = $this->doctorModel->where('user_id', $userId)->first();
         $appointmentId = $this->request->getGet('id');
-        $appointment = $this->appointmentModel
+        $appointment = $doctor ? $this->appointmentModel
             ->select('appointments.*, users.name as patient_name')
             ->join('patients', 'patients.id = appointments.patient_id')
             ->join('users', 'users.id = patients.user_id')
             ->where('appointments.id', $appointmentId)
-            ->first();
+            ->where('appointments.doctor_id', $doctor['id'])
+            ->first() : null;
+
+        if (!$appointment) {
+            return redirect()->to('doctor/consultation')->with('error', 'Jadwal konsultasi tidak ditemukan.');
+        }
             
         return view('doctor/prescription_form', [
             'role' => 'doctor',
@@ -541,18 +601,38 @@ class Doctor extends BaseController
 
     public function writePrescription()
     {
+        $userId = session()->get('user_id');
+        $doctor = $this->doctorModel->where('user_id', $userId)->first();
         $appointmentId = $this->request->getPost('appointment_id');
+        $appointment = $appointmentId ? $this->appointmentModel->find($appointmentId) : null;
+
+        if (!$doctor || !$appointment || $appointment['doctor_id'] != $doctor['id']) {
+            return redirect()->to('doctor/consultation')->with('error', 'Akses ditolak.');
+        }
+
         $diagnosis = $this->request->getPost('diagnosis');
         $medicineNames = $this->request->getPost('medicine_name'); 
         $dosages = $this->request->getPost('dosage');
         $frequencies = $this->request->getPost('frequency');
+        $durations = $this->request->getPost('duration');
+        $quantities = $this->request->getPost('quantity');
         $notes = $this->request->getPost('notes');
+        $bloodPressure = trim((string) $this->request->getPost('blood_pressure')) ?: null;
+        $weight = $this->request->getPost('weight') ?: null;
+        $height = $this->request->getPost('height') ?: null;
+
+        $db = \Config\Database::connect();
+        $db->transStart();
 
         $consultationModel = new \App\Models\ConsultationModel();
         $consultation = $consultationModel->where('appointment_id', $appointmentId)->first();
         
         if ($consultation) {
-            $consultationModel->update($consultation['id'], ['diagnosis' => $diagnosis, 'doctor_notes' => $notes]);
+            $consultationModel->update($consultation['id'], [
+                'diagnosis' => $diagnosis,
+                'doctor_notes' => $notes,
+                'status' => 'ended'
+            ]);
             
             $prescriptionModel = new \App\Models\PrescriptionModel();
             $prescriptionModel->insert([
@@ -566,39 +646,55 @@ class Doctor extends BaseController
             if (is_array($medicineNames)) {
                 for ($i = 0; $i < count($medicineNames); $i++) {
                     if (!empty($medicineNames[$i])) {
+                        $qty = isset($quantities[$i]) && (int) $quantities[$i] > 0 ? (int) $quantities[$i] : 1;
+                        $dur = !empty($durations[$i]) ? trim((string) $durations[$i]) : 'Sesuai anjuran';
                         $prescriptionItemModel->insert([
                             'prescription_id' => $prescriptionId,
                             'medicine_name' => $medicineNames[$i],
                             'dosage' => isset($dosages[$i]) ? $dosages[$i] : '',
                             'frequency' => isset($frequencies[$i]) ? $frequencies[$i] : '',
-                            'duration' => 'Sesuai anjuran',
-                            'quantity' => 1
+                            'duration' => $dur,
+                            'quantity' => $qty
                         ]);
                     }
                 }
+            }
+
+            $medicalRecordModel = new \App\Models\MedicalRecordModel();
+            $existingRecord = $medicalRecordModel->where('consultation_id', $consultation['id'])->first();
+            $recordData = [
+                'patient_id'      => $appointment['patient_id'],
+                'consultation_id' => $consultation['id'],
+                'blood_pressure'  => $bloodPressure,
+                'weight'          => $weight,
+                'height'          => $height,
+                'summary'         => trim($diagnosis . ($notes ? " - $notes" : '')),
+            ];
+            if ($existingRecord) {
+                $medicalRecordModel->update($existingRecord['id'], $recordData);
+            } else {
+                $medicalRecordModel->insert($recordData);
             }
         }
         
         // Also end consultation
         $this->appointmentModel->update($appointmentId, ['status' => 'completed']);
-        if ($consultation) $consultationModel->update($consultation['id'], ['status' => 'completed']);
 
         // Notify patient
-        $appointment = $this->appointmentModel->find($appointmentId);
-        if ($appointment) {
-            $patientModel = new \App\Models\PatientModel();
-            $patient = $patientModel->find($appointment['patient_id']);
-            if ($patient) {
-                $notificationModel = new \App\Models\NotificationModel();
-                $notificationModel->insert([
-                    'user_id' => $patient['user_id'],
-                    'title' => 'Resep Dokter Diterbitkan',
-                    'message' => 'Dokter telah menyelesaikan sesi dan menerbitkan resep untuk Anda. Silakan cek menu Resep & Obat untuk menebusnya.',
-                    'is_read' => 0,
-                    'created_at' => date('Y-m-d H:i:s')
-                ]);
-            }
+        $patientModel = new \App\Models\PatientModel();
+        $patient = $patientModel->find($appointment['patient_id']);
+        if ($patient) {
+            $notificationModel = new \App\Models\NotificationModel();
+            $notificationModel->insert([
+                'user_id' => $patient['user_id'],
+                'title' => 'Resep Dokter Diterbitkan',
+                'message' => 'Dokter telah menyelesaikan sesi dan menerbitkan resep untuk Anda. Silakan cek menu Resep & Obat untuk menebusnya.',
+                'is_read' => 0,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
         }
+
+        $db->transComplete();
 
         return redirect()->to('doctor/consultation')->with('success', 'Resep berhasil dibuat dan konsultasi selesai.');
     }

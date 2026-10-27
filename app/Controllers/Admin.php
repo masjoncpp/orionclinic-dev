@@ -124,9 +124,10 @@ class Admin extends BaseController
         $userModel = new UserModel();
         $doctorModel = new DoctorModel();
 
-        $name = $this->request->getPost('name');
-        $email = $this->request->getPost('email');
-        $password = $this->request->getPost('password');
+        $name = trim((string) $this->request->getPost('name'));
+        $email = trim((string) $this->request->getPost('email'));
+        $phone = trim((string) $this->request->getPost('phone')) ?: '081200000000';
+        $password = (string) $this->request->getPost('password');
         $specialization = $this->request->getPost('specialization');
         $experience = $this->request->getPost('experience_years');
         $str = $this->request->getPost('str_number');
@@ -138,15 +139,23 @@ class Admin extends BaseController
             return redirect()->back()->with('error', 'Email sudah terdaftar!');
         }
 
-        // Insert into users table
-        $userModel->insert([
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        // Insert into users table (UserModel hashes password via beforeInsert callback)
+        $userId = $userModel->insert([
             'name' => $name,
             'email' => $email,
-            'password' => password_hash($password, PASSWORD_DEFAULT),
+            'phone' => $phone,
+            'password' => $password,
             'role' => 'doctor',
-            'created_at' => date('Y-m-d H:i:s')
         ]);
-        $userId = $userModel->getInsertID();
+
+        if (!$userId) {
+            $db->transRollback();
+            $err = implode(' ', $userModel->errors());
+            return redirect()->back()->with('error', $err ?: 'Gagal membuat akun dokter.');
+        }
 
         // Insert into doctors table
         $doctorModel->insert([
@@ -156,14 +165,56 @@ class Admin extends BaseController
             'str_number' => $str,
             'sip_number' => $sip,
             'consultation_fee' => $fee ?: 0,
-            'is_verified' => 1, // Automatically verified if admin creates it
+            'is_verified' => 1,
             'status' => 'offline',
-            'created_at' => date('Y-m-d H:i:s')
         ]);
+
+        $db->transComplete();
 
         $this->logAction('Add Doctor', "Admin menambahkan akun dokter baru: $name ($email).");
 
         return redirect()->back()->with('success', 'Akun dokter berhasil dibuat!');
+    }
+
+    public function verifyTransaction()
+    {
+        $paymentId = $this->request->getPost('payment_id');
+        $status = $this->request->getPost('status');
+        if (!in_array($status, ['paid', 'failed'], true)) {
+            return redirect()->back()->with('error', 'Status transaksi tidak valid.');
+        }
+
+        $paymentModel = new PaymentModel();
+        $payment = $paymentModel->find($paymentId);
+        if (!$payment) {
+            return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        $paymentModel->update($paymentId, [
+            'status' => $status,
+            'payment_date' => $status === 'paid' ? date('Y-m-d H:i:s') : $payment['payment_date'],
+        ]);
+
+        $appointmentModel = new AppointmentModel();
+        $appointment = $appointmentModel->find($payment['appointment_id']);
+        if ($appointment && $status === 'paid') {
+            if (($payment['type'] ?? 'consultation') === 'prescription') {
+                $consultation = (new \App\Models\ConsultationModel())->where('appointment_id', $appointment['id'])->first();
+                if ($consultation) {
+                    (new \App\Models\PrescriptionModel())->where('consultation_id', $consultation['id'])->set(['status' => 'redeemed'])->update();
+                }
+            } else {
+                $appointmentModel->update($appointment['id'], ['status' => 'pending']);
+            }
+        }
+
+        $db->transComplete();
+        $this->logAction('Verify Transaction', "Admin mengubah status transaksi #$paymentId menjadi $status.");
+
+        return redirect()->back()->with('success', 'Status transaksi berhasil diperbarui!');
     }
 
     public function verifyDoctor()

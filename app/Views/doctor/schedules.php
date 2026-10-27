@@ -46,15 +46,13 @@
                             
                             <div class="flex items-center space-x-2 w-full sm:w-2/3 time-inputs <?= $isActive ? '' : 'opacity-30 pointer-events-none' ?>">
                                 <div class="flex-1">
-                                    <input type="text" name="start_time[<?= $day ?>]" value="<?= $start ?>" 
-                                        class="w-full bg-[#ffffff] border border-[#d3cec6] rounded-[12px] px-3 py-2 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/50 focus:border-[#003E7E] transition-all text-center"
-                                        placeholder="08:00" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" maxlength="5">
+                                    <input type="time" name="start_time[<?= $day ?>]" value="<?= $start ?>" 
+                                        class="w-full bg-[#ffffff] border border-[#d3cec6] rounded-[12px] px-3 py-2 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/50 focus:border-[#003E7E] transition-all text-center font-medium">
                                 </div>
                                 <span class="text-[#7b7b78] font-medium text-sm">-</span>
                                 <div class="flex-1">
-                                    <input type="text" name="end_time[<?= $day ?>]" value="<?= $end ?>" 
-                                        class="w-full bg-[#ffffff] border border-[#d3cec6] rounded-[12px] px-3 py-2 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/50 focus:border-[#003E7E] transition-all text-center"
-                                        placeholder="16:00" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" maxlength="5">
+                                    <input type="time" name="end_time[<?= $day ?>]" value="<?= $end ?>" 
+                                        class="w-full bg-[#ffffff] border border-[#d3cec6] rounded-[12px] px-3 py-2 text-sm text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/50 focus:border-[#003E7E] transition-all text-center font-medium">
                                 </div>
                             </div>
                         </div>

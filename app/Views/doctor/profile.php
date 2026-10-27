@@ -136,7 +136,7 @@
                                 <svg class="w-5 h-5 text-[#7b7b78]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                             </button>
 
-                            <button class="w-full flex items-center justify-between text-left text-sm py-2 group">
+                            <button type="button" onclick="Swal.fire({title: 'Ubah Kata Sandi Akun Dokter', text: 'Demi keamanan kredensial medis (STR/SIP), penggantian kata sandi akun dokter dilakukan melalui verifikasi Administrator Klinik.', icon: 'info', confirmButtonColor: '#003E7E', confirmButtonText: 'Mengerti'})" class="w-full flex items-center justify-between text-left text-sm py-2 group">
                                 <div class="flex items-center text-gray-700 group-hover:text-[#111111] transition-colors">
                                     <svg class="w-5 h-5 text-[#7b7b78] mr-3 group-hover:text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                                     Ubah Kata Sandi

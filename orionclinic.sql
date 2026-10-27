@@ -153,6 +153,7 @@ CREATE TABLE `consultations` (
   `appointment_id` INT(11) UNSIGNED NOT NULL,
   `doctor_notes` TEXT DEFAULT NULL,
   `diagnosis` TEXT DEFAULT NULL,
+  `follow_up` TEXT DEFAULT NULL,
   `status` ENUM('active','ended') NOT NULL DEFAULT 'active',
   `created_at` DATETIME DEFAULT NULL,
   `updated_at` DATETIME DEFAULT NULL,

@@ -71,9 +71,11 @@
                                     ?>
                                     <p class="text-xs text-[#7b7b78]"><?= esc($member['relation']) ?> • <?= $age ?> tahun</p>
                                 </div>
-                                <a href="<?= base_url('patient/family/delete/' . $member['id']) ?>" onclick="return confirm('Hapus anggota keluarga ini?')" class="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                </a>
+                                <form action="<?= base_url('patient/family/delete/' . $member['id']) ?>" method="POST" class="form-del-family">
+                                    <button type="button" onclick="confirmDeleteFamily(this)" class="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </form>
                             </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
@@ -93,7 +95,7 @@
                 </div>
             <?php endif; ?>
 
-            <div class="bg-[#ffffff] rounded-[24px]  overflow-hidden mb-6">
+            <div class="bg-[#ffffff] rounded-[24px] border border-[#ebe7e1] overflow-hidden mb-6">
                 <a href="<?= base_url('patient/edit_profile') ?>" class="w-full flex items-center p-4 hover:bg-[#f5f1ec] transition-all border-b border-gray-50">
                     <div class="w-9 h-9 bg-[#ebe7e1] rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
                         <svg class="w-4 h-4 text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -106,21 +108,21 @@
                     </svg>
                 </a>
 
-                <button class="w-full flex items-center p-4 hover:bg-[#f5f1ec] transition-all border-b border-gray-50">
+                <a href="<?= base_url('patient/payments') ?>" class="w-full flex items-center p-4 hover:bg-[#f5f1ec] transition-all border-b border-gray-50">
                     <div class="w-9 h-9 bg-teal-50 rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
-                        <svg class="w-4 h-4 text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 text-[#1BA098]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                         </svg>
                     </div>
-                    <span class="flex-1 text-left font-semibold text-[#111111] text-sm">Metode Pembayaran</span>
+                    <span class="flex-1 text-left font-semibold text-[#111111] text-sm">Riwayat & Metode Pembayaran</span>
                     <svg class="w-4 h-4 text-[#7b7b78]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                </button>
+                </a>
 
-                <button class="w-full flex items-center p-4 hover:bg-[#f5f1ec] transition-all border-b border-gray-50">
+                <a href="<?= base_url('patient/notifications') ?>" class="w-full flex items-center p-4 hover:bg-[#f5f1ec] transition-all border-b border-gray-50">
                     <div class="w-9 h-9 bg-purple-50 rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
-                        <svg class="w-4 h-4 text-[#111111]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                         </svg>
                     </div>
@@ -128,9 +130,9 @@
                     <svg class="w-4 h-4 text-[#7b7b78]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                </button>
+                </a>
 
-                <button class="w-full flex items-center p-4 hover:bg-[#f5f1ec] transition-all">
+                <button type="button" onclick="showFaqModal()" class="w-full flex items-center p-4 hover:bg-[#f5f1ec] transition-all">
                     <div class="w-9 h-9 bg-orange-50 rounded-[16px] flex items-center justify-center mr-3 flex-shrink-0">
                         <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -221,4 +223,45 @@
     </div>
 </div>
 
+<script>
+function confirmDeleteFamily(btn) {
+    Swal.fire({
+        title: 'Hapus Anggota Keluarga?',
+        text: 'Data anggota keluarga ini akan dihapus dari profil Anda.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#E53935',
+        cancelButtonColor: '#626260',
+        confirmButtonText: 'Ya, Hapus',
+        cancelButtonText: 'Batal'
+    }).then((res) => {
+        if (res.isConfirmed) {
+            btn.closest('form').submit();
+        }
+    });
+}
+
+function showFaqModal() {
+    Swal.fire({
+        title: 'Bantuan & FAQ',
+        html: `<div class="text-left space-y-3 text-xs text-[#626260]">
+            <div class="p-3 bg-[#f5f1ec] rounded-[14px] border border-[#d3cec6]">
+                <strong class="text-[#111111] block mb-1">Bagaimana cara memulai konsultasi?</strong>
+                Pilih menu <b>Konsultasi</b>, pilih dokter yang sedang Online, tentukan tanggal & jam praktik, lalu selesaikan pembayaran.
+            </div>
+            <div class="p-3 bg-[#f5f1ec] rounded-[14px] border border-[#d3cec6]">
+                <strong class="text-[#111111] block mb-1">Bagaimana cara menebus resep obat?</strong>
+                Buka menu <b>Resep & Obat</b> setelah konsultasi selesai, lalu klik <b>Tebus Obat</b> untuk melakukan pembayaran dan pengambilan di apotek.
+            </div>
+            <div class="p-3 bg-[#f5f1ec] rounded-[14px] border border-[#d3cec6]">
+                <strong class="text-[#111111] block mb-1">Butuh bantuan lebih lanjut?</strong>
+                Hubungi Layanan Pelanggan Orion Clinic di <b>(021) 555-0123</b> atau email <b>support@orionclinic.id</b>.
+            </div>
+        </div>`,
+        confirmButtonText: 'Tutup',
+        confirmButtonColor: '#003E7E',
+        customClass: { popup: 'rounded-[24px]' }
+    });
+}
+</script>
 <?= $this->endSection() ?>

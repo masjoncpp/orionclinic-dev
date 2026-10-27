@@ -31,8 +31,15 @@ class Pharmacy extends BaseController
             ->findAll();
 
         $itemModel = new PrescriptionItemModel();
+        $prescriptionIds = array_column($prescriptionsRaw, 'id');
+        $itemsByPrescription = [];
+        if (!empty($prescriptionIds)) {
+            foreach ($itemModel->whereIn('prescription_id', $prescriptionIds)->findAll() as $item) {
+                $itemsByPrescription[$item['prescription_id']][] = $item;
+            }
+        }
         foreach ($prescriptionsRaw as &$p) {
-            $p['items'] = $itemModel->where('prescription_id', $p['id'])->findAll();
+            $p['items'] = $itemsByPrescription[$p['id']] ?? [];
         }
 
         return view('pharmacy/dashboard', [
@@ -45,6 +52,10 @@ class Pharmacy extends BaseController
     {
         $prescriptionId = $this->request->getPost('prescription_id');
         $newStatus = $this->request->getPost('status');
+
+        if (!in_array($newStatus, ['preparing', 'ready', 'completed'], true)) {
+            return redirect()->back()->with('error', 'Status tidak valid.');
+        }
 
         $prescriptionModel = new PrescriptionModel();
         $prescription = $prescriptionModel->find($prescriptionId);

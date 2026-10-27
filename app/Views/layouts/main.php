@@ -50,16 +50,39 @@
         });
         <?php endif; ?>
         $(document).ready(function() {
+            var csrfName = <?= json_encode(csrf_token()) ?>;
+            var csrfHash = <?= json_encode(csrf_hash()) ?>;
+            $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': csrfHash } });
+            $('form').each(function() {
+                if (($(this).attr('method') || '').toUpperCase() === 'POST' && $(this).find('input[name="' + csrfName + '"]').length === 0) {
+                    $(this).prepend($('<input>', { type: 'hidden', name: csrfName, value: csrfHash }));
+                }
+            });
+
             var currentPath = window.location.pathname.replace(/\/$/, '');
+            var routeAliases = {
+                '/patient/historyDetail': '/patient/history',
+                '/patient/edit_profile': '/patient/profile',
+                '/patient/payment': '/patient/payments',
+                '/patient/invoice': '/patient/payments',
+                '/doctor/historyDetail': '/doctor/consultation',
+                '/doctor/prescription_form': '/doctor/consultation',
+                '/doctor/patientHistory': '/doctor/patients'
+            };
+            var normalizedPath = routeAliases[currentPath] || currentPath;
+            if (normalizedPath.indexOf('/admin/patients/detail') === 0) {
+                normalizedPath = '/admin/patients';
+            } else if (normalizedPath.indexOf('/doctor/patient_profile') === 0) {
+                normalizedPath = '/doctor/patients';
+            }
+
             $('.nav-item').each(function() {
                 var onclick = $(this).attr('onclick') || '';
                 var match = onclick.match(/href='([^']+)'/);
                 if (match) {
-                    var targetUrl = match[1].split('?')[0]; // Remove query params
-                    // Get path from targetUrl
-                    var targetPath = targetUrl.replace(/^(?:\/\/|[^/]+)*\//, '/'); // Get relative path
-                    targetPath = targetPath.replace(/\/$/, ''); // Remove trailing slash
-                    if (targetPath === currentPath) {
+                    var targetUrl = match[1].split('?')[0];
+                    var targetPath = targetUrl.replace(/^(?:\/\/|[^/]+)*\//, '/').replace(/\/$/, '');
+                    if (targetPath === normalizedPath) {
                         $(this).addClass('active').removeClass('text-[#626260]');
                     }
                 }
@@ -68,12 +91,10 @@
                 var onclick = $(this).attr('onclick') || '';
                 var match = onclick.match(/href='([^']+)'/);
                 if (match) {
-                    var targetUrl = match[1].split('?')[0]; // Remove query params
-                    // Get path from targetUrl
-                    var targetPath = targetUrl.replace(/^(?:\/\/|[^/]+)*\//, '/'); // Get relative path
-                    targetPath = targetPath.replace(/\/$/, ''); // Remove trailing slash
-                    if (targetPath === currentPath) {
-                        $(this).addClass('bg-[#ebe7e1] text-[#111111]').removeClass('text-[#626260]');
+                    var targetUrl = match[1].split('?')[0];
+                    var targetPath = targetUrl.replace(/^(?:\/\/|[^/]+)*\//, '/').replace(/\/$/, '');
+                    if (targetPath === normalizedPath) {
+                        $(this).addClass('active bg-[#003E7E] text-[#ffffff]').removeClass('text-[#111111] text-[#626260]');
                     }
                 }
             });

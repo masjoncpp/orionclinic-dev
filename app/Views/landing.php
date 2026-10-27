@@ -113,8 +113,8 @@
 
                     <!-- Text -->
                     <div class="order-2 lg:order-1">
-                        <div class="inline-flex items-center bg-[#ebe7e1] text-white-700 px-4 py-1.5 rounded-full text-sm font-semibold mb-6 border-radius-50">
-                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="inline-flex items-center bg-[#ebe7e1] text-[#003E7E] px-4 py-1.5 rounded-full text-sm font-bold mb-6 border border-[#d3cec6]">
+                            <svg class="w-4 h-4 mr-2 text-[#1BA098]" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                             </svg>
                             Platform Telemedisin Terpercaya
@@ -122,7 +122,7 @@
 
                         <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#111111] leading-tight mb-6">
                             Kesehatan Anda,
-                            <span class="text-[#111111]">Prioritas Kami</span>
+                            <span class="text-[#003E7E]">Prioritas Kami</span>
                         </h1>
 
                         <p class="text-lg text-[#626260] leading-relaxed mb-8">
@@ -131,15 +131,15 @@
 
                         <div class="flex flex-col sm:flex-row gap-4 mb-10">
                             <a href="<?= base_url('register') ?>"
-                               class="bg-[#1BA098] text-[#ffffff] px-[18px] py-[10px] rounded-[8px] font-medium transition-all hover:bg-[#14857d] inline-flex items-center justify-center px-8 py-4 rounded-[24px] text-white font-bold text-base transition-all">
+                               class="bg-[#1BA098] hover:bg-[#14857d] inline-flex items-center justify-center px-8 py-4 rounded-[24px] text-white font-bold text-base shadow-[0_8px_20px_rgba(27,160,152,0.28)] transition-all">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
                                 </svg>
                                 Mulai Sekarang — Gratis
                             </a>
                             <a href="#tentang"
-                               class="inline-flex items-center justify-center px-8 py-4 rounded-[24px] border-2 border-blue-200 text-[#111111] font-bold text-base bg-[#ebe7e1] transition-all">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               class="inline-flex items-center justify-center px-8 py-4 rounded-[24px] border-2 border-[#d3cec6] text-[#111111] font-bold text-base bg-[#ffffff] hover:bg-[#ebe7e1] transition-all">
+                                <svg class="w-5 h-5 mr-2 text-[#003E7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                                 Pelajari Lebih Lanjut
@@ -280,22 +280,22 @@
                         <div class="relative">
                             <div class="absolute -top-4 -left-4 w-24 h-24 bg-[#ebe7e1] rounded-full opacity-60"></div>
                             <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-[#ebe7e1] rounded-full opacity-50"></div>
-                            <div class="relative    rounded-[24px] p-12  flex items-center justify-center">
+                            <div class="relative bg-[#f5f1ec] border border-[#ebe7e1] rounded-[24px] p-12 flex items-center justify-center">
                                 <img src="<?= base_url('assets/img/logoorion.png') ?>"
                                      alt="Orion Clinic"
-                                     class="w-full max-w-sm object-contain drop-shadow-xlshadow-xl hero-float">
+                                     class="w-full max-w-sm object-contain drop-shadow-xl hero-float">
                             </div>
                         </div>
                     </div>
 
                     <!-- Text kanan -->
                     <div class="section-fade">
-                        <div class="inline-flex items-center bg-[#ebe7e1] text-[#111111] px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
+                        <div class="inline-flex items-center bg-[#ebe7e1] text-[#003E7E] px-4 py-1.5 rounded-full text-sm font-bold mb-4">
                             Tentang Kami
                         </div>
                         <h2 class="text-3xl md:text-4xl font-extrabold text-[#111111] mb-6 leading-tight">
                             Mengapa Memilih
-                            <span class="text-[#111111]">Orion Clinic?</span>
+                            <span class="text-[#003E7E]">Orion Clinic?</span>
                         </h2>
                         <p class="text-[#626260] text-lg leading-relaxed mb-6">
                             Orion Clinic adalah platform telemedisin inovatif yang menghubungkan pasien dengan dokter berpengalaman secara digital. Kami percaya bahwa layanan kesehatan berkualitas harus mudah dijangkau oleh semua orang.
@@ -348,15 +348,15 @@
         </section>
 
         <!-- ============ LAYANAN SECTION ============ -->
-        <section id="layanan" class="py-20 px-6 md:px-12" style="background: linear-gradient(180deg, #f8faff 0%, #eff6ff 100%);">
+        <section id="layanan" class="py-20 px-6 md:px-12 bg-[#f5f1ec]">
             <div class="max-w-6xl mx-auto">
                 <div class="text-center mb-14 section-fade">
-                    <div class="inline-flex items-center bg-[#ebe7e1] text-[#111111] px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
+                    <div class="inline-flex items-center bg-[#ebe7e1] text-[#003E7E] px-4 py-1.5 rounded-full text-sm font-bold mb-4">
                         Layanan Kami
                     </div>
                     <h2 class="text-3xl md:text-4xl font-extrabold text-[#111111] mb-4">
                         Semua Kebutuhan Kesehatan
-                        <br><span class="text-[#111111]">dalam Satu Platform</span>
+                        <br><span class="text-[#003E7E]">dalam Satu Platform</span>
                     </h2>
                     <p class="text-[#626260] text-lg max-w-2xl mx-auto">
                         Kami menyediakan berbagai layanan kesehatan digital yang komprehensif untuk mendukung kesehatan Anda sehari-hari.
@@ -366,106 +366,106 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
                     <!-- Konsultasi Dokter -->
-                    <div class="card-hover bg-[#ffffff] rounded-[24px] p-7  border border-blue-50 section-fade">
-                        <div class="w-14 h-14 bg-[#ebe7e1] rounded-[24px] flex items-center justify-center mb-5">
+                    <a href="<?= base_url('auth/login') ?>" class="card-hover block bg-[#ffffff] rounded-[24px] p-7 border border-[#d3cec6] section-fade group">
+                        <div class="w-14 h-14 bg-[#ebe7e1] rounded-[24px] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
                             <?= icon('appointments', 32, 'w-7 h-7 text-[#111111]') ?>
                         </div>
                         <h3 class="text-xl font-bold text-[#111111] mb-3">Konsultasi Dokter</h3>
                         <p class="text-[#626260] leading-relaxed text-sm mb-4">
                             Chat langsung dengan dokter berpengalaman kapan saja. Dapatkan jawaban atas keluhan kesehatan Anda dengan cepat dan akurat.
                         </p>
-                        <div class="flex items-center text-[#111111] font-semibold text-sm">
+                        <div class="flex items-center text-[#003E7E] font-bold text-sm">
                             <span>Mulai konsultasi</span>
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Resep Digital -->
-                    <div class="card-hover bg-[#ffffff] rounded-[24px] p-7  border border-[#d3cec6] section-fade">
-                        <div class="w-14 h-14 bg-[#ebe7e1] rounded-[24px] flex items-center justify-center mb-5">
+                    <a href="<?= base_url('auth/login') ?>" class="card-hover block bg-[#ffffff] rounded-[24px] p-7 border border-[#d3cec6] section-fade group">
+                        <div class="w-14 h-14 bg-[#ebe7e1] rounded-[24px] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
                             <?= icon('prescription', 32, 'w-7 h-7 text-[#111111]') ?>
                         </div>
                         <h3 class="text-xl font-bold text-[#111111] mb-3">Resep & Obat Digital</h3>
                         <p class="text-[#626260] leading-relaxed text-sm mb-4">
                             Terima resep dokter secara digital langsung di aplikasi. Pantau penggunaan obat dan jadwal minum obat dengan mudah.
                         </p>
-                        <div class="flex items-center text-[#111111] font-semibold text-sm">
+                        <div class="flex items-center text-[#003E7E] font-bold text-sm">
                             <span>Lihat resep</span>
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Wellness Tracking -->
-                    <div class="card-hover bg-[#ffffff] rounded-[24px] p-7  border border-[#d3cec6] section-fade">
-                        <div class="w-14 h-14 bg-[#ebe7e1] rounded-[24px] flex items-center justify-center mb-5">
+                    <a href="<?= base_url('auth/login') ?>" class="card-hover block bg-[#ffffff] rounded-[24px] p-7 border border-[#d3cec6] section-fade group">
+                        <div class="w-14 h-14 bg-[#ebe7e1] rounded-[24px] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
                             <?= icon('wellness', 32, 'w-7 h-7 text-[#111111]') ?>
                         </div>
                         <h3 class="text-xl font-bold text-[#111111] mb-3">Wellness Tracking</h3>
                         <p class="text-[#626260] leading-relaxed text-sm mb-4">
                             Pantau kondisi kesehatan Anda setiap hari. Catat aktivitas, pola tidur, dan parameter kesehatan untuk hidup yang lebih sehat.
                         </p>
-                        <div class="flex items-center text-[#111111] font-semibold text-sm">
+                        <div class="flex items-center text-[#003E7E] font-bold text-sm">
                             <span>Mulai tracking</span>
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Riwayat Kesehatan -->
-                    <div class="card-hover bg-[#ffffff] rounded-[24px] p-7  border border-[#d3cec6] section-fade">
-                        <div class="w-14 h-14 bg-[#ebe7e1] rounded-[24px] flex items-center justify-center mb-5">
+                    <a href="<?= base_url('auth/login') ?>" class="card-hover block bg-[#ffffff] rounded-[24px] p-7 border border-[#d3cec6] section-fade group">
+                        <div class="w-14 h-14 bg-[#ebe7e1] rounded-[24px] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
                             <?= icon('medical_records', 32, 'w-7 h-7 text-[#111111]') ?>
                         </div>
                         <h3 class="text-xl font-bold text-[#111111] mb-3">Riwayat Kesehatan</h3>
                         <p class="text-[#626260] leading-relaxed text-sm mb-4">
                             Akses rekam medis digital Anda kapan saja. Semua riwayat konsultasi, diagnosis, dan resep tersimpan aman dan terorganisir.
                         </p>
-                        <div class="flex items-center text-[#111111] font-semibold text-sm">
+                        <div class="flex items-center text-[#003E7E] font-bold text-sm">
                             <span>Lihat riwayat</span>
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Chat Dokter -->
-                    <div class="card-hover bg-[#ffffff] rounded-[24px] p-7  border border-[#d3cec6] section-fade">
-                        <div class="w-14 h-14 bg-[#ebe7e1] rounded-[24px] flex items-center justify-center mb-5">
+                    <a href="<?= base_url('auth/login') ?>" class="card-hover block bg-[#ffffff] rounded-[24px] p-7 border border-[#d3cec6] section-fade group">
+                        <div class="w-14 h-14 bg-[#ebe7e1] rounded-[24px] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
                             <?= icon('chat', 32, 'w-7 h-7 text-[#111111]') ?>
                         </div>
                         <h3 class="text-xl font-bold text-[#111111] mb-3">Live Chat Dokter</h3>
                         <p class="text-[#626260] leading-relaxed text-sm mb-4">
                             Komunikasi real-time dengan dokter Anda melalui fitur chat terintegrasi. Tanya jawab langsung tanpa perlu menunggu antrian.
                         </p>
-                        <div class="flex items-center text-[#111111] font-semibold text-sm">
+                        <div class="flex items-center text-[#003E7E] font-bold text-sm">
                             <span>Chat sekarang</span>
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Profil Kesehatan -->
-                    <div class="card-hover bg-[#ffffff] rounded-[24px] p-7  border border-[#d3cec6] section-fade">
-                        <div class="w-14 h-14 bg-[#ebe7e1] rounded-[24px] flex items-center justify-center mb-5">
+                    <a href="<?= base_url('auth/login') ?>" class="card-hover block bg-[#ffffff] rounded-[24px] p-7 border border-[#d3cec6] section-fade group">
+                        <div class="w-14 h-14 bg-[#ebe7e1] rounded-[24px] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
                             <?= icon('profile', 32, 'w-7 h-7 text-[#111111]') ?>
                         </div>
                         <h3 class="text-xl font-bold text-[#111111] mb-3">Profil Kesehatan</h3>
                         <p class="text-[#626260] leading-relaxed text-sm mb-4">
                             Kelola profil kesehatan personal Anda. Simpan informasi medis penting untuk memudahkan dokter memberikan penanganan terbaik.
                         </p>
-                        <div class="flex items-center text-[#111111] font-semibold text-sm">
+                        <div class="flex items-center text-[#003E7E] font-bold text-sm">
                             <span>Kelola profil</span>
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
                         </div>
-                    </div>
+                    </a>
 
                 </div>
             </div>
@@ -475,12 +475,12 @@
         <section id="cara-kerja" class="py-20 px-6 md:px-12 bg-[#ffffff]">
             <div class="max-w-6xl mx-auto">
                 <div class="text-center mb-14 section-fade">
-                    <div class="inline-flex items-center bg-[#ebe7e1] text-[#111111] px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
+                    <div class="inline-flex items-center bg-[#ebe7e1] text-[#003E7E] px-4 py-1.5 rounded-full text-sm font-bold mb-4">
                         Cara Kerja
                     </div>
                     <h2 class="text-3xl md:text-4xl font-extrabold text-[#111111] mb-4">
                         Mudah dalam
-                        <span class="text-[#111111]">3 Langkah Sederhana</span>
+                        <span class="text-[#003E7E]">3 Langkah Sederhana</span>
                     </h2>
                     <p class="text-[#626260] text-lg max-w-xl mx-auto">
                         Mulai perjalanan kesehatan digital Anda bersama Orion Clinic dengan cara yang sangat mudah.
@@ -490,7 +490,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
 
                     <!-- Connector line (desktop) -->
-                    <div class="hidden md:block absolute top-14 left-1/4 right-1/4 h-0.5    " style="top: 56px; left: 22%; right: 22%;"></div>
+                    <div class="hidden md:block absolute top-14 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-[#003E7E]/25 via-[#1BA098]/35 to-[#4CAF50]/25" style="top: 56px; left: 22%; right: 22%;"></div>
 
                     <!-- Step 1 -->
                     <div class="text-center section-fade">
@@ -589,7 +589,7 @@
         </section>
 
         <!-- ============ STATISTIK SECTION ============ -->
-        <section id="statistik" class="py-20 px-6 md:px-12" style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 60%, #0891b2 100%);">
+        <section id="statistik" class="py-20 px-6 md:px-12" style="background: linear-gradient(135deg, #003E7E 0%, #002855 60%, #1BA098 100%);">
             <div class="max-w-6xl mx-auto">
                 <div class="text-center mb-14 section-fade">
                     <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4">

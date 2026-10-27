@@ -1,6 +1,7 @@
 <?php
 
 use CodeIgniter\Test\CIUnitTestCase;
+use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
 
 /**
@@ -8,7 +9,11 @@ use CodeIgniter\Test\FeatureTestTrait;
  */
 final class ProfileAndLogoutTest extends CIUnitTestCase
 {
+    use DatabaseTestTrait;
     use FeatureTestTrait;
+
+    protected $namespace = 'App';
+    protected $refresh = false;
 
     public function testPatientProfilePageLoads(): void
     {
@@ -27,8 +32,27 @@ final class ProfileAndLogoutTest extends CIUnitTestCase
 
     public function testDoctorProfilePageLoads(): void
     {
+        $userModel = new \App\Models\UserModel();
+        $doctorModel = new \App\Models\DoctorModel();
+        $existing = $userModel->where('email', 'dokter@example.com')->first();
+        $userId = $existing ? $existing['id'] : $userModel->insert([
+            'name' => 'Dokter Uji',
+            'email' => 'dokter@example.com',
+            'phone' => '081298765432',
+            'password' => 'secret123',
+            'role' => 'doctor',
+        ]);
+        if (!$doctorModel->where('user_id', $userId)->first()) {
+            $doctorModel->insert([
+                'user_id' => $userId,
+                'specialization' => 'Umum',
+                'is_verified' => 1,
+                'status' => 'online',
+            ]);
+        }
+
         $result = $this->withSession([
-            'user_id'    => 20,
+            'user_id'    => $userId,
             'name'       => 'Dokter Uji',
             'email'      => 'dokter@example.com',
             'phone'      => '081298765432',

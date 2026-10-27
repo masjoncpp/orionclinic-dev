@@ -36,6 +36,21 @@
                     <input type="text" name="diagnosis" required placeholder="Contoh: ISPA, Gastritis, dll" 
                            class="w-full px-4 py-3 bg-[#f5f1ec] rounded-[16px] text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/30">
                 </div>
+
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-[#626260] mb-1">Tekanan Darah</label>
+                        <input type="text" name="blood_pressure" placeholder="120/80" class="w-full px-3 py-2.5 bg-[#f5f1ec] rounded-[12px] text-sm text-[#111111] focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-[#626260] mb-1">Berat Badan (kg)</label>
+                        <input type="number" step="0.1" name="weight" placeholder="65" class="w-full px-3 py-2.5 bg-[#f5f1ec] rounded-[12px] text-sm text-[#111111] focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-[#626260] mb-1">Tinggi Badan (cm)</label>
+                        <input type="number" step="0.1" name="height" placeholder="170" class="w-full px-3 py-2.5 bg-[#f5f1ec] rounded-[12px] text-sm text-[#111111] focus:outline-none">
+                    </div>
+                </div>
                 
                 <div>
                     <label class="block text-sm font-semibold text-[#626260] mb-2">Catatan Dokter</label>
@@ -52,8 +67,8 @@
                 
                 <div id="medicines-container" class="space-y-4">
                     <div class="p-4 bg-[#f9f8f6] rounded-[16px] border border-[#ebe7e1] relative medicine-item">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                            <div>
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                            <div class="md:col-span-2">
                                 <label class="block text-xs font-semibold text-[#626260] mb-1">Nama Obat *</label>
                                 <input type="text" name="medicine_name[]" required placeholder="mis: Paracetamol" 
                                        class="w-full px-4 py-2.5 bg-[#ffffff] border border-[#d3cec6] rounded-[12px] text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/30 text-sm">
@@ -65,8 +80,20 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-[#626260] mb-1">Aturan Pakai *</label>
-                                <input type="text" name="frequency[]" required placeholder="mis: 3x1 Sesudah Makan" 
+                                <input type="text" name="frequency[]" required placeholder="mis: 3x1" 
                                        class="w-full px-4 py-2.5 bg-[#ffffff] border border-[#d3cec6] rounded-[12px] text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/30 text-sm">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-xs font-semibold text-[#626260] mb-1">Durasi</label>
+                                    <input type="text" name="duration[]" value="3 Hari" placeholder="3 Hari" 
+                                           class="w-full px-3 py-2.5 bg-[#ffffff] border border-[#d3cec6] rounded-[12px] text-[#111111] text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-[#626260] mb-1">Jml *</label>
+                                    <input type="number" name="quantity[]" value="1" min="1" required 
+                                           class="w-full px-3 py-2.5 bg-[#ffffff] border border-[#d3cec6] rounded-[12px] text-[#111111] text-sm">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -88,8 +115,8 @@ document.getElementById('add-medicine').addEventListener('click', function() {
         <button type="button" class="absolute -top-2 -right-2 p-1.5 bg-red-100 text-red-500 rounded-full hover:bg-red-200 remove-medicine shadow-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+            <div class="md:col-span-2">
                 <label class="block text-xs font-semibold text-[#626260] mb-1">Nama Obat *</label>
                 <input type="text" name="medicine_name[]" required placeholder="mis: Paracetamol" 
                        class="w-full px-4 py-2.5 bg-[#ffffff] border border-[#d3cec6] rounded-[12px] text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/30 text-sm">
@@ -101,8 +128,20 @@ document.getElementById('add-medicine').addEventListener('click', function() {
             </div>
             <div>
                 <label class="block text-xs font-semibold text-[#626260] mb-1">Aturan Pakai *</label>
-                <input type="text" name="frequency[]" required placeholder="mis: 3x1 Sesudah Makan" 
+                <input type="text" name="frequency[]" required placeholder="mis: 3x1" 
                        class="w-full px-4 py-2.5 bg-[#ffffff] border border-[#d3cec6] rounded-[12px] text-[#111111] focus:outline-none focus:ring-2 focus:ring-[#003E7E]/30 text-sm">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="block text-xs font-semibold text-[#626260] mb-1">Durasi</label>
+                    <input type="text" name="duration[]" value="3 Hari" placeholder="3 Hari" 
+                           class="w-full px-3 py-2.5 bg-[#ffffff] border border-[#d3cec6] rounded-[12px] text-[#111111] text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-[#626260] mb-1">Jml *</label>
+                    <input type="number" name="quantity[]" value="1" min="1" required 
+                           class="w-full px-3 py-2.5 bg-[#ffffff] border border-[#d3cec6] rounded-[12px] text-[#111111] text-sm">
+                </div>
             </div>
         </div>
     `;

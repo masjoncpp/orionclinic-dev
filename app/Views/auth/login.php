@@ -23,16 +23,22 @@
             <svg class="absolute top-1/3 left-10 w-8 h-8 text-white opacity-[0.05] transform rotate-45" fill="currentColor" viewBox="0 0 24 24"><path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6v-2z"/></svg>
         </div>
         <div class="relative z-10">
-            <img src="<?= base_url('assets/logoorion.png') ?>" alt="Logo" class="w-32 h-32 mx-auto mb-8 bg-[#ffffff] p-4 rounded-[24px]  -blue-900/20 object-contain">
+            <img src="<?= base_url('assets/logoorion.png') ?>" alt="Logo" class="w-32 h-32 mx-auto mb-8 bg-[#ffffff] p-4 rounded-[24px] shadow-xl shadow-black/15 object-contain">
             <h2 class="text-4xl font-bold mb-4">Orion Clinic</h2>
             <p class="text-xl text-blue-100/90 leading-relaxed">Solusi kesehatan terpadu<br>untuk keluarga modern.</p>
         </div>
     </div>
-    <div class="flex-1 overflow-auto px-6 pt-12 pb-6">
+    <div class="flex-1 overflow-auto px-6 pt-8 pb-6 flex flex-col justify-center">
         <div class="mx-auto w-full max-w-md">
+            <a href="<?= base_url('/') ?>" class="inline-flex items-center text-xs font-semibold text-[#626260] hover:text-[#003E7E] mb-6 transition-colors">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                Kembali ke Beranda
+            </a>
             <div class="text-center mb-8 slide-up">
-                <img src="<?= base_url('assets/logoorion.png') ?>" alt="Orion Clinic Logo" class="mx-auto mb-4 w-20 h-20 object-contain">
-                <h1 id="login-title" class="text-2xl font-bold text-[#111111]">Selamat Datang</h1>
+                <img src="<?= base_url('assets/logoorion.png') ?>" alt="Orion Clinic Logo" class="mx-auto mb-4 w-20 h-20 object-contain md:hidden">
+                <h1 id="login-title" class="text-2xl font-extrabold text-[#111111]">Selamat Datang</h1>
                 <p class="text-[#626260] text-sm mt-1">Masuk ke akun Orion Clinic Anda</p>
             </div>
 
@@ -40,19 +46,19 @@
                 <?= csrf_field() ?>
 
                 <?php if (session()->getFlashdata('success')): ?>
-                    <div class="bg-green-50 text-green-700 p-4 rounded-[16px] text-sm font-medium">
+                    <div class="bg-green-50 text-green-700 p-4 rounded-[16px] text-sm font-medium border border-green-200">
                         <?= session()->getFlashdata('success') ?>
                     </div>
                 <?php endif; ?>
 
                 <?php if (session()->getFlashdata('error')): ?>
-                    <div class="bg-red-50 text-[#E53935] p-4 rounded-[16px] text-sm font-medium">
+                    <div class="bg-red-50 text-[#E53935] p-4 rounded-[16px] text-sm font-medium border border-red-200">
                         <?= session()->getFlashdata('error') ?>
                     </div>
                 <?php endif; ?>
 
                 <div class="slide-up slide-up-delay-1">
-                    <label for="email-input" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <label for="email-input" class="block text-xs font-bold uppercase tracking-wider text-[#626260] mb-2">Email</label>
                     <div class="relative">
                         <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#7b7b78]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
@@ -62,29 +68,40 @@
                 </div>
 
                 <div class="slide-up slide-up-delay-2">
-                    <label for="password-input" class="block text-sm font-medium text-gray-700 mb-2">Kata Sandi</label>
+                    <label for="password-input" class="block text-xs font-bold uppercase tracking-wider text-[#626260] mb-2">Kata Sandi</label>
                     <div class="relative">
                         <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#7b7b78]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
-                        <input type="password" id="password-input" name="password" placeholder="Masukkan kata sandi" required class="w-full pl-12 pr-4 py-3.5 border border-[#d3cec6] rounded-[16px] text-[#111111] bg-[#f5f1ec] focus:bg-[#ffffff] transition-all">
+                        <input type="password" id="password-input" name="password" placeholder="Masukkan kata sandi" required class="w-full pl-12 pr-12 py-3.5 border border-[#d3cec6] rounded-[16px] text-[#111111] bg-[#f5f1ec] focus:bg-[#ffffff] transition-all">
+                        <button type="button" onclick="togglePass('password-input', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-[#7b7b78] hover:text-[#111111] transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </button>
                     </div>
                 </div>
 
                 <div class="flex justify-end slide-up slide-up-delay-3">
-                    <button type="button" class="text-sm text-[#111111] font-medium hover:text-[#111111]">Lupa kata sandi?</button>
+                    <button type="button" onclick="Swal.fire({title: 'Lupa Kata Sandi?', text: 'Silakan hubungi layanan pelanggan Orion Clinic di support@orionclinic.id atau WhatsApp Admin untuk bantuan pemulihan akun.', icon: 'info', confirmButtonColor: '#003E7E'})" class="text-xs text-[#003E7E] font-semibold hover:underline">Lupa kata sandi?</button>
                 </div>
 
-                <button type="submit" class="w-full btn-primary text-white py-4 rounded-[16px] font-semibold text-lg slide-up slide-up-delay-3">
-                    Masuk
+                <button type="submit" class="w-full btn-primary text-white py-4 rounded-[16px] font-bold text-base slide-up slide-up-delay-3">
+                    Masuk Sekarang
                 </button>
             </form>
 
-            <p class="text-center mt-8 text-[#626260]">
+            <p class="text-center mt-8 text-sm text-[#626260]">
                 Belum punya akun?
-                <button type="button" onclick="window.location.href='<?= site_url('auth/register') ?>'" class="text-[#111111] font-semibold hover:text-[#111111]">Daftar</button>
+                <button type="button" onclick="window.location.href='<?= site_url('auth/register') ?>'" class="text-[#003E7E] font-bold hover:underline ml-1">Daftar Gratis</button>
             </p>
         </div>
     </div>
 </div>
+<script>
+function togglePass(id, btn) {
+    const input = document.getElementById(id);
+    if (!input) return;
+    input.type = input.type === 'password' ? 'text' : 'password';
+    btn.classList.toggle('text-[#003E7E]');
+}
+</script>
 <?= $this->endSection() ?>
